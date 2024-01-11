@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { IBOOK } from './book';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BookService {
   private _booksUrl = 'api/books/';
