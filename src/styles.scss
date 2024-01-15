@@ -1,3 +1,86 @@
+@use '@angular/material' as mat;
+@use 'sass:map';
+@include mat.core();
+
+$primary-palette: (
+    50 : #ecf4f6,
+    100 : #d0e4e9,
+    200 : #b1d2db,
+    300 : #91bfcc,
+    400 : #7ab2c1,
+    500 : #62a4b6,
+    600 : #5a9caf,
+    700 : #5092a6,
+    800 : #46899e,
+    900 : #34788e,
+    A100 : #daf5ff,
+    A200 : #a7e8ff,
+    A400 : #74dbff,
+    A700 : #5ad4ff,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #000000,
+        500 : #000000,
+        600 : #000000,
+        700 : #000000,
+        800 : #ffffff,
+        900 : #ffffff,
+        A100 : #000000,
+        A200 : #000000,
+        A400 : #000000,
+        A700 : #000000,
+    )
+);
+
+$accent-palette: (
+    50 : #fbf8f0,
+    100 : #f4ecdb,
+    200 : #ede0c3,
+    300 : #e5d4aa,
+    400 : #e0ca98,
+    500 : #dac186,
+    600 : #d6bb7e,
+    700 : #d0b373,
+    800 : #cbab69,
+    900 : #c29e56,
+    A100 : #ffffff,
+    A200 : #fffbf3,
+    A400 : #ffe9c0,
+    A700 : #ffe1a7,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #000000,
+        500 : #000000,
+        600 : #000000,
+        700 : #000000,
+        800 : #000000,
+        900 : #000000,
+        A100 : #000000,
+        A200 : #000000,
+        A400 : #000000,
+        A700 : #000000,
+    )
+);
+
+$my-primary: mat.define-palette($primary-palette, 600);
+$my-accent: mat.define-palette($accent-palette, 400);
+
+$my-theme: mat.define-light-theme((
+ color: (
+   primary: $my-primary,
+   accent: $my-accent,
+ ),
+ density: 0,
+));
+
+@include mat.all-component-themes($my-theme);
+
 /* You can add global styles to this file, and also import other style files */
 
 html, body { height: 100%; }

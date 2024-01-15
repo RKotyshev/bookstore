@@ -1,0 +1,34 @@
+@import '../../core/mixins.scss';
+@import '../../core/variables';
+
+.announcement {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    @media(min-width: $tablet-width) {
+        flex-direction: row;
+    }
+}
+
+app-events {
+    width: 100%;
+    @media(min-width: $tablet-width) {
+        width: 700px;
+    }
+    @media(min-width: $desktop-width) {
+        width: 800px;
+    }   
+}
+
+app-topics {
+    margin-top: 15px;
+    width: 100%;
+    @media(min-width: $tablet-width) {
+        margin-top: 0;
+        width: 180px;
+    }
+    @media(min-width: $desktop-width) {
+        width: 200px;
+    }
+}

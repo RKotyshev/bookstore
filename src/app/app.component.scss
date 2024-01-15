@@ -1,6 +1,10 @@
 @import './core/mixins';
 @import './core/variables';
 
+.container {
+  @include container;
+}
+
 mat-toolbar .container {
   @include container;
   display: flex;
