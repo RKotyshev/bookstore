@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { BookService } from './core/book.service';
-import { IBOOK } from './core/book';
+import { IBook } from './core/book';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +9,7 @@ import { IBOOK } from './core/book';
 })
 export class AppComponent {
   public title = 'bookstore-initial';
-  public books!: IBOOK[];
+  public books!: IBook[];
 
   constructor(private _bookService: BookService) {}
 
@@ -19,7 +19,7 @@ export class AppComponent {
 
   public getBooks(): void {
     this._bookService.getBooks()
-      .subscribe((response: {[s: string]: unknown, result: IBOOK[]}) => {
+      .subscribe((response: {[s: string]: unknown, result: IBook[]}) => {
         this.books = response.result;
         console.log(this.books);
       });

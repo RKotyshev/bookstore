@@ -1,4 +1,4 @@
-export interface IBOOK {
+export interface IBook {
     id: number,
     in_stock: number,
     title: string,

@@ -6,24 +6,6 @@
   ],
   "overrides": [
     {
-      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-      "rules": {
-        // "@nrwl/nx/enforce-module-boundaries": [
-        //   "error",
-        //   {
-        //     "enforceBuildableLibDependency": true,
-        //     "allow": [],
-        //     "depConstraints": [
-        //       {
-        //         "sourceTag": "*",
-        //         "onlyDependOnLibsWithTags": ["*"]
-        //       }
-        //     ]
-        //   }
-        // ]
-      }
-    },
-    {
       "files": ["*.ts", "*.tsx"],
       "parserOptions": {
         "project": ["tsconfig.(app|spec).json"]
@@ -150,7 +132,6 @@
 
               "public-abstract-field",
               "protected-abstract-field",
-              // "private-abstract-field",
 
               "public-constructor",
               "protected-constructor",
@@ -166,7 +147,6 @@
 
               "public-abstract-method",
               "protected-abstract-method"
-              // "private-abstract-method"
             ]
           }
         ],
