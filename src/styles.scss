@@ -1,5 +1,7 @@
 @use '@angular/material' as mat;
 @use 'sass:map';
+@use './app/feature/main-page/novelties/_novelties-theme' as novelties;
+
 @include mat.core();
 
 $primary-palette: (
@@ -80,6 +82,7 @@ $my-theme: mat.define-light-theme((
 ));
 
 @include mat.all-component-themes($my-theme);
+@include novelties.theme($my-theme);
 
 /* You can add global styles to this file, and also import other style files */
 

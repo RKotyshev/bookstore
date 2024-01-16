@@ -1,0 +1,29 @@
+@use '@angular/material' as mat;
+@include mat.core();
+
+.books {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.book-card {
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    // background-color: green;
+}
+
+.book-card mat-card-header {
+    align-self: flex-start;
+}
+
+.book-card img {
+    margin: 10px 0;
+}
+
+.book-card button {
+    width: 140px;
+    margin: 5px 0;
+}
