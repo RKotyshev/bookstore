@@ -5,11 +5,12 @@
   @include container;
 }
 
-mat-toolbar {
+mat-toolbar.header {
+  min-width: 320px;
   margin-bottom: 20px;
 }
 
-mat-toolbar .container {
+mat-toolbar.header .container {
   @include container;
   display: flex;
   justify-content: space-between;
