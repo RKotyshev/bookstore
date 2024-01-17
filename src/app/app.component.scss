@@ -5,6 +5,10 @@
   @include container;
 }
 
+mat-toolbar {
+  margin-bottom: 20px;
+}
+
 mat-toolbar .container {
   @include container;
   display: flex;

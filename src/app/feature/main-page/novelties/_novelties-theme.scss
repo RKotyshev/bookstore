@@ -1,18 +1,33 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
+@import '../../../core/variables.scss';
 
 @mixin color($theme) {
   .book-card mat-card-header {
-    // Read the 500 hue from the primary color palette.
-    // color: mat.get-theme-color($theme, primary, 500);
     background: mat.get-theme-color($theme, primary, 200);
   }
 }
 
 @mixin typography($theme) {
-  .book-card {
-    // Get the headline font from the theme.
-    font: mat.get-theme-typography($theme, headline-1);
+  .book-card mat-card-title {
+    font: mat.get-theme-typography($theme, body-2);
+    @media(min-width: $mobile-width-horizontal) {
+      font: mat.get-theme-typography($theme, subtitle-1);
+    }
+  }
+
+  .book-card mat-card-subtitle{
+    font: mat.get-theme-typography($theme, caption);
+    @media(min-width: $mobile-width-horizontal) {
+      font: mat.get-theme-typography($theme, body-1);
+    }
+  }
+
+  .book-card p {
+    font: mat.get-theme-typography($theme, caption);
+    @media(min-width: $mobile-width-horizontal) {
+      font: mat.get-theme-typography($theme, body-2)
+    }
   }
 }
 
