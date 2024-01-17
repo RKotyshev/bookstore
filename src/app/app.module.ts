@@ -11,11 +11,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MainPageModule } from './feature/main-page/main-page.module';
 import { FooterToolbarComponent } from './footer-toolbar/footer-toolbar.component';
+import { HeaderToolbarComponent } from './header-toolbar/header-toolbar.component';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
     AppComponent,
     FooterToolbarComponent,
+    HeaderToolbarComponent,
   ],
   imports: [
     BrowserModule,
@@ -27,6 +30,7 @@ import { FooterToolbarComponent } from './footer-toolbar/footer-toolbar.componen
     MatButtonModule,
     MatListModule,
     MainPageModule,
+    MatDividerModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

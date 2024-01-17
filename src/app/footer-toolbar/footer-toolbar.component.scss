@@ -10,8 +10,16 @@ mat-toolbar {
     display: flex;
     justify-content: space-around;
     @include container;
+    // padding-bottom: 15px;
   }
   
+mat-list-item, mat-nav-list a {
+  margin-bottom: -15px;
+  &:nth-last-child(1) {
+    margin-bottom: 0;
+  }
+}
+
   .social {
     display: flex;
     flex-direction: column;

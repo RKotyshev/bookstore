@@ -1,30 +1,6 @@
-<mat-toolbar class="header" color="accent">
-  <div class="container">
-    <section class="site-navigation">
-      <span>Bookstore</span>
-      <button class="navigation-toggle" mat-icon-button aria-label="Icon button with a menu icon">
-        <mat-icon fontIcon="menu"></mat-icon>
-      </button>
-      <mat-nav-list>
-          <a mat-list-item href="#">Books</a>
-          <a mat-list-item href="#">Authors</a>
-      </mat-nav-list>
-    </section>
-  
-    <section class="user-navigation">
-      <button mat-icon-button aria-label="Icon button with an account_circle icon">
-        <mat-icon fontIcon="account_circle"></mat-icon>
-      </button>
-      <button mat-icon-button aria-label="Icon button with an shopping_bag icon">
-        <mat-icon fontIcon="shopping_bag"></mat-icon>
-      </button>
-    </section>
-  </div>
-</mat-toolbar>
+<app-header-toolbar></app-header-toolbar>
 
-<div class="container">
-  <app-main-page></app-main-page>
-</div>
+<app-main-page></app-main-page>
 
 <router-outlet></router-outlet>
 

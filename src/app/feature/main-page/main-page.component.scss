@@ -1,6 +1,11 @@
 @import '../../core/mixins.scss';
 @import '../../core/variables';
 
+.container {
+    @include container;
+    margin-bottom: 20px;
+}
+
 .announcement {
     display: flex;
     justify-content: space-between;

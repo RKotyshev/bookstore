@@ -1,5 +1,6 @@
 @use '@angular/material' as mat;
 @use 'sass:map';
+@use './app/header-toolbar/header-toolbar-theme' as headerFootbar;
 @use './app/footer-toolbar/footer-toolbar-theme' as footerToolbar;
 @use './app/feature/main-page/novelties/_novelties-theme' as novelties;
 
@@ -100,6 +101,7 @@ $my-theme: mat.define-light-theme((
 ));
 
 @include mat.all-component-themes($my-theme);
+@include headerFootbar.theme($my-theme);
 @include footerToolbar.theme($my-theme);
 @include novelties.theme($my-theme);
 

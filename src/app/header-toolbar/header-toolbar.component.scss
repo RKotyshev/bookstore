@@ -1,0 +1,69 @@
+@import '../core/mixins';
+@import '../core/variables';
+
+.container {
+    @include container;
+  }
+  
+  mat-toolbar.header {
+    min-width: 320px;
+    margin-bottom: 20px;
+  }
+  
+  mat-toolbar .container {
+    @include container;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .site-navigation {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .navigation-toggle {
+    @media(min-width: $mobile-width-horizontal) {
+      display: none;
+    }
+  }
+  
+  .user-navigation {
+    display: none;
+    @media(min-width: $mobile-width-horizontal) {
+      display: flex;
+      align-items: center;
+    }
+  }
+  
+.site-list {
+    display: none;
+    @media(min-width: $mobile-width-horizontal) {
+      display: flex;
+    }
+  }
+  
+ .site-list a {
+    width: auto;
+  }
+
+  .navigation-mobile {
+    position: absolute;
+    z-index: 1;
+
+    top: -5px;
+    left: 0;
+
+    width: 100%;
+    @media(min-width: $mobile-width-horizontal) {
+      display: none;
+    }
+  }
+
+  .navigation-mobile a {
+    padding: 0;
+    margin: 0;
+  }
+
