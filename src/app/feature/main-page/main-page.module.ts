@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { NoveltiesComponent } from './novelties/novelties.component';
 import { LayoutModule } from '@angular/cdk/layout';
+import { SharedPipesModule } from '../../shared/shared-pipes/shared-pipes.module';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { LayoutModule } from '@angular/cdk/layout';
     MatButtonModule,
     MatIconModule,
     LayoutModule,
+    SharedPipesModule,
   ],
   exports: [
     MainPageComponent,

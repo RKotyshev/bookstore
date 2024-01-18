@@ -20,16 +20,18 @@
 
 .book-card mat-card-header {
     align-self: flex-start;
+    width: 100%;
     padding: 0;
+    min-height: 75px;
     @media(min-width: $mobile-width-horizontal) {
-        padding: 16px 16px 0 16px;
+        // padding: 16px 16px 0 16px;
     }
 }
 
 .author-id-image {
     width: 35px;
     height: 35px;
-    margin: 5px 0 0 5px;
+    margin: 10px 0 0 5px;
     background-image: url(../../../../assets/authors/auth-doyle.jpg);
     background-size: cover;
 
@@ -40,6 +42,7 @@
 }
 
 .book-card mat-card-title {
+    margin-top: 10px;
     padding: 0 10px;
 }
 
@@ -55,7 +58,15 @@
     }
 }
 
+mat-card-content {
+    margin-bottom: 20px;
+}
+
 .book-card button {
     width: 130px;
     margin: 5px 0;
+}
+
+.book-card .favorite-button {
+    margin-top: auto;
 }

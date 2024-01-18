@@ -6,16 +6,15 @@
 
         <mat-card class="book-card" *ngFor="let noveltie of noveltiesList">
             <mat-card-header>
-                <div mat-card-avatar class="author-id-image"></div>
-                <mat-card-title>Author namelong</mat-card-title>
-                <mat-card-subtitle>Genre</mat-card-subtitle>
+                <mat-card-title>{{ noveltie.title }}</mat-card-title>
+                <mat-card-subtitle>{{ noveltie.price | currency }}</mat-card-subtitle>
             </mat-card-header>
             <img  mat-card-image src="../../../../assets/novelties-1.webp" alt="Book-name-image" width="140px">
             <mat-card-content>
                 <p>
-                    The sudden death of Sir Charles Baskerville, which occurred under mysterious circumstances.
+                    {{ noveltie.description | sliceSentence:100 }}
                 </p>
             </mat-card-content>
-            <button mat-stroked-button color="primary">TO FAVORITES</button>
-            <button mat-stroked-button color="primary">BUY</button>
+            <button class="favorite-button" mat-stroked-button color="primary">TO FAVORITES</button>
+            <button class="buy-button" mat-stroked-button color="primary">BUY</button>
         </mat-card>
