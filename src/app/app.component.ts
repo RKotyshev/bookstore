@@ -21,7 +21,6 @@ export class AppComponent implements OnInit{
     this._bookService.getBooks()
       .subscribe((response: IBook[]) => {
         this._books = response;
-        console.log(this._books);
       });
   }
 }

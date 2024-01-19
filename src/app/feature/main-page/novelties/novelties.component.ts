@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { AppBreakpoints, DisplayNameMap } from '../../../utils/constants/layout-constants';
-import { Subject, takeUntil, tap } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { BookService } from '../../../core/services/book-service/book.service';
 import { IBook } from '../../../core/services/book-service/book';
 
@@ -40,34 +40,32 @@ export class NoveltiesComponent implements OnInit, OnDestroy {
     const books$ = this.bookService.getBooks();
 
     books$.pipe(
-
-      tap((books: IBook[]) => {
-        this._booksList = books;
-        this.noveltiesList = this._booksList
-          .slice(0, (this._noveltiesCountMap.get(this.currentScreenSize)));
-
-        this.breakpointObserver.observe([
-          AppBreakpoints.MVertical,
-          AppBreakpoints.MHorizontal,
-          AppBreakpoints.Tablet,
-          AppBreakpoints.Desktop,
-        ])
-          .pipe(takeUntil(this._destroyed))
-          .subscribe((result: BreakpointState) => {
-            for (const query of Object.keys(result.breakpoints)) {
-              if(result.breakpoints[query]) {
-                this.currentScreenSize = DisplayNameMap.get(query) ?? 'unknown';
-                console.log(this.currentScreenSize);
-                this.noveltiesList = this._booksList
-                  .slice(0, (this._noveltiesCountMap.get(this.currentScreenSize)));
-              }
-            }
-          });
-      }),
-
       takeUntil(this._destroyed),
     )
-      .subscribe();
+      .subscribe(
+        (books: IBook[]) => {
+          this._booksList = books;
+          this.noveltiesList = this._booksList
+            .slice(0, (this._noveltiesCountMap.get(this.currentScreenSize)));
+  
+          this.breakpointObserver.observe([
+            AppBreakpoints.MVertical,
+            AppBreakpoints.MHorizontal,
+            AppBreakpoints.Tablet,
+            AppBreakpoints.Desktop,
+          ])
+            .pipe(takeUntil(this._destroyed))
+            .subscribe((result: BreakpointState) => {
+              for (const query of Object.keys(result.breakpoints)) {
+                if (result.breakpoints[query]) {
+                  this.currentScreenSize = DisplayNameMap.get(query) ?? 'unknown';
+                  this.noveltiesList = this._booksList
+                    .slice(0, (this._noveltiesCountMap.get(this.currentScreenSize)));
+                }
+              }
+            });
+        },
+      );
   }
 
 }
