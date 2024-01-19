@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { AppBreakpoints, DisplayNameMap } from '../../../utils/constants/layout-constants';
-import { Subject, firstValueFrom, takeUntil } from 'rxjs';
+import { Subject, takeUntil, tap } from 'rxjs';
 import { BookService } from '../../../core/services/book-service/book.service';
 import { IBook } from '../../../core/services/book-service/book';
 
@@ -12,8 +12,8 @@ import { IBook } from '../../../core/services/book-service/book';
 })
 export class NoveltiesComponent implements OnInit, OnDestroy {
   public noveltiesList!: IBook[];
-  public booksList!: IBook[];
   public currentScreenSize: string = 'unknown';
+  private _booksList!: IBook[];
   private _noveltiesCountMap = new Map([
     ['isMVertical', 4],
     ['isMHorizontal', 6],
@@ -28,7 +28,7 @@ export class NoveltiesComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit(): void {
-    this.getBooks();
+    this._getBooks();
   }
 
   public ngOnDestroy(): void {
@@ -36,31 +36,38 @@ export class NoveltiesComponent implements OnInit, OnDestroy {
     this._destroyed.complete();
   }
 
-  public async getBooks() {
-    const response = await firstValueFrom(this.bookService.getBooks());
-    
-    this.booksList = response.result;
+  private _getBooks() {
+    const books$ = this.bookService.getBooks();
 
-    this.noveltiesList = this.booksList
-      .slice(0, (this._noveltiesCountMap.get(this.currentScreenSize)));
-    
-    this.breakpointObserver.observe([
-      AppBreakpoints.MVertical,
-      AppBreakpoints.MHorizontal,
-      AppBreakpoints.Tablet,
-      AppBreakpoints.Desktop,
-    ])
-      .pipe(takeUntil(this._destroyed))
-      .subscribe((result: BreakpointState) => {
-        for (const query of Object.keys(result.breakpoints)) {
-          if(result.breakpoints[query]) {
-            this.currentScreenSize = DisplayNameMap.get(query) ?? 'unknown';
-            console.log(this.currentScreenSize);
-            this.noveltiesList = this.booksList
-              .slice(0, (this._noveltiesCountMap.get(this.currentScreenSize)));
-          }
-        }
-      });
+    books$.pipe(
+
+      tap((books: IBook[]) => {
+        this._booksList = books;
+        this.noveltiesList = this._booksList
+          .slice(0, (this._noveltiesCountMap.get(this.currentScreenSize)));
+
+        this.breakpointObserver.observe([
+          AppBreakpoints.MVertical,
+          AppBreakpoints.MHorizontal,
+          AppBreakpoints.Tablet,
+          AppBreakpoints.Desktop,
+        ])
+          .pipe(takeUntil(this._destroyed))
+          .subscribe((result: BreakpointState) => {
+            for (const query of Object.keys(result.breakpoints)) {
+              if(result.breakpoints[query]) {
+                this.currentScreenSize = DisplayNameMap.get(query) ?? 'unknown';
+                console.log(this.currentScreenSize);
+                this.noveltiesList = this._booksList
+                  .slice(0, (this._noveltiesCountMap.get(this.currentScreenSize)));
+              }
+            }
+          });
+      }),
+
+      takeUntil(this._destroyed),
+    )
+      .subscribe();
   }
 
 }

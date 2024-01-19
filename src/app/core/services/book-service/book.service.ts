@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { IBook } from './book';
 
@@ -11,7 +11,8 @@ export class BookService {
 
   constructor(private _http: HttpClient) { }
 
-  public getBooks(): Observable<{[s: string]: unknown, result: IBook[]}> {
-    return this._http.get<{[s: string]: unknown, result: IBook[]}>(this._booksUrl);
+  public getBooks(): Observable<IBook[]> {
+    return this._http.get<{[s: string]: unknown, result: IBook[]}>(this._booksUrl)
+      .pipe(map((response: {[s: string]: unknown, result: IBook[]}) => response.result));
   }
 }

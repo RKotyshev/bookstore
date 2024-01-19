@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrl: './events.component.scss',
 })
 export class EventsComponent {
-  public giftBook: string = 'Some gift book';
+  
 }

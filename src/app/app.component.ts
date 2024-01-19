@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BookService } from './core/services/book-service/book.service';
 import { IBook } from './core/services/book-service/book';
 
@@ -7,21 +7,21 @@ import { IBook } from './core/services/book-service/book';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   public title = 'bookstore-initial';
-  public books!: IBook[];
+  private _books!: IBook[];
 
   constructor(private _bookService: BookService) {}
 
   public ngOnInit(): void {
-    this.getBooks();
+    this._getBooks();
   }
 
-  public getBooks(): void {
+  private _getBooks(): void {
     this._bookService.getBooks()
-      .subscribe((response: {[s: string]: unknown, result: IBook[]}) => {
-        this.books = response.result;
-        console.log(this.books);
+      .subscribe((response: IBook[]) => {
+        this._books = response;
+        console.log(this._books);
       });
   }
 }

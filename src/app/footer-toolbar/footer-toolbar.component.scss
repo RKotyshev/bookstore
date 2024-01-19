@@ -7,10 +7,9 @@ mat-toolbar {
   }
   
 .container {
+  @include container;
     display: flex;
     justify-content: space-around;
-    @include container;
-    // padding-bottom: 15px;
   }
   
 mat-list-item, mat-nav-list a {
