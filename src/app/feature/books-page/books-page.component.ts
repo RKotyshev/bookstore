@@ -35,6 +35,7 @@ export class BooksPageComponent implements OnInit {
 
   private _getBooksCount(): void {
     this._bookService.getBooksResponse()
+      .pipe(takeUntil(this._destroyed))
       .subscribe((response: IBookResponse) => this.totalBooks = response.total_items);
   }
 }
