@@ -1,0 +1,16 @@
+<h2 class="title">Books</h2>
+
+<mat-card class="book" *ngFor="let book of booksList">
+    <mat-card-header>
+        <mat-card-title>{{ book.title }}</mat-card-title>
+        <mat-card-subtitle>{{ book.price | currency }}</mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image src="../../../assets/novelties-1.webp" alt="Book cover picture">
+    <mat-card-content>
+        <p>{{ book.description }}</p>
+    </mat-card-content>
+    <section class="book-interact">
+        <button class="favorite-button" mat-stroked-button color="primary">TO FAVORITES</button>
+        <button class="buy-button" mat-stroked-button color="primary">BUY</button>
+    </section>
+</mat-card>

@@ -1,0 +1,10 @@
+@import '../../core/variables.scss';
+@import '../../core/mixins.scss';
+
+.container {
+    @include container;
+}
+
+mat-paginator {
+    margin-bottom: 10px;
+}

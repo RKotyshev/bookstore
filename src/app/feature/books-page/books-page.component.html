@@ -1,0 +1,5 @@
+<section class="container">
+    <app-books-list [booksList]="currentBooksList | slice : pageStartValue : pageEndValue"></app-books-list>
+
+    <mat-paginator [length]="currentBooksList.length" pageSize="5" (page)="getPaginatorData($event)" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+</section>
