@@ -9,3 +9,15 @@ export interface IBook {
     release_date: string,
     writing_date: string
 }
+
+export interface IBookResponse {
+    links: {
+        next: string,
+        previous: string
+    },
+    total_items: number,
+    total_pages: number,
+    page: number,
+    page_size: number,
+    result: IBook[]
+}

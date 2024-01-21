@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { AppBreakpoints, DisplayNameMap } from '../../../utils/constants/layout-constants';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, map } from 'rxjs';
 import { BookService } from '../../../core/services/book-service/book.service';
-import { IBook } from '../../../core/services/book-service/book';
+import { IBook, IBookResponse } from '../../../core/services/book-service/book';
 
 @Component({
   selector: 'app-novelties',
@@ -37,7 +37,8 @@ export class NoveltiesComponent implements OnInit, OnDestroy {
   }
 
   private _getBooks() {
-    const books$ = this.bookService.getBooks();
+    const books$ = this.bookService.getBooksResponse()
+      .pipe(map((response: IBookResponse) => response.result));
 
     books$.pipe(
       takeUntil(this._destroyed),

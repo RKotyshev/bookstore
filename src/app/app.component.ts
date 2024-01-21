@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BookService } from './core/services/book-service/book.service';
-import { IBook } from './core/services/book-service/book';
+import { IBook, IBookResponse } from './core/services/book-service/book';
 
 @Component({
   selector: 'app-root',
@@ -18,9 +18,9 @@ export class AppComponent implements OnInit{
   }
 
   private _getBooks(): void {
-    this._bookService.getBooks()
-      .subscribe((response: IBook[]) => {
-        this._books = response;
+    this._bookService.getBooksResponse()
+      .subscribe((response: IBookResponse) => {
+        this._books = response.result;
       });
   }
 }
