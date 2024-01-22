@@ -12,9 +12,9 @@
             <mat-divider></mat-divider>
             <a mat-list-item routerLink="/authors">Authors</a>
             <mat-divider></mat-divider>
-            <a mat-list-item href="#">Authorization</a>
+            <a mat-list-item routerLink="/auth">Authorization</a>
             <mat-divider></mat-divider>
-            <a mat-list-item href="#">Cart</a>
+            <a mat-list-item routerLink="/cart">Cart</a>
           </mat-list>
         </section>
 
@@ -29,12 +29,12 @@
       </button>
 
       <section class="user-navigation">
-        <button mat-icon-button aria-label="Icon button with an account_circle icon">
+        <a mat-icon-button aria-label="Icon button with an account_circle icon" routerLink="/auth">
           <mat-icon fontIcon="account_circle"></mat-icon>
-        </button>
-        <button mat-icon-button aria-label="Icon button with an shopping_bag icon">
+        </a>
+        <a mat-icon-button aria-label="Icon button with an shopping_bag icon" routerLink="/cart">
           <mat-icon fontIcon="shopping_bag"></mat-icon>
-        </button>
+        </a>
       </section>
     </div>
   </mat-toolbar>

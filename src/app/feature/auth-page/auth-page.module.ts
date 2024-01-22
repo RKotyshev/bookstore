@@ -5,10 +5,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { AuthFormComponent } from './auth-form/auth-form.component';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
     AuthPageComponent,
+    AuthFormComponent,
   ],
   imports: [
     CommonModule,
@@ -17,6 +20,7 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule,
     ReactiveFormsModule,
     MatInputModule,
+    MatButtonModule,
   ],
   exports: [
     AuthPageComponent,
