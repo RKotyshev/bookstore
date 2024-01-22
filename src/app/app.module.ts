@@ -16,6 +16,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { BooksPageModule } from './feature/books-page/books-page.module';
 import { AuthorsPageModule } from './feature/authors-page/authors-page.module';
 import { AuthPageModule } from './feature/auth-page/auth-page.module';
+import { CartPageModule } from './feature/cart-page/cart-page.module';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { AuthPageModule } from './feature/auth-page/auth-page.module';
     BooksPageModule,
     AuthorsPageModule,
     AuthPageModule,
+    CartPageModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
