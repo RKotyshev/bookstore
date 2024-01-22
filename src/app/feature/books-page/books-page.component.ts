@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BookService } from '../../core/services/book-service/book.service';
 import { IBook, IBookResponse } from '../../core/services/book-service/book';
 import { Subject, takeUntil } from 'rxjs';
@@ -9,7 +9,7 @@ import { PageEvent } from '@angular/material/paginator';
   templateUrl: './books-page.component.html',
   styleUrl: './books-page.component.scss',
 })
-export class BooksPageComponent implements OnInit {
+export class BooksPageComponent implements OnInit, OnDestroy {
   public currentBooksList: IBook[] = [];
   public pageIndexStart = 0;
   public pageSizeStart = 5;
@@ -25,6 +25,11 @@ export class BooksPageComponent implements OnInit {
 
   public getPaginatorData(event: PageEvent): void {
     this._getBooks(event.pageIndex, event.pageSize);
+  }
+
+  public ngOnDestroy():void {
+    this._destroyed.next();
+    this._destroyed.complete();
   }
 
   private _getBooks(pageIndex: number, pageSize: number): void {

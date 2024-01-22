@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AuthorService } from '../../core/author-service/author.service';
-import { IAuthor, IAuthorResponse } from '../../core/author-service/author';
+import { AuthorService } from '../../core/services/author-service/author.service';
+import { IAuthor, IAuthorResponse } from '../../core/services/author-service/author';
 import { PageEvent } from '@angular/material/paginator';
 import { Subject, takeUntil } from 'rxjs';
 

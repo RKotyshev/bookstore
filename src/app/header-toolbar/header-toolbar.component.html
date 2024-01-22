@@ -1,13 +1,16 @@
 <mat-toolbar class="header" color="accent">
     <div class="container">
       <section class="site-navigation">
-        <span>Bookstore</span>
+        <mat-list class="bookstore-link">
+          <a mat-list-item routerLink="/">Bookstore</a>
+        </mat-list>
+        
 
         <section *ngIf="isMenuOpen">
           <mat-list class="navigation-mobile">
-            <a mat-list-item href="#">Books</a>
+            <a mat-list-item routerLink="/books">Books</a>
             <mat-divider></mat-divider>
-            <a mat-list-item href="#">Authors</a>
+            <a mat-list-item routerLink="/authors">Authors</a>
             <mat-divider></mat-divider>
             <a mat-list-item href="#">Authorization</a>
             <mat-divider></mat-divider>
@@ -16,8 +19,8 @@
         </section>
 
         <mat-nav-list class="site-list">
-            <a mat-list-item href="#">Books</a>
-            <a mat-list-item href="#">Authors</a>
+            <a mat-list-item routerLink="/books">Books</a>
+            <a mat-list-item routerLink="/authors">Authors</a>
         </mat-nav-list>
       </section>
     

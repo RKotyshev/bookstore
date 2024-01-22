@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IAuthor } from '../../../core/author-service/author';
+import { IAuthor } from '../../../core/services/author-service/author';
 
 @Component({
   selector: 'app-authors-list',
