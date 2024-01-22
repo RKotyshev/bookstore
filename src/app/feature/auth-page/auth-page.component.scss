@@ -1,0 +1,15 @@
+mat-card {
+    margin-bottom: 20px;
+}
+
+.authorization-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+mat-form-field {
+    width: 100%;
+    min-width: 280px;
+    max-width: 500px;
+}

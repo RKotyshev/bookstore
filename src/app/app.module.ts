@@ -15,6 +15,7 @@ import { HeaderToolbarComponent } from './header-toolbar/header-toolbar.componen
 import { MatDividerModule } from '@angular/material/divider';
 import { BooksPageModule } from './feature/books-page/books-page.module';
 import { AuthorsPageModule } from './feature/authors-page/authors-page.module';
+import { AuthPageModule } from './feature/auth-page/auth-page.module';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { AuthorsPageModule } from './feature/authors-page/authors-page.module';
     MatDividerModule,
     BooksPageModule,
     AuthorsPageModule,
+    AuthPageModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
