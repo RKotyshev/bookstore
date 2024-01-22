@@ -4,8 +4,3 @@
 .container {
   @include container;
 }
-
-mat-toolbar.header {
-  min-width: 320px;
-  margin-bottom: 20px;
-}

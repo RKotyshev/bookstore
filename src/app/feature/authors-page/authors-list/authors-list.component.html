@@ -2,7 +2,7 @@
 
 <mat-expansion-panel class="author" *ngFor="let author of authorsList">
     <mat-expansion-panel-header>
-        {{ author.first_name }} {{ author.second_name }}
+        {{ author.first_name | fullname: author.second_name }}
     </mat-expansion-panel-header>
     <mat-panel-description>
         Author id number: {{ author.id }}

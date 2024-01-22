@@ -13,7 +13,7 @@ export class AuthFormComponent {
   constructor() {
     this.authorizationForm = new FormGroup({
       emailInput: new FormControl('', [Validators.required, Validators.email]),
-      passwordInput: new FormControl(''),
+      passwordInput: new FormControl('', [Validators.required]),
     });
   }
 }
