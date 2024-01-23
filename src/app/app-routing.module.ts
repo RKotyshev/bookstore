@@ -7,11 +7,11 @@ import { AuthPageComponent } from './feature/auth-page/auth-page.component';
 import { CartPageComponent } from './feature/cart-page/cart-page.component';
 
 const routes: Routes = [
-  { path: '', component: MainPageComponent, pathMatch: 'full' },
   { path: 'books', component: BooksPageComponent },
-  { path: 'auth', component: AuthPageComponent, pathMatch: 'full' },
-  { path: 'authors', component: AuthorsPageComponent, pathMatch: 'full' },
+  { path: 'authors', component: AuthorsPageComponent },
+  { path: 'auth', component: AuthPageComponent },
   { path: 'cart', component: CartPageComponent },
+  { path: '', component: MainPageComponent, pathMatch: 'full' },
   
 ];
 
