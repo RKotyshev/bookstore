@@ -1,0 +1,10 @@
+<h2>Authors</h2>
+
+<mat-expansion-panel class="author" *ngFor="let author of authorsList">
+    <mat-expansion-panel-header>
+        {{ author | fullname }}
+    </mat-expansion-panel-header>
+    <mat-panel-description>
+        Author id number: {{ author.id }}
+    </mat-panel-description>
+</mat-expansion-panel>

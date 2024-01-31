@@ -81,7 +81,7 @@
           {
             "selector": ["variable"],
             "modifiers": ["const", "exported"],
-            "format": ["PascalCase"],
+            "format": ["PascalCase", "UPPER_CASE"],
             "leadingUnderscore": "allow"
           }
         ],

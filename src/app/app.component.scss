@@ -1,10 +1,11 @@
-@import './core/mixins';
-@import './core/variables';
+@import './core/styles/mixins';
+@import './core/styles/variables';
+
 
 .container {
   @include container;
 }
 
-app-footer-toolbar {
+app-footer {
   margin-top: auto;
 }

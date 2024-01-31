@@ -1,16 +1,18 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { MainPageComponent } from './feature/main-page/main-page.component';
-import { BooksPageComponent } from './feature/books-page/books-page.component';
-import { AuthorsPageComponent } from './feature/authors-page/authors-page.component';
-import { AuthPageComponent } from './feature/auth-page/auth-page.component';
-import { CartPageComponent } from './feature/cart-page/cart-page.component';
+
+import { MainPageComponent } from './pages/main/main.component';
+import { BooksComponent } from './pages/books/books.component';
+import { AuthorsComponent } from './pages/authors/authors.component';
+import { AuthComponent } from './pages/auth/auth.component';
+import { CartComponent } from './pages/cart/cart.component';
+
 
 const routes: Routes = [
-  { path: 'books', component: BooksPageComponent },
-  { path: 'authors', component: AuthorsPageComponent },
-  { path: 'auth', component: AuthPageComponent },
-  { path: 'cart', component: CartPageComponent },
+  { path: 'books', component: BooksComponent },
+  { path: 'authors', component: AuthorsComponent },
+  { path: 'auth', component: AuthComponent },
+  { path: 'cart', component: CartComponent },
   { path: '', component: MainPageComponent, pathMatch: 'full' },
   
 ];

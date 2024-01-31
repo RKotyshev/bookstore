@@ -1,0 +1,34 @@
+@import '../core/styles/mixins';
+@import '../core/styles/variables';
+
+
+mat-toolbar {
+    min-width: 320px;
+    height: auto;
+    padding: 20px;
+  }
+  
+.container {
+  @include container;
+    display: flex;
+    justify-content: space-around;
+  }
+  
+mat-list-item, mat-nav-list a {
+  margin-bottom: -15px;
+  &:nth-last-child(1) {
+    margin-bottom: 0;
+  }
+}
+
+.social {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.navigation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

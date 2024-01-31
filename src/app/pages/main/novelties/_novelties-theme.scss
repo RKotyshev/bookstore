@@ -1,0 +1,44 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+@import '../../../core/styles/variables';
+
+
+@mixin color($theme) {
+  .book-card mat-card-header {
+    background: mat.get-theme-color($theme, primary, 200);
+  }
+}
+
+@mixin typography($theme) {
+  .book-card mat-card-title {
+    font: mat.get-theme-typography($theme, body-2);
+    @media(min-width: $mobile-width-horizontal) {
+      font: mat.get-theme-typography($theme, subtitle-1);
+    }
+  }
+
+  .book-card mat-card-subtitle {
+    font: mat.get-theme-typography($theme, caption);
+    @media(min-width: $mobile-width-horizontal) {
+      font: mat.get-theme-typography($theme, body-1);
+    }
+  }
+
+  .book-card p {
+    font: mat.get-theme-typography($theme, caption);
+    @media(min-width: $mobile-width-horizontal) {
+      font: mat.get-theme-typography($theme, body-2)
+    }
+  }
+}
+
+@mixin theme($theme) {
+  @if mat.theme-has($theme, color) {
+    @include color($theme);
+  }
+
+  @if mat.theme-has($theme, typography) {
+    @include typography($theme);
+  }
+}

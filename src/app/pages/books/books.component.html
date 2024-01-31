@@ -1,0 +1,8 @@
+<app-books-list [booksList]="currentBooksList"></app-books-list>
+
+<mat-paginator 
+            [length]="totalBooks" 
+            [pageSize]="pageSizeStart" 
+            (page)="getPaginatorData($event)" 
+            [pageSizeOptions]="pageSize">
+        </mat-paginator>
