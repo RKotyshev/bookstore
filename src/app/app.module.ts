@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { MainPageModule } from './pages/main/main.module';
 import { BooksPageModule } from './pages/books/books.module';
@@ -19,6 +20,7 @@ import { AppComponent } from './app.component';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { PAGE_SIZE_OPTIONS } from './core/tokens/paginator.token';
+import { CloseMenuDirective } from './shared/directives/close-menu.directive';
 
 
 @NgModule({
@@ -26,6 +28,7 @@ import { PAGE_SIZE_OPTIONS } from './core/tokens/paginator.token';
     AppComponent,
     FooterComponent,
     HeaderComponent,
+    CloseMenuDirective,
   ],
   imports: [
     BrowserModule,
@@ -42,6 +45,7 @@ import { PAGE_SIZE_OPTIONS } from './core/tokens/paginator.token';
     AuthorsPageModule,
     AuthPageModule,
     CartPageModule,
+    MatSidenavModule,
   ],
   providers: [
     { provide: PAGE_SIZE_OPTIONS, useValue: [5, 10, 20] },

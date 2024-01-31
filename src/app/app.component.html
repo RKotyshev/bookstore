@@ -1,7 +1,22 @@
-<app-header></app-header>
+<mat-sidenav-container>
+    <mat-sidenav class="side" [opened]="isSidenavOpen" (closedStart)="closeMenu()" #sidenav>
+        <mat-nav-list class="navigation-mobile">
+            <a mat-list-item routerLink="/books" [appCloseMenu]="isSidenavOpen" (appCloseMenuChange)="closeMenu()">Books</a>
+            <mat-divider></mat-divider>
+            <a mat-list-item routerLink="/authors" [appCloseMenu]="isSidenavOpen" (appCloseMenuChange)="closeMenu()">Authors</a>
+            <mat-divider></mat-divider>
+            <a mat-list-item routerLink="/auth" [appCloseMenu]="isSidenavOpen" (appCloseMenuChange)="closeMenu()">Authorization</a>
+            <mat-divider></mat-divider>
+            <a mat-list-item routerLink="/cart" [appCloseMenu]="isSidenavOpen" (appCloseMenuChange)="closeMenu()">Cart</a>
+          </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <app-header></app-header>
 
-<section class="container">
-    <router-outlet></router-outlet>
-</section>
+        <section class="container">
+            <router-outlet></router-outlet>
+        </section>
 
-<app-footer></app-footer>
+        <app-footer></app-footer>
+    </mat-sidenav-content>
+</mat-sidenav-container>

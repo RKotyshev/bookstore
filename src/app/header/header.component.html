@@ -8,13 +8,13 @@
 
         <section *ngIf="isMenuOpen">
           <mat-nav-list class="navigation-mobile">
-            <a mat-list-item routerLink="/books">Books</a>
+            <a mat-list-item routerLink="/books" [(appCloseMenu)]="isMenuOpen">Books</a>
             <mat-divider></mat-divider>
-            <a mat-list-item routerLink="/authors">Authors</a>
+            <a mat-list-item routerLink="/authors" [(appCloseMenu)]="isMenuOpen">Authors</a>
             <mat-divider></mat-divider>
-            <a mat-list-item routerLink="/auth">Authorization</a>
+            <a mat-list-item routerLink="/auth" [(appCloseMenu)]="isMenuOpen">Authorization</a>
             <mat-divider></mat-divider>
-            <a mat-list-item routerLink="/cart">Cart</a>
+            <a mat-list-item routerLink="/cart" [(appCloseMenu)]="isMenuOpen">Cart</a>
           </mat-nav-list>
         </section>
 
