@@ -8,19 +8,17 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { MainPageModule } from './pages/main/main.module';
-import { BooksPageModule } from './pages/books/books.module';
-import { AuthPageModule } from './pages/auth/auth.module';
-import { CartPageModule } from './pages/cart/cart.module';
-import { AuthorsPageModule } from './pages/authors/authors.module';
+import { BooksModule } from './pages/books/books.module';
+import { AuthModule } from './pages/auth/auth.module';
+import { CartModule } from './pages/cart/cart.module';
+import { AuthorsModule } from './pages/authors/authors.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
-import { PAGE_SIZE_OPTIONS } from './core/tokens/paginator.token';
-import { CloseMenuDirective } from './shared/directives/close-menu.directive';
+import { PreventScrollDirective } from './core/directives/prevent-scroll.directive';
 
 
 @NgModule({
@@ -28,11 +26,10 @@ import { CloseMenuDirective } from './shared/directives/close-menu.directive';
     AppComponent,
     FooterComponent,
     HeaderComponent,
-    CloseMenuDirective,
+    PreventScrollDirective,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
     MatToolbarModule,
@@ -41,14 +38,11 @@ import { CloseMenuDirective } from './shared/directives/close-menu.directive';
     MatListModule,
     MainPageModule,
     MatDividerModule,
-    BooksPageModule,
-    AuthorsPageModule,
-    AuthPageModule,
-    CartPageModule,
-    MatSidenavModule,
-  ],
-  providers: [
-    { provide: PAGE_SIZE_OPTIONS, useValue: [5, 10, 20] },
+    BooksModule,
+    AuthorsModule,
+    AuthModule,
+    CartModule,
+    AppRoutingModule,
   ],
   bootstrap: [AppComponent],
 })

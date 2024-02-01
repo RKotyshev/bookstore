@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import { Observable, map } from 'rxjs';
 
@@ -9,7 +9,7 @@ import { IAuthor, IAuthorResponse } from '../interfaces/author';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthorService {
+export class AuthorsService {
   private _authorsUrl = 'api/authors';
 
   constructor(private _httpClient: HttpClient) { }
@@ -19,12 +19,13 @@ export class AuthorService {
   }
 
   public getPaginatedAuthors(pageIndex: number, pageSize: number):Observable<IAuthor[]> {
-    const correctIndexOrder: number = pageIndex + 1;
-    const options = { 
-      params: new HttpParams().set('page', correctIndexOrder).set('page_size', pageSize),
+    const pageNumber: number = pageIndex + 1;
+    const params = {
+      page: pageNumber,
+      page_size: pageSize,
     };
 
-    return this._httpClient.get<IAuthorResponse>(this._authorsUrl, options)
+    return this._httpClient.get<IAuthorResponse>(this._authorsUrl, { params })
       .pipe(map((response: IAuthorResponse) => response.result));
   }
   

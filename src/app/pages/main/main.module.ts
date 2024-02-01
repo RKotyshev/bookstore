@@ -10,7 +10,7 @@ import { MainPageComponent } from './main.component';
 import { EventsComponent } from './events/events.component';
 import { TopicsComponent } from './topics/topics.component';
 import { NoveltiesComponent } from './novelties/novelties.component';
-import { SliceSentencePipe } from '../../shared/pipes/slice-sentence/slice-sentence.pipe';
+import { SliceSentencePipe } from '../../core/pipes/slice-sentence.pipe';
 
 
 @NgModule({

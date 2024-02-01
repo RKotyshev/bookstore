@@ -6,7 +6,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 
 import { AuthorsComponent } from './authors.component';
 import { AuthorsListComponent } from './authors-list/authors-list.component';
-import { FullnamePipe } from '../../shared/pipes/fullname/fullname.pipe';
+import { FullnamePipe } from '../../core/pipes/fullname.pipe';
 
 
 @NgModule({
@@ -24,4 +24,4 @@ import { FullnamePipe } from '../../shared/pipes/fullname/fullname.pipe';
     AuthorsComponent,
   ],
 })
-export class AuthorsPageModule { }
+export class AuthorsModule { }

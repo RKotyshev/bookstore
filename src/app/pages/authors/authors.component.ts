@@ -1,12 +1,12 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { PageEvent } from '@angular/material/paginator';
 
 import { Subject, takeUntil } from 'rxjs';
 
-import { AuthorService } from '../../core/services/author.service';
+import { AuthorsService } from '../../core/services/authors.service';
 import { IAuthor, IAuthorResponse } from '../../core/interfaces/author';
-import { PAGE_SIZE_OPTIONS } from '../../core/tokens/paginator.token';
+import { PageSizeOptions } from '../../utils/constants/paginator';
 
 
 @Component({
@@ -19,10 +19,10 @@ export class AuthorsComponent implements OnInit, OnDestroy {
   public totalAuthors!: number;
   public pageStartIndex = 0;
   public pageStartSize = 5;
-  public pageSize = inject(PAGE_SIZE_OPTIONS);
+  public pageSize = PageSizeOptions;
   private _destroyed = new Subject<void>();
 
-  constructor(private _authorService: AuthorService) {}
+  constructor(private _authorService: AuthorsService) {}
 
   public ngOnInit(): void {
     this._getAuthorsCount();

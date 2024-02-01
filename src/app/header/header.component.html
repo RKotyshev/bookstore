@@ -1,40 +1,42 @@
-<mat-toolbar class="header" color="accent">
-    <div class="container">
-      <section class="site-navigation">
-        <mat-nav-list class="bookstore-link">
-          <a mat-list-item routerLink="/">Bookstore</a>
-        </mat-nav-list>
-        
+<section class="mobile-wrapper" *ngIf="isMenuOpen">
+  <mat-nav-list class="mobile-list">
 
-        <section *ngIf="isMenuOpen">
-          <mat-nav-list class="navigation-mobile">
-            <a mat-list-item routerLink="/books" [(appCloseMenu)]="isMenuOpen">Books</a>
-            <mat-divider></mat-divider>
-            <a mat-list-item routerLink="/authors" [(appCloseMenu)]="isMenuOpen">Authors</a>
-            <mat-divider></mat-divider>
-            <a mat-list-item routerLink="/auth" [(appCloseMenu)]="isMenuOpen">Authorization</a>
-            <mat-divider></mat-divider>
-            <a mat-list-item routerLink="/cart" [(appCloseMenu)]="isMenuOpen">Cart</a>
+    <a mat-list-item routerLink="/" (click)="closeMenu()">Bookstore</a>
+    <a mat-list-item routerLink="/books" (click)="closeMenu()">Books</a>
+    <a mat-list-item routerLink="/authors" (click)="closeMenu()">Authors</a>
+    <a mat-list-item routerLink="/auth" (click)="closeMenu()">Authorization</a>
+    <a mat-list-item routerLink="/cart" (click)="closeMenu()">Cart</a>
+    <button mat-list-item (click)="closeMenu()">Close</button>
+
+  </mat-nav-list>
+</section>
+
+  <mat-toolbar class="header" color="accent">
+      <div class="container">
+
+        <section class="site-navigation">
+          <mat-nav-list class="bookstore-link">
+            <a mat-list-item routerLink="/">Bookstore</a>
+          </mat-nav-list>
+          
+
+          <mat-nav-list class="site-list">
+              <a mat-list-item routerLink="/books">Books</a>
+              <a mat-list-item routerLink="/authors">Authors</a>
           </mat-nav-list>
         </section>
+      
+        <button class="navigation-toggle" (click)="isMenuOpen ? closeMenu() : openMenu()" mat-icon-button aria-label="Icon button with a menu icon">
+          <mat-icon [fontIcon]="isMenuOpen ? 'close' : 'menu'"></mat-icon>
+        </button>
 
-        <mat-nav-list class="site-list">
-            <a mat-list-item routerLink="/books">Books</a>
-            <a mat-list-item routerLink="/authors">Authors</a>
-        </mat-nav-list>
-      </section>
-    
-      <button class="navigation-toggle" (click)="isMenuOpen = !isMenuOpen" mat-icon-button aria-label="Icon button with a menu icon">
-        <mat-icon [fontIcon]="isMenuOpen ? 'close' : 'menu'"></mat-icon>
-      </button>
-
-      <section class="user-navigation">
-        <a mat-icon-button aria-label="Icon button with an account_circle icon" routerLink="/auth">
-          <mat-icon fontIcon="account_circle"></mat-icon>
-        </a>
-        <a mat-icon-button aria-label="Icon button with an shopping_bag icon" routerLink="/cart">
-          <mat-icon fontIcon="shopping_bag"></mat-icon>
-        </a>
-      </section>
-    </div>
+        <section class="user-navigation">
+          <a mat-icon-button aria-label="Icon button with an account_circle icon" routerLink="/auth">
+            <mat-icon fontIcon="account_circle"></mat-icon>
+          </a>
+          <a mat-icon-button aria-label="Icon button with an shopping_bag icon" routerLink="/cart">
+            <mat-icon fontIcon="shopping_bag"></mat-icon>
+          </a>
+        </section>
+      </div>
   </mat-toolbar>

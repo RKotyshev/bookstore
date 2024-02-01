@@ -1,10 +1,7 @@
-import { 
-  AfterViewChecked,
-  ChangeDetectorRef,
-  Component,
-  ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
 import { HeaderComponent } from './header/header.component';
+import { MobileMenuService } from './core/services/mobile-menu.service';
 
 
 @Component({
@@ -12,22 +9,17 @@ import { HeaderComponent } from './header/header.component';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent implements AfterViewChecked {
+export class AppComponent {
   public title = 'bookstore-initial';
-  public isSidenavOpen: boolean = false;
+  public isMenuOpen: boolean = false;
   @ViewChild(HeaderComponent) public headerComponent!: HeaderComponent;
 
-  constructor(
-    private _changeDetection: ChangeDetectorRef,
-  ) {}
-
-  public ngAfterViewChecked(): void {
-    this.isSidenavOpen = this.headerComponent.isMenuOpen;
-    this._changeDetection.detectChanges();
-  }
+  constructor(private _menuService: MobileMenuService) {}
 
   public closeMenu() {
-    this.headerComponent.isMenuOpen = false;
+    this._menuService.closeMenu();
+    this.isMenuOpen = this._menuService.getMenuStatus();
+    this.headerComponent.closeMenu();
   }
 
 }

@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
 
-@import '../core/styles/variables';
+@import '../styles/variables';
 
 
 @mixin typography($theme) {

@@ -5,7 +5,7 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { Subject, takeUntil, map } from 'rxjs';
 
 import { AppBreakpoints, DisplayNameMap } from '../../../utils/constants/layout';
-import { BookService } from '../../../core/services/book.service';
+import { BooksService } from '../../../core/services/books.service';
 import { IBook, IBookResponse } from '../../../core/interfaces/book';
 
 
@@ -28,7 +28,7 @@ export class NoveltiesComponent implements OnInit, OnDestroy {
 
   constructor(
     public breakpointObserver: BreakpointObserver,
-    public bookService: BookService,
+    public booksService: BooksService,
   ) {}
 
   public ngOnInit(): void {
@@ -41,7 +41,7 @@ export class NoveltiesComponent implements OnInit, OnDestroy {
   }
 
   private _getBooks() {
-    const books$ = this.bookService.getBooksData()
+    const books$ = this.booksService.getBooksData()
       .pipe(map((response: IBookResponse) => response.result));
 
     books$.pipe(

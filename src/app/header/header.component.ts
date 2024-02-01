@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+
+import { MobileMenuService } from '../core/services/mobile-menu.service';
 
 
 @Component({
@@ -6,7 +8,26 @@ import { Component } from '@angular/core';
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
-export class HeaderComponent {
-  public isMenuOpen: boolean = false;
+export class HeaderComponent implements OnInit{
+  public isMenuOpen!: boolean;
 
+  constructor(private _menuService: MobileMenuService) {}
+
+  public ngOnInit(): void {
+    this.isMenuOpen = this.getMenuStatus();
+  }
+
+  public getMenuStatus() {
+    return this._menuService.getMenuStatus();
+  }
+
+  public closeMenu() {
+    this._menuService.closeMenu();
+    this.isMenuOpen = this._menuService.getMenuStatus();
+  }
+
+  public openMenu() {
+    this._menuService.openMenu();
+    this.isMenuOpen = this.getMenuStatus();
+  }
 }

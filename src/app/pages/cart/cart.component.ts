@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { Subject, takeUntil } from 'rxjs';
 
-import { BookService } from '../../core/services/book.service';
+import { BooksService } from '../../core/services/books.service';
 import { IBook } from '../../core/interfaces/book';
 
 
@@ -16,7 +16,7 @@ export class CartComponent implements OnInit, OnDestroy {
   private _temporaryItemsCount = 5;
   private _destroyed = new Subject<void>();
   
-  constructor(private _bookService: BookService) {}
+  constructor(private _bookService: BooksService) {}
 
   public ngOnInit() {
     this._getCartItems(1, this._temporaryItemsCount);

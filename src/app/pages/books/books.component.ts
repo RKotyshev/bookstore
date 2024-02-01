@@ -1,12 +1,12 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { PageEvent } from '@angular/material/paginator';
 
 import { Subject, takeUntil } from 'rxjs';
 
-import { BookService } from '../../core/services/book.service';
-import { PAGE_SIZE_OPTIONS } from '../../core/tokens/paginator.token';
+import { BooksService } from '../../core/services/books.service';
 import { IBook, IBookResponse } from '../../core/interfaces/book';
+import { PageSizeOptions } from '../../utils/constants/paginator';
 
 
 @Component({
@@ -19,10 +19,10 @@ export class BooksComponent implements OnInit, OnDestroy {
   public pageIndexStart = 0;
   public pageSizeStart = 5;
   public totalBooks!: number;
-  public pageSize = inject(PAGE_SIZE_OPTIONS);
+  public pageSize = PageSizeOptions;
   private _destroyed = new Subject<void>;
 
-  constructor(private _bookService: BookService) {}
+  constructor(private _bookService: BooksService) {}
 
   public ngOnInit(): void {
     this._getBooks(this.pageIndexStart, this.pageSizeStart);

@@ -24,4 +24,4 @@ import { CartListComponent } from './cart-list/cart-list.component';
     CartComponent,
   ],
 })
-export class CartPageModule { }
+export class CartModule { }

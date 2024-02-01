@@ -18,10 +18,10 @@ import { AuthFormComponent } from './auth-form/auth-form.component';
   ],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     MatCardModule,
     MatCardModule,
     MatFormFieldModule,
-    ReactiveFormsModule,
     MatInputModule,
     MatButtonModule,
   ],
@@ -29,4 +29,4 @@ import { AuthFormComponent } from './auth-form/auth-form.component';
     AuthComponent,
   ],
 })
-export class AuthPageModule { }
+export class AuthModule { }

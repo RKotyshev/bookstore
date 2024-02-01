@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { IAuthor } from '../../../core/interfaces/author';
+import { IAuthor } from '../interfaces/author';
 
 
 @Pipe({

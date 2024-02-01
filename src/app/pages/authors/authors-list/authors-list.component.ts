@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 
 import { IAuthor } from '../../../core/interfaces/author';
-// import { FullnamePipe } from '../../../shared/shared-pipes/fullname/fullname.pipe';
 
 
 @Component({

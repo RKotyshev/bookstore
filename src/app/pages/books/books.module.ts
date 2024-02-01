@@ -22,4 +22,4 @@ import { BooksListComponent } from './books-list/books-list.component';
   ],
   exports: [BooksComponent],
 })
-export class BooksPageModule { }
+export class BooksModule { }
