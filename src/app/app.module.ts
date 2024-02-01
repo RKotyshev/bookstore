@@ -18,7 +18,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
-import { PreventScrollDirective } from './core/directives/prevent-scroll.directive';
 
 
 @NgModule({
@@ -26,7 +25,6 @@ import { PreventScrollDirective } from './core/directives/prevent-scroll.directi
     AppComponent,
     FooterComponent,
     HeaderComponent,
-    PreventScrollDirective,
   ],
   imports: [
     BrowserModule,

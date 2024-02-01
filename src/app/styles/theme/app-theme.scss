@@ -67,10 +67,10 @@ $accent-palette: (
     )
 );
 
-$my-primary: mat.define-palette($primary-palette, 600);
-$my-accent: mat.define-palette($accent-palette, 400);
+$app-primary: mat.define-palette($primary-palette, 600);
+$app-accent: mat.define-palette($accent-palette, 400);
 
-$my-custom-typography-config: mat.define-typography-config(
+$app-custom-typography-config: mat.define-typography-config(
   $headline-1: mat.define-typography-level(112px, 112px, 300, $letter-spacing: -0.05em),
   $headline-2: mat.define-typography-level(56px, 56px, 400, $letter-spacing: -0.02em),
   $headline-3: mat.define-typography-level(45px, 48px, 400, $letter-spacing: -0.005em),
@@ -86,11 +86,11 @@ $my-custom-typography-config: mat.define-typography-config(
   $overline: mat.define-typography-level(10px, 13px, 400)
 );
 
-$my-theme: mat.define-light-theme((
+$app-theme: mat.define-light-theme((
  color: (
-   primary: $my-primary,
-   accent: $my-accent,
+   primary: $app-primary,
+   accent: $app-accent,
  ),
- typography: $my-custom-typography-config,
+ typography: $app-custom-typography-config,
  density: 0,
 ));

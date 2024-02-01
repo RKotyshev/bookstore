@@ -8,10 +8,10 @@
 
 @include mat.core();
 
-@include mat.all-component-themes($my-theme);
-@include header.theme($my-theme);
-@include footer.theme($my-theme);
-@include novelties.theme($my-theme);
+@include mat.all-component-themes($app-theme);
+@include header.theme($app-theme);
+@include footer.theme($app-theme);
+@include novelties.theme($app-theme);
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
