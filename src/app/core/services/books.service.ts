@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 
 import { Observable, map } from 'rxjs';
 
-import { IBook, IBookResponse } from '../interfaces/book';
+import { IBook } from '../interfaces/book';
+import { IResponse } from '../interfaces/response';
 
 
 @Injectable({
@@ -14,8 +15,8 @@ export class BooksService {
 
   constructor(private _http: HttpClient) { }
 
-  public getBooksData(): Observable<IBookResponse> {
-    return this._http.get<IBookResponse>(this._booksUrl);
+  public getBooksData(): Observable<IResponse<IBook>> {
+    return this._http.get<IResponse<IBook>>(this._booksUrl);
   }
 
   public getPaginatedBooks(pageIndex: number, pageSize: number): Observable<IBook[]> {
@@ -25,7 +26,7 @@ export class BooksService {
       page_size: pageSize,
     };
 
-    return this._http.get<IBookResponse>(this._booksUrl, { params })
-      .pipe(map((response: IBookResponse) => response.result));
+    return this._http.get<IResponse<IBook>>(this._booksUrl, { params })
+      .pipe(map((response: IResponse<IBook>) => response.result));
   }
 }

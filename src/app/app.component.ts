@@ -14,9 +14,9 @@ export class AppComponent {
   public isMenuOpen: boolean = false;
   @ViewChild(HeaderComponent) public headerComponent!: HeaderComponent;
 
-  constructor(private _menuService: MobileMenuService) {}
+  constructor(private _menuService: MobileMenuService) { }
 
-  public closeMenu() {
+  public closeMenu(): void {
     this._menuService.closeMenu();
     this.isMenuOpen = this._menuService.getMenuStatus();
     this.headerComponent.closeMenu();

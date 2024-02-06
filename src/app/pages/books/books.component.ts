@@ -5,7 +5,8 @@ import { PageEvent } from '@angular/material/paginator';
 import { Subject, takeUntil } from 'rxjs';
 
 import { BooksService } from '../../core/services/books.service';
-import { IBook, IBookResponse } from '../../core/interfaces/book';
+import { IBook } from '../../core/interfaces/book';
+import { IResponse } from '../../core/interfaces/response';
 import { PageSizeOptions } from '../../utils/constants/paginator';
 
 
@@ -22,7 +23,7 @@ export class BooksComponent implements OnInit, OnDestroy {
   public pageSize = PageSizeOptions;
   private _destroyed = new Subject<void>;
 
-  constructor(private _bookService: BooksService) {}
+  constructor(private _bookService: BooksService) { }
 
   public ngOnInit(): void {
     this._getBooks(this.pageIndexStart, this.pageSizeStart);
@@ -33,7 +34,7 @@ export class BooksComponent implements OnInit, OnDestroy {
     this._getBooks(event.pageIndex, event.pageSize);
   }
 
-  public ngOnDestroy():void {
+  public ngOnDestroy(): void {
     this._destroyed.next();
     this._destroyed.complete();
   }
@@ -47,6 +48,6 @@ export class BooksComponent implements OnInit, OnDestroy {
   private _getBooksCount(): void {
     this._bookService.getBooksData()
       .pipe(takeUntil(this._destroyed))
-      .subscribe((response: IBookResponse) => this.totalBooks = response.total_items);
+      .subscribe((response: IResponse<IBook>) => this.totalBooks = response.total_items);
   }
 }

@@ -3,19 +3,21 @@
 
 
 mat-toolbar {
-    min-width: 320px;
-    height: auto;
-    padding: 20px;
-  }
-  
+  min-width: 320px;
+  height: auto;
+  padding: 20px;
+}
+
 .container {
   @include container;
-    display: flex;
-    justify-content: space-around;
-  }
-  
-mat-list-item, mat-nav-list a {
+  display: flex;
+  justify-content: space-around;
+}
+
+mat-list-item,
+mat-nav-list a {
   margin-bottom: -15px;
+
   &:nth-last-child(1) {
     margin-bottom: 0;
   }

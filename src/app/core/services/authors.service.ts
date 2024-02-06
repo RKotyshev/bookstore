@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 
 import { Observable, map } from 'rxjs';
 
-import { IAuthor, IAuthorResponse } from '../interfaces/author';
+import { IAuthor } from '../interfaces/author';
+import { IResponse } from '../interfaces/response';
 
 
 @Injectable({
@@ -14,19 +15,19 @@ export class AuthorsService {
 
   constructor(private _httpClient: HttpClient) { }
 
-  public getAuthorsData():Observable<IAuthorResponse> {
-    return this._httpClient.get<IAuthorResponse>(this._authorsUrl);
+  public getAuthorsData(): Observable<IResponse<IAuthor>> {
+    return this._httpClient.get<IResponse<IAuthor>>(this._authorsUrl);
   }
 
-  public getPaginatedAuthors(pageIndex: number, pageSize: number):Observable<IAuthor[]> {
+  public getPaginatedAuthors(pageIndex: number, pageSize: number): Observable<IAuthor[]> {
     const pageNumber: number = pageIndex + 1;
     const params = {
       page: pageNumber,
       page_size: pageSize,
     };
 
-    return this._httpClient.get<IAuthorResponse>(this._authorsUrl, { params })
-      .pipe(map((response: IAuthorResponse) => response.result));
+    return this._httpClient.get<IResponse<IAuthor>>(this._authorsUrl, { params })
+      .pipe(map((response: IResponse<IAuthor>) => response.result));
   }
-  
+
 }

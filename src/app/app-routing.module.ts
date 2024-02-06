@@ -14,7 +14,7 @@ const routes: Routes = [
   { path: 'auth', component: AuthComponent },
   { path: 'cart', component: CartComponent },
   { path: '', component: MainPageComponent, pathMatch: 'full' },
-  
+
 ];
 
 @NgModule({

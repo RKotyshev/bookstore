@@ -24,6 +24,7 @@ mat-toolbar.header {
 
 .navigation-toggle {
   align-self: center;
+
   @media(min-width: $mobile-width-horizontal) {
     display: none;
   }
@@ -31,6 +32,7 @@ mat-toolbar.header {
 
 .user-navigation {
   display: none;
+
   @media(min-width: $mobile-width-horizontal) {
     display: flex;
     align-items: center;
@@ -39,6 +41,7 @@ mat-toolbar.header {
 
 .site-list {
   display: none;
+
   @media(min-width: $mobile-width-horizontal) {
     display: flex;
   }
@@ -60,6 +63,7 @@ mat-toolbar.header {
   left: 0;
   width: 320px;
   margin: 0 auto;
+
   @media(min-width: $mobile-width-horizontal) {
     display: none;
   }

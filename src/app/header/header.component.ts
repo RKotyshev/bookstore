@@ -8,25 +8,25 @@ import { MobileMenuService } from '../core/services/mobile-menu.service';
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
-export class HeaderComponent implements OnInit{
+export class HeaderComponent implements OnInit {
   public isMenuOpen!: boolean;
 
-  constructor(private _menuService: MobileMenuService) {}
+  constructor(private _menuService: MobileMenuService) { }
 
   public ngOnInit(): void {
     this.isMenuOpen = this.getMenuStatus();
   }
 
-  public getMenuStatus() {
+  public getMenuStatus(): boolean {
     return this._menuService.getMenuStatus();
   }
 
-  public closeMenu() {
+  public closeMenu(): void {
     this._menuService.closeMenu();
     this.isMenuOpen = this._menuService.getMenuStatus();
   }
 
-  public openMenu() {
+  public openMenu(): void {
     this._menuService.openMenu();
     this.isMenuOpen = this.getMenuStatus();
   }

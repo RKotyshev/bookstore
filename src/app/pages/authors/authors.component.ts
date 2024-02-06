@@ -5,7 +5,8 @@ import { PageEvent } from '@angular/material/paginator';
 import { Subject, takeUntil } from 'rxjs';
 
 import { AuthorsService } from '../../core/services/authors.service';
-import { IAuthor, IAuthorResponse } from '../../core/interfaces/author';
+import { IAuthor } from '../../core/interfaces/author';
+import { IResponse } from '../../core/interfaces/response';
 import { PageSizeOptions } from '../../utils/constants/paginator';
 
 
@@ -22,7 +23,7 @@ export class AuthorsComponent implements OnInit, OnDestroy {
   public pageSize = PageSizeOptions;
   private _destroyed = new Subject<void>();
 
-  constructor(private _authorService: AuthorsService) {}
+  constructor(private _authorService: AuthorsService) { }
 
   public ngOnInit(): void {
     this._getAuthorsCount();
@@ -34,17 +35,17 @@ export class AuthorsComponent implements OnInit, OnDestroy {
     this._destroyed.complete();
   }
 
-  public getPaginatorData(event: PageEvent):void {
+  public getPaginatorData(event: PageEvent): void {
     this._getAuthors(event.pageIndex, event.pageSize);
   }
 
-  private _getAuthorsCount() {
+  private _getAuthorsCount(): void {
     this._authorService.getAuthorsData()
       .pipe(takeUntil(this._destroyed))
-      .subscribe((response: IAuthorResponse) => this.totalAuthors = response.total_items);
+      .subscribe((response: IResponse<IAuthor>) => this.totalAuthors = response.total_items);
   }
 
-  private _getAuthors(pageIndex: number, pageSize: number):void {
+  private _getAuthors(pageIndex: number, pageSize: number): void {
     this._authorService.getPaginatedAuthors(pageIndex, pageSize)
       .pipe(takeUntil(this._destroyed))
       .subscribe((authors: IAuthor[]) => this.currentAuthorsList = authors);

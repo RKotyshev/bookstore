@@ -6,7 +6,8 @@ import { Subject, takeUntil, map } from 'rxjs';
 
 import { AppBreakpoints, DisplayNameMap } from '../../../utils/constants/layout';
 import { BooksService } from '../../../core/services/books.service';
-import { IBook, IBookResponse } from '../../../core/interfaces/book';
+import { IBook } from '../../../core/interfaces/book';
+import { IResponse } from '../../../core/interfaces/response';
 
 
 @Component({
@@ -29,7 +30,7 @@ export class NoveltiesComponent implements OnInit, OnDestroy {
   constructor(
     public breakpointObserver: BreakpointObserver,
     public booksService: BooksService,
-  ) {}
+  ) { }
 
   public ngOnInit(): void {
     this._getBooks();
@@ -40,9 +41,9 @@ export class NoveltiesComponent implements OnInit, OnDestroy {
     this._destroyed.complete();
   }
 
-  private _getBooks() {
+  private _getBooks(): void {
     const books$ = this.booksService.getBooksData()
-      .pipe(map((response: IBookResponse) => response.result));
+      .pipe(map((response: IResponse<IBook>) => response.result));
 
     books$.pipe(
       takeUntil(this._destroyed),
@@ -52,7 +53,7 @@ export class NoveltiesComponent implements OnInit, OnDestroy {
           this._booksList = books;
           this.noveltiesList = this._booksList
             .slice(0, (this._noveltiesCountMap.get(this.currentScreenSize)));
-  
+
           this.breakpointObserver.observe([
             AppBreakpoints.MVertical,
             AppBreakpoints.MHorizontal,

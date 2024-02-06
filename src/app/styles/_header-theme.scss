@@ -5,13 +5,15 @@
 
 
 @mixin color($theme) {
-    .mobile-list, .mobile-wrapper {
-        background: mat.get-theme-color($theme, accent);
-    }
+
+  .mobile-list,
+  .mobile-wrapper {
+    background: mat.get-theme-color($theme, accent);
+  }
 }
 
 @mixin theme($theme) {
-    @if mat.theme-has($theme, color) {
-        @include color($theme);
-    }
+  @if mat.theme-has($theme, color) {
+    @include color($theme);
+  }
 }

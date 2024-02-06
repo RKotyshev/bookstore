@@ -1,22 +1,20 @@
 <mat-card class="novelties" color="accent">
-    <mat-card-header>
-        <mat-card-title>Novelties of literature</mat-card-title>
-    </mat-card-header>
-    <mat-card-content class="books">
-
-        <mat-card class="book-card" *ngFor="let novelty of noveltiesList">
-            <mat-card-header>
-                <mat-card-title>{{ novelty.title }}</mat-card-title>
-                <mat-card-subtitle>{{ novelty.price | currency }}</mat-card-subtitle>
-            </mat-card-header>
-            <img  mat-card-image src="../../../../assets/novelties-1.webp" alt="{{ novelty.title }} cover image" width="140px">
-            <mat-card-content>
-                <p>
-                    {{ novelty.description | sliceSentence:100 }}
-                </p>
-            </mat-card-content>
-            <button class="favorite-button" mat-stroked-button color="primary">TO FAVORITES</button>
-            <button class="buy-button" mat-stroked-button color="primary">BUY</button>
-        </mat-card>
-    </mat-card-content>
+  <mat-card-header>
+    <mat-card-title>Novelties of literature</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="books">
+    <mat-card class="book-card" *ngFor="let novelty of noveltiesList">
+      <mat-card-header>
+        <mat-card-title>{{ novelty.title }}</mat-card-title>
+        <mat-card-subtitle>{{ novelty.price | currency }}</mat-card-subtitle>
+      </mat-card-header>
+      <img mat-card-image src="../../../../assets/novelties-1.webp" alt="{{ novelty.title }} cover image"
+        width="140px" />
+      <mat-card-content>
+        <p>{{ novelty.description | sliceSentence : 100 }}</p>
+      </mat-card-content>
+      <button class="favorite-button" mat-stroked-button color="primary">TO FAVORITES</button>
+      <button class="buy-button" mat-stroked-button color="primary">BUY</button>
+    </mat-card>
+  </mat-card-content>
 </mat-card>

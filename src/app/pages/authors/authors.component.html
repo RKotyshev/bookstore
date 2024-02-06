@@ -1,8 +1,4 @@
 <app-authors-list [authorsList]="currentAuthorsList"></app-authors-list>
-<mat-paginator 
-            [length]="totalAuthors" 
-            (page)="getPaginatorData($event)" 
-            [pageSize]="pageStartSize" 
-            [pageSizeOptions]="pageSize">
-        </mat-paginator>
-
+<mat-paginator [length]="totalAuthors" (page)="getPaginatorData($event)" [pageSize]="pageStartSize"
+  [pageSizeOptions]="pageSize">
+</mat-paginator>

@@ -5,19 +5,19 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class MobileMenuService {
-  public isMenuOpen: boolean = false;
+  private _isMenuOpen: boolean = false;
 
   constructor() { }
 
-  public openMenu() {
-    this.isMenuOpen = true;
+  public openMenu(): void {
+    this._isMenuOpen = true;
   }
 
-  public closeMenu() {
-    this.isMenuOpen = false;
+  public closeMenu(): void {
+    this._isMenuOpen = false;
   }
 
-  public getMenuStatus() {
-    return this.isMenuOpen;
+  public getMenuStatus(): boolean {
+    return this._isMenuOpen;
   }
 }
