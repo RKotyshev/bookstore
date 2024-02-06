@@ -25,6 +25,13 @@
             "default": "array"
           }
         ],
+        "@typescript-eslint/type-annotation-spacing": [
+          "error",
+          {
+            "before": false,
+            "after": true
+          }
+        ],
         "@typescript-eslint/await-thenable": "error",
         "@typescript-eslint/ban-types": [
           "error",
