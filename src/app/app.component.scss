@@ -1,0 +1,15 @@
+@import './styles/mixins';
+@import './styles/variables';
+
+
+.container {
+  @include container;
+}
+
+mat-nav-list {
+  width: 250px;
+}
+
+app-footer {
+  margin-top: auto;
+}

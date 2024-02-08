@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
-import { BookService } from './core/book.service';
-import { IBook } from './core/book';
+import { Component, ViewChild } from '@angular/core';
+
+import { HeaderComponent } from './header/header.component';
+import { MobileMenuService } from './core/services/mobile-menu.service';
+
 
 @Component({
   selector: 'app-root',
@@ -9,19 +11,15 @@ import { IBook } from './core/book';
 })
 export class AppComponent {
   public title = 'bookstore-initial';
-  public books!: IBook[];
+  public isMenuOpen: boolean = false;
+  @ViewChild(HeaderComponent) public headerComponent!: HeaderComponent;
 
-  constructor(private _bookService: BookService) {}
+  constructor(private _menuService: MobileMenuService) { }
 
-  public ngOnInit(): void {
-    this.getBooks();
+  public closeMenu(): void {
+    this._menuService.closeMenu();
+    this.isMenuOpen = this._menuService.getMenuStatus();
+    this.headerComponent.closeMenu();
   }
 
-  public getBooks(): void {
-    this._bookService.getBooks()
-      .subscribe((response: {[s: string]: unknown, result: IBook[]}) => {
-        this.books = response.result;
-        console.log(this.books);
-      });
-  }
 }

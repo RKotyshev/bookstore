@@ -1,1 +1,30 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+@use 'sass:map';
+
+@use './app/styles/header-theme' as header;
+@use './app/styles/footer-theme' as footer;
+@use './app/styles/novelties-theme' as novelties;
+@import './app/styles/theme/app-theme.scss';
+
+@include mat.core();
+
+@include mat.all-component-themes($app-theme);
+@include header.theme($app-theme);
+@include footer.theme($app-theme);
+@include novelties.theme($app-theme);
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}

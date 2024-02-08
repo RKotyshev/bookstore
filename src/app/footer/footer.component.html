@@ -1,0 +1,39 @@
+<mat-toolbar class="footer" color="accent">
+  <div class="container">
+    <mat-list class="contacts">
+      <h4>Contacts</h4>
+      <mat-list-item>
+        <span matListItemTitle>Telephone</span>
+        <span matListItemLine>
+          <a href="tel:+70010010101">+7(001)001-01-01</a>
+        </span>
+      </mat-list-item>
+      <mat-list-item>
+        <span matListItemTitle>Address</span>
+        <span matListItemLine>Rostov-on-Don,</span>
+        <span matListItemLine> B. Sadovoya str.,1</span>
+      </mat-list-item>
+      <mat-list-item>
+        <span matListItemTitle>Email</span>
+        <span matListItemLine>
+          <a href="mailto:bookstore@gmail.com">bookstore.gmail.com</a>
+        </span>
+      </mat-list-item>
+    </mat-list>
+
+    <mat-nav-list class="social">
+      <h4>Social</h4>
+      <a mat-list-item href="#">VKontakte</a>
+      <a mat-list-item href="#">Twitter (X)</a>
+      <a mat-list-item href="#">Instagram</a>
+    </mat-nav-list>
+
+    <mat-nav-list class="navigation">
+      <h4>Navigation</h4>
+      <a mat-list-item routerLink="/books">Books</a>
+      <a mat-list-item routerLink="/authors">Authors</a>
+      <a mat-list-item routerLink="/auth">Authorization</a>
+      <a mat-list-item routerLink="/cart">Cart</a>
+    </mat-nav-list>
+  </div>
+</mat-toolbar>
