@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 
-import { Subject, takeUntil, map } from 'rxjs';
+import { Subject, takeUntil, map, switchMap } from 'rxjs';
 
 import { AppBreakpoints, DisplayNameMap } from '../../../utils/constants/layout';
 import { BooksService } from '../../../core/services/books.service';
@@ -46,32 +46,28 @@ export class NoveltiesComponent implements OnInit, OnDestroy {
       .pipe(map((response: IResponse<IBook>) => response.result));
 
     books$.pipe(
+      switchMap((books: IBook[]) => {
+        this._booksList = books;
+        this.noveltiesList = this._booksList
+          .slice(0, (this._noveltiesCountMap.get(this.currentScreenSize)));
+
+        return this.breakpointObserver.observe([
+          AppBreakpoints.MVertical,
+          AppBreakpoints.MHorizontal,
+          AppBreakpoints.Tablet,
+          AppBreakpoints.Desktop,
+        ]);
+      }),
       takeUntil(this._destroyed),
-    )
-      .subscribe(
-        (books: IBook[]) => {
-          this._booksList = books;
+    ).subscribe((result: BreakpointState) => {
+      for (const query of Object.keys(result.breakpoints)) {
+        if (result.breakpoints[query]) {
+          this.currentScreenSize = DisplayNameMap.get(query) ?? 'unknown';
           this.noveltiesList = this._booksList
             .slice(0, (this._noveltiesCountMap.get(this.currentScreenSize)));
-
-          this.breakpointObserver.observe([
-            AppBreakpoints.MVertical,
-            AppBreakpoints.MHorizontal,
-            AppBreakpoints.Tablet,
-            AppBreakpoints.Desktop,
-          ])
-            .pipe(takeUntil(this._destroyed))
-            .subscribe((result: BreakpointState) => {
-              for (const query of Object.keys(result.breakpoints)) {
-                if (result.breakpoints[query]) {
-                  this.currentScreenSize = DisplayNameMap.get(query) ?? 'unknown';
-                  this.noveltiesList = this._booksList
-                    .slice(0, (this._noveltiesCountMap.get(this.currentScreenSize)));
-                }
-              }
-            });
-        },
-      );
+        }
+      }
+    });
   }
 
 }
