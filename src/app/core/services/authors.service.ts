@@ -11,7 +11,7 @@ import { IResponse } from '../interfaces/response';
   providedIn: 'root',
 })
 export class AuthorsService {
-  private _authorsUrl = 'api/authors';
+  private _authorsUrl = 'api/authors/';
 
   constructor(private _httpClient: HttpClient) { }
 
@@ -30,4 +30,7 @@ export class AuthorsService {
       .pipe(map((response: IResponse<IAuthor>) => response.result));
   }
 
+  public getAuthor(id: number): Observable<IAuthor> {
+    return this._httpClient.get<IAuthor>(this._authorsUrl + id);
+  }
 }

@@ -1,0 +1,39 @@
+<mat-card *ngIf="book">
+  <mat-card-header>
+    <mat-card-title>{{ book.title }}</mat-card-title>
+    <img src="../../../../assets/novelties-1.webp" alt="" width="300px">
+  </mat-card-header>
+  <mat-card-content>
+
+    <section>
+
+      <ng-container *ngIf="authors.length">
+        <h4>Authors</h4>
+        <div class="authors">
+          <div *ngFor="let author of authors" class="author">
+            <div mat-card-avatar class="author-avatar"></div>
+            <p>{{ author | fullname }}</p>
+          </div>
+        </div>
+      </ng-container>
+
+      <div class="genres">
+        <p>Genres: {{ 'genres' }}</p>
+      </div>
+
+      <div class="description">
+        <h4>Description</h4>
+        <p>{{ book.description }}</p>
+        <span>Writing date: {{ book.writing_date | date:'mediumDate' }}</span><br>
+        <span>Release date: {{ book.release_date | date:'mediumDate' }}</span><br><br>
+        <span>In stock: {{ book.in_stock }}</span><br>
+        <span>Price: {{ book.price | currency }}</span>
+      </div>
+    </section>
+
+    <section class="actions">
+      <button mat-stroked-button color="primary">TO FAVORITES</button>
+      <button mat-stroked-button color="primary">BUY</button>
+    </section>
+  </mat-card-content>
+</mat-card>

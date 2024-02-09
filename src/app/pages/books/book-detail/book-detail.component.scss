@@ -1,0 +1,27 @@
+mat-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+mat-card-header {
+  display: flex;
+  flex-direction: column;
+}
+
+.authors {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+}
+
+.author-avatar {
+  background-image: url('../../../../assets/authors/auth-doyle.jpg');
+  background-size: cover;
+}
