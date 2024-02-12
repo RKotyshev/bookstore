@@ -15,15 +15,7 @@ export class GenresService {
   constructor(private _httpClient: HttpClient) { }
 
   public getGenre(id: number): Observable<IGenre> {
-    return this._httpClient.get<IGenre>(this._genresUrl + id);
+    return this._httpClient.get<IGenre>(`${this._genresUrl}${id}/`);
   }
 
-  // public getGenre(indexes: number[]): Observable<IGenre>[] {
-  //   const genresReq: Observable<IGenre>[] = [];
-  //   for (const id of indexes) {
-  //     genresReq.push(this._httpClient.get<IGenre>(this._genresUrl + id));
-  //   }
-
-  //   return genresReq;
-  // }
 }

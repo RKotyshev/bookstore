@@ -31,15 +31,7 @@ export class AuthorsService {
   }
 
   public getAuthor(id: number): Observable<IAuthor> {
-    return this._httpClient.get<IAuthor>(this._authorsUrl + id);
+    return this._httpClient.get<IAuthor>(`${this._authorsUrl}${id}/`);
   }
 
-  // public getAuthor(indexes: number[]): Observable<IAuthor>[] {
-  //   const genresReq: Observable<IAuthor>[] = [];
-  //   for (const id of indexes) {
-  //     genresReq.push(this._httpClient.get<IAuthor>(this._authorsUrl + id));
-  //   }
-
-  //   return genresReq;
-  // }
 }
