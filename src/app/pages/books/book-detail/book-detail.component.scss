@@ -1,12 +1,27 @@
+@import '../../../styles/variables.scss';
+
 mat-card {
   display: flex;
-  flex-direction: row;
   align-items: center;
+  margin-bottom: 20px;
+
+  @media(min-width: $mobile-width-horizontal) {
+    flex-direction: row;
+  }
+
+  h4 {
+    font-weight: bold;
+  }
 }
 
 mat-card-header {
   display: flex;
   flex-direction: column;
+  padding: 10px;
+}
+
+mat-card-content {
+  padding: 10px;
 }
 
 .authors {
@@ -24,4 +39,14 @@ mat-card-header {
 .author-avatar {
   background-image: url('../../../../assets/authors/auth-doyle.jpg');
   background-size: cover;
+}
+
+.description {
+  margin-bottom: 20px;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  column-gap: 20px;
 }

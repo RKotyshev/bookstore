@@ -5,17 +5,15 @@
   <mat-card-content class="books">
     <mat-card class="book-card" *ngFor="let novelty of noveltiesList">
       <mat-card-header>
-        <a [routerLink]="['/book', novelty.id]">
+        <a [routerLink]="['/books', novelty.id]">
           <mat-card-title>{{ novelty.title }}</mat-card-title>
           <mat-card-subtitle>{{ novelty.price | currency }}</mat-card-subtitle>
         </a>
       </mat-card-header>
-      <a [routerLink]="['/book', novelty.id]">
-        <img mat-card-image src="../../../../assets/novelties-1.webp" alt="{{ novelty.title }} cover image"
+        <img mat-card-image [routerLink]="['/books', novelty.id]" src="../../../../assets/novelties-1.webp" alt="{{ novelty.title }} cover image"
           width="140px" />
-      </a>
       <mat-card-content>
-        <a [routerLink]="['/book', novelty.id]">
+        <a [routerLink]="['/books', novelty.id]">
           <p>{{ novelty.description | sliceSentence : 100 }}</p>
         </a>
       </mat-card-content>

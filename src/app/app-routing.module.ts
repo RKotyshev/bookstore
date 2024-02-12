@@ -11,7 +11,7 @@ import { BookDetailComponent } from './pages/books/book-detail/book-detail.compo
 
 const routes: Routes = [
   { path: 'books', component: BooksComponent },
-  { path: 'book/:id', component: BookDetailComponent },
+  { path: 'books/:id', component: BookDetailComponent },
   { path: 'authors', component: AuthorsComponent },
   { path: 'auth', component: AuthComponent },
   { path: 'cart', component: CartComponent },

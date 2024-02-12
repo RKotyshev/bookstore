@@ -33,6 +33,7 @@
     margin-right: 10px;
     margin-bottom: 20px;
     margin-left: auto;
+    cursor: pointer;
 
     @media(min-width: $mobile-width-horizontal) {
       margin: 0;
@@ -45,6 +46,11 @@
     @media(min-width: $desktop-width) {
       width: 140px;
     }
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
   }
 
   mat-card-content {
