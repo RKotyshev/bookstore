@@ -1,7 +1,9 @@
 <mat-card *ngIf="book">
   <mat-card-header>
-    <mat-card-title><h2>{{ book.title }}</h2></mat-card-title>
-    <img src="../../../../assets/novelties-1.webp" alt="" width="300px">
+    <mat-card-title>
+      <h2>{{ book.title }}</h2>
+    </mat-card-title>
+    <img src="../../../../assets/novelties-1.webp" alt="{{ book.title }} cover image">
   </mat-card-header>
   <mat-card-content>
 
@@ -19,11 +21,11 @@
 
       <ng-container *ngIf="genres.length">
         <h4>Genres</h4>
-          <ul class="genres">
-            <li *ngFor="let genre of genres" class="genre">
-              {{ genre.title }}
-            </li>
-          </ul>
+        <ul class="genres">
+          <li *ngFor="let genre of genres" class="genre">
+            {{ genre.title }}
+          </li>
+        </ul>
       </ng-container>
 
       <div class="description">
