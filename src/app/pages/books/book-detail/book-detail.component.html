@@ -1,4 +1,4 @@
-<mat-card *ngIf="book">
+<mat-card *ngIf="book$ | async as book">
   <mat-card-header>
     <mat-card-title>
       <h2>{{ book.title }}</h2>
@@ -9,23 +9,27 @@
 
     <section>
 
-      <ng-container *ngIf="authors.length">
-        <h4>Authors</h4>
-        <div class="authors">
-          <div *ngFor="let author of authors" class="author">
-            <div mat-card-avatar class="author-avatar"></div>
-            <p>{{ author | fullname }}</p>
+      <ng-container *ngIf="authors$ | async as authors">
+        <ng-container *ngIf="authors.length">
+          <h4>Authors</h4>
+          <div class="authors">
+            <div *ngFor="let author of authors" class="author">
+              <div mat-card-avatar class="author-avatar"></div>
+              <p>{{ author | fullname }}</p>
+            </div>
           </div>
-        </div>
+        </ng-container>
       </ng-container>
 
-      <ng-container *ngIf="genres.length">
-        <h4>Genres</h4>
-        <ul class="genres">
-          <li *ngFor="let genre of genres" class="genre">
-            {{ genre.title }}
-          </li>
-        </ul>
+      <ng-container *ngIf="genres$ | async as genres">
+        <ng-container *ngIf="genres.length">
+          <h4>Genres</h4>
+          <ul class="genres">
+            <li *ngFor="let genre of genres" class="genre">
+              {{ genre.title }}
+            </li>
+          </ul>
+        </ng-container>
       </ng-container>
 
       <div class="description">

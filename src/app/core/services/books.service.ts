@@ -11,12 +11,12 @@ import { IResponse } from '../interfaces/response';
   providedIn: 'root',
 })
 export class BooksService {
-  private _booksUrl = 'api/books/';
+  private _booksUrl = 'api/books';
 
   constructor(private _http: HttpClient) { }
 
   public getBooksData(): Observable<IResponse<IBook>> {
-    return this._http.get<IResponse<IBook>>(this._booksUrl);
+    return this._http.get<IResponse<IBook>>(`${this._booksUrl}/`);
   }
 
   public getPaginatedBooks(pageIndex: number, pageSize: number): Observable<IBook[]> {
@@ -26,11 +26,11 @@ export class BooksService {
       page_size: pageSize,
     };
 
-    return this._http.get<IResponse<IBook>>(this._booksUrl, { params })
+    return this._http.get<IResponse<IBook>>(`${this._booksUrl}/`, { params })
       .pipe(map((response: IResponse<IBook>) => response.result));
   }
 
   public getBook(id: string): Observable<IBook> {
-    return this._http.get<IBook>(`${this._booksUrl}${id}/`);
+    return this._http.get<IBook>(`${this._booksUrl}/${id}/`);
   }
 }
