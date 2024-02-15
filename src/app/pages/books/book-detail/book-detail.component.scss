@@ -1,0 +1,66 @@
+@import '../../../styles/variables.scss';
+
+
+mat-card {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+
+  @media(min-width: $mobile-width-horizontal) {
+    flex-direction: row;
+  }
+
+  h4 {
+    font-weight: bold;
+  }
+}
+
+mat-card-header {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+
+  img {
+    width: 250px;
+
+    @media(min-width: $mobile-width-horizontal) {
+      width: 300px;
+    }
+  }
+}
+
+mat-card-content {
+  padding: 10px;
+}
+
+.authors {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+}
+
+.author-avatar {
+  background-image: url('../../../../assets/authors/auth-doyle.jpg');
+  background-size: cover;
+}
+
+.description {
+  margin-bottom: 20px;
+
+  span:nth-of-type(2) {
+    display: inline-block;
+    margin-bottom: 15px;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  column-gap: 20px;
+}

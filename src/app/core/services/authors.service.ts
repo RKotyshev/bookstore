@@ -16,7 +16,7 @@ export class AuthorsService {
   constructor(private _httpClient: HttpClient) { }
 
   public getAuthorsData(): Observable<IResponse<IAuthor>> {
-    return this._httpClient.get<IResponse<IAuthor>>(this._authorsUrl);
+    return this._httpClient.get<IResponse<IAuthor>>(`${this._authorsUrl}/`);
   }
 
   public getPaginatedAuthors(pageIndex: number, pageSize: number): Observable<IAuthor[]> {
@@ -26,8 +26,12 @@ export class AuthorsService {
       page_size: pageSize,
     };
 
-    return this._httpClient.get<IResponse<IAuthor>>(this._authorsUrl, { params })
+    return this._httpClient.get<IResponse<IAuthor>>(`${this._authorsUrl}/`, { params })
       .pipe(map((response: IResponse<IAuthor>) => response.result));
+  }
+
+  public getAuthor(id: number): Observable<IAuthor> {
+    return this._httpClient.get<IAuthor>(`${this._authorsUrl}/${id}/`);
   }
 
 }

@@ -2,12 +2,18 @@
 
 <mat-card class="book" *ngFor="let book of booksList">
   <mat-card-header>
-    <mat-card-title>{{ book.title }}</mat-card-title>
-    <mat-card-subtitle>{{ book.price | currency }}</mat-card-subtitle>
+    <mat-card-title>
+      <a [routerLink]="['/books', book.id]">{{ book.title }}</a>
+    </mat-card-title>
+    <mat-card-subtitle>
+      <a [routerLink]="['/books', book.id]">{{ book.price | currency }}</a>
+    </mat-card-subtitle>
   </mat-card-header>
-  <img mat-card-image src="../../../assets/novelties-1.webp" alt="Book cover picture">
+  <img mat-card-image [routerLink]="['/books', book.id]" src="../../../assets/novelties-1.webp" [attr.alt]="book.title + ' cover image'">
   <mat-card-content>
-    <p>{{ book.description }}</p>
+    <a [routerLink]="['/books', book.id]">
+      <p>{{ book.description }}</p>
+    </a>
   </mat-card-content>
   <section class="actions">
     <button class="favorite-button" mat-stroked-button color="primary">TO FAVORITES</button>
