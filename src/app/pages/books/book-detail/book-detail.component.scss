@@ -52,6 +52,11 @@ mat-card-content {
 
 .description {
   margin-bottom: 20px;
+
+  span:nth-of-type(2) {
+    display: inline-block;
+    margin-bottom: 15px;
+  }
 }
 
 .actions {

@@ -10,7 +10,7 @@
           <mat-card-subtitle>{{ novelty.price | currency }}</mat-card-subtitle>
         </a>
       </mat-card-header>
-        <img mat-card-image [routerLink]="['/books', novelty.id]" src="../../../../assets/novelties-1.webp" alt="{{ novelty.title }} cover image"
+        <img mat-card-image [routerLink]="['/books', novelty.id]" src="../../../../assets/novelties-1.webp" [attr.alt]="novelty.title + ' cover image'"
           width="140px" />
       <mat-card-content>
         <a [routerLink]="['/books', novelty.id]">

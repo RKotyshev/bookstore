@@ -9,7 +9,7 @@
       <a [routerLink]="['/books', book.id]">{{ book.price | currency }}</a>
     </mat-card-subtitle>
   </mat-card-header>
-  <img mat-card-image [routerLink]="['/books', book.id]" src="../../../assets/novelties-1.webp" alt="Book cover picture">
+  <img mat-card-image [routerLink]="['/books', book.id]" src="../../../assets/novelties-1.webp" [attr.alt]="book.title + ' cover image'">
   <mat-card-content>
     <a [routerLink]="['/books', book.id]">
       <p>{{ book.description }}</p>

@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 
-import { Observable, Subject, forkJoin, map, of, shareReplay, switchMap, takeUntil } from 'rxjs';
+import { Observable, filter, forkJoin, map, shareReplay, switchMap } from 'rxjs';
 
 import { BooksService } from '../../../core/services/books.service';
 import { AuthorsService } from '../../../core/services/authors.service';
@@ -16,78 +16,34 @@ import { IGenre } from '../../../core/interfaces/genre';
   templateUrl: './book-detail.component.html',
   styleUrl: './book-detail.component.scss',
 })
-export class BookDetailComponent implements OnInit, OnDestroy {
-  // public book!: IBook;
-  // public authors: IAuthor[] = [];
-  // public genres: IGenre[] = [];
+export class BookDetailComponent {
+  public count = 5;
   public book$: Observable<IBook> = this._route.paramMap.pipe(
     switchMap((paramMap: ParamMap) => this._booksService.getBook(paramMap.get('id')!)),
     shareReplay({ bufferSize: 1, refCount: true }),
   );
   public authors$: Observable<IAuthor[]> = this.book$.pipe(
     map((book: IBook) => book.author.map((id: number) => this._authorService.getAuthor(id))),
+    filter((authorReqs: Observable<IAuthor>[]) => authorReqs.length > 0),
     switchMap((authorReqs: Observable<IAuthor>[]) => {
-      return authorReqs.length ? forkJoin(authorReqs) : of([]);
+
+      return forkJoin(authorReqs);
     }),
   );
   public genres$: Observable<IGenre[]> = this.book$.pipe(
     map((book: IBook) => book.genres.map((id: number) => this._genreService.getGenre(id))),
+    filter((genreReqs: Observable<IGenre>[]) => genreReqs.length > 0),
     switchMap((genreReqs: Observable<IGenre>[]) => {
-      return genreReqs.length ? forkJoin(genreReqs) : of([]);
+
+      return forkJoin(genreReqs);
     }),
   );
 
-  // private _destroyed = new Subject<void>();
-  
   constructor(
     private _route: ActivatedRoute,
     private _booksService: BooksService,
     private _authorService: AuthorsService,
     private _genreService: GenresService,
   ) { }
-
-  public ngOnInit(): void {
-    // this.getBook();
-    // this.getAuthors();
-    // this.getGenres();
-  }
-
-  public ngOnDestroy(): void {
-    // this._destroyed.next();
-    // this._destroyed.complete();
-  }
-  
-  // public getBook(): void {
-  //   this.book$.pipe(
-  //     takeUntil(this._destroyed),
-  //   )
-  //     .subscribe((book: IBook) => {
-  //       this.book = book;
-  //     });
-  // }
-
-  // public getAuthors(): void {
-  //   this.book$.pipe(
-  //     map((book: IBook) => book.author.map((id: number) => this._authorService.getAuthor(id))),
-  //     switchMap((authorReqs: Observable<IAuthor>[]) => {
-  //       return authorReqs.length ? forkJoin(authorReqs) : of(null);
-  //     }),
-  //     takeUntil(this._destroyed),
-  //   ).subscribe((authors: IAuthor[] | null) => {
-  //     this.authors = authors ? authors : [];
-  //   });
-  // }
-
-  // public getGenres(): void {
-  //   this.book$.pipe(
-  //     map((book: IBook) => book.genres.map((id: number) => this._genreService.getGenre(id))),
-  //     switchMap((genreReqs: Observable<IGenre>[]) => {
-  //       return genreReqs.length ? forkJoin(genreReqs) : of(null);
-  //     }),
-  //     takeUntil(this._destroyed),
-  //   ).subscribe((genres: IGenre[] | null) => {
-  //     this.genres = genres ? genres : [];
-  //   });
-  // }
 
 }
