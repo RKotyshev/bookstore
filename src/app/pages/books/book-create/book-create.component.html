@@ -1,6 +1,8 @@
 <p>book-create works!</p>
 
 <div>{{ bookForm.value | json }}</div>
+<div>{{ newBook.writing_date }}</div>
+<div>{{ writingDate.value }}</div>
 
 <form #bookForm="ngForm" #testFormVariable name="testFormName" (ngSubmit)="onSubmit(bookForm.value)">
   <h2>Add book</h2>
@@ -21,7 +23,7 @@
     <mat-form-field>
       <mat-label>Book description</mat-label>
       <input type="text" matInput placeholder="Description" name="description" [(ngModel)]="newBook.description"
-        id="description" ngModel>
+        id="description">
     </mat-form-field>
   </div>
 
@@ -44,8 +46,8 @@
   <div>
     <mat-form-field>
       <mat-label>Writing date</mat-label>
-      <input matInput [matDatepicker]="writingPicker" name="writing_date" [(ngModel)]="newBook.writing_date"
-      id="writing_date">
+      <input  matInput [matDatepicker]="writingPicker" name="writing_date" [(ngModel)]="newBook.writing_date"
+      id="writing_date" #writingDate>
       <mat-datepicker-toggle matIconSuffix [for]="writingPicker"></mat-datepicker-toggle>
       <mat-datepicker #writingPicker></mat-datepicker>
     </mat-form-field>

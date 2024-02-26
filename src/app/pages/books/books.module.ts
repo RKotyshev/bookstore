@@ -12,7 +12,9 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+// import { MatNativeDateModule } from '@angular/material/core';
+import { MatMomentDateModule, MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import { MAT_DATE_FORMATS, DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 
 
 import { BooksComponent } from './books.component';
@@ -42,8 +44,27 @@ import { BookCreateComponent } from './book-create/book-create.component';
     MatSelectModule,
     MatIconModule,
     MatDatepickerModule,
-    MatNativeDateModule,
+    // MatNativeDateModule,
+    MatMomentDateModule,
     FullnamePipe,
+  ],
+  providers: [
+    // { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+    {
+      provide: MAT_DATE_FORMATS,
+      useValue: {
+        parse: {
+          dateInput: 'YYYY-MM-DD',
+        },
+        display: {
+          dateInput: 'LL',
+          monthYearLabel: 'MMM YYYY',
+          dateA11yLabel: 'LL',
+          monthYearA11yLabel: 'MMMM YYYY',
+        },
+      },
+    },
   ],
   exports: [BooksComponent],
 })

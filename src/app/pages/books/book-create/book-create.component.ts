@@ -8,6 +8,7 @@ import { IBook, INewBook } from '../../../core/interfaces/book';
 import { IGenre } from '../../../core/interfaces/genre';
 import { GenresService } from '../../../core/services/genres.service';
 import { BooksService } from '../../../core/services/books.service';
+import moment from 'moment';
 
 
 @Component({
@@ -47,6 +48,7 @@ export class BookCreateComponent implements AfterViewInit, OnDestroy {
     //   takeUntil(this._destroyed),
     // );
     console.log(this.form.nativeElement.elements);
+
   }
 
   public ngOnDestroy(): void {
@@ -59,6 +61,11 @@ export class BookCreateComponent implements AfterViewInit, OnDestroy {
   }
 
   public onSubmit(book: INewBook): void {
-    this._booksService.postBook(book).subscribe(console.log);
+    console.log(book);
+    this._booksService.postBook({
+      ...book,
+      writing_date: moment(book.writing_date).format('YYYY-MM-DD'),
+      release_date: moment(book.release_date).format('YYYY-MM-DD'),
+    }).subscribe(console.log);
   }
 }
