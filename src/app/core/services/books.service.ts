@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Observable, map } from 'rxjs';
+import { Observable, catchError, map, of, take } from 'rxjs';
 
-import { IBook } from '../interfaces/book';
+import { IBook, INewBook } from '../interfaces/book';
 import { IResponse } from '../interfaces/response';
 
 
@@ -32,5 +32,15 @@ export class BooksService {
 
   public getBook(id: string): Observable<IBook> {
     return this._http.get<IBook>(`${this._booksUrl}/${id}/`);
+  }
+
+  public postBook(book: INewBook): Observable<IBook> {
+    return this._http.post<IBook>(`${this._booksUrl}/`, book).pipe(
+      catchError((error) => {
+        console.log(error.error);
+        throw error;
+      }),
+      take(1),
+    );
   }
 }

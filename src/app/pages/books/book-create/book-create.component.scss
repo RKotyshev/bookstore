@@ -1,0 +1,22 @@
+@import '../../../styles/variables.scss';
+
+
+form {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+
+  div {
+    display: flex;
+    flex-direction: column;
+
+    @media(min-width: $mobile-width-horizontal) {
+      flex-direction: row;
+      column-gap: 20px;
+    }
+  }
+
+  mat-form-field {
+    width: 100%;
+  }
+}

@@ -1,0 +1,83 @@
+<p>book-create works!</p>
+
+<div>{{ bookForm.value | json }}</div>
+
+<form #bookForm="ngForm" #testFormVariable name="testFormName" (ngSubmit)="onSubmit(bookForm.value)">
+  <h2>Add book</h2>
+
+  <div>
+    <mat-form-field>
+      <mat-label>Book title</mat-label>
+      <input type="text" matInput placeholder="Title" name="title" [(ngModel)]="newBook.title" id="title"
+        #title="ngModel" required minlength="3">
+      <button mat-icon-button matSuffix>
+        <mat-icon>title</mat-icon>
+      </button>
+      <mat-hint align="end">{{ title.value?.length }}/3</mat-hint>
+      <mat-error *ngIf="title.errors?.['required']">Title is required</mat-error>
+      <mat-error *ngIf="title.errors?.['minlength']">Title must consist 3 chars least</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Book description</mat-label>
+      <input type="text" matInput placeholder="Description" name="description" [(ngModel)]="newBook.description"
+        id="description" ngModel>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field>
+      <mat-label>Authors</mat-label>
+      <mat-select multiple [(ngModel)]="newBook.author" name="author" id="author">
+        <mat-option *ngFor="let author of authors$ | async" [value]="author.id">{{ author | fullname }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    
+    <mat-form-field>
+      <mat-label>Genres</mat-label>
+      <mat-select name="genres" [(ngModel)]="newBook.genres" id="genres" multiple>
+        <mat-option *ngFor="let genre of genres$ | async" [value]="genre.id">{{ genre.title }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field>
+      <mat-label>Writing date</mat-label>
+      <input matInput [matDatepicker]="writingPicker" name="writing_date" [(ngModel)]="newBook.writing_date"
+      id="writing_date">
+      <mat-datepicker-toggle matIconSuffix [for]="writingPicker"></mat-datepicker-toggle>
+      <mat-datepicker #writingPicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Release date</mat-label>
+      <input matInput [matDatepicker]="releasePicker" name="release_date" [(ngModel)]="newBook.release_date"
+      id="release_date">
+      <mat-datepicker-toggle matIconSuffix [for]="releasePicker"></mat-datepicker-toggle>
+      <mat-datepicker #releasePicker></mat-datepicker>
+    </mat-form-field>
+  </div>
+  
+  <div>
+    <mat-form-field>
+      <mat-label>In stock</mat-label>
+      <input type="number" matInput name="in_stock" [(ngModel)]="newBook.in_stock" id="in_stock">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Price</mat-label>
+      <input type="number" matInput name="price" [(ngModel)]="newBook.price" id="price">
+    </mat-form-field>
+  </div>
+
+  <!-- <mat-form-field>
+    <mat-label>Pick author</mat-label>
+    <input type="text" matInput [matAutocomplete]="authorsList" placeholder="Start typing author name" name="authors" id="authors" #authors>
+    <mat-autocomplete #authorsList="matAutocomplete" [displayWith]="displayFn">
+      <mat-option *ngFor="let author of authors$ | async" [value]="author">{{ author | fullname }}</mat-option>
+    </mat-autocomplete>
+  </mat-form-field> -->
+
+  <button type="submit" mat-raised-button>Create</button>
+</form>
