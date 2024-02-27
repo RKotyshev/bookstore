@@ -1,5 +1,6 @@
 import { Directive, Input } from '@angular/core';
 import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator } from '@angular/forms';
+
 import { writingDateValidator } from './writing-date-validator';
 
 
@@ -17,9 +18,7 @@ export class WritingDateValidatorDirective implements Validator {
   constructor() { }
 
   public validate(control: AbstractControl): ValidationErrors | null {
-    console.log('test');
-
-    return this.appWritingDateValidator ? 
+    return this.appWritingDateValidator ?
       writingDateValidator(this.appWritingDateValidator)(control) : null;
   }
 }
