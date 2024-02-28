@@ -32,12 +32,17 @@ export class BookCreateComponent {
   ) { }
 
   public onSubmit(book: INewBook): void {
+    const correctPrice = book.price !== null ? book.price : 200;
+    const correctInStock = book.in_stock !== null ? book.in_stock : 0;
+    const correctWritingDate = moment(book.writing_date).format('YYYY-MM-DD');
+    const correctReleaseDate = moment(book.release_date).format('YYYY-MM-DD');
+
     this._booksService.postBook({
       ...book,
-      price: book.price !== null ? book.price : 200,
-      in_stock: book.in_stock !== null ? book.in_stock : 0,
-      writing_date: moment(book.writing_date).format('YYYY-MM-DD'),
-      release_date: moment(book.release_date).format('YYYY-MM-DD'),
+      price: correctPrice,
+      in_stock: correctInStock,
+      writing_date: correctWritingDate,
+      release_date: correctReleaseDate,
     }).pipe(
       switchMap(() => {
         this.submitted = true;

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Observable, catchError, map, of, take } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 import { IBook, INewBook } from '../interfaces/book';
 import { IResponse } from '../interfaces/response';
@@ -35,12 +35,6 @@ export class BooksService {
   }
 
   public postBook(book: INewBook): Observable<IBook> {
-    return this._http.post<IBook>(`${this._booksUrl}/`, book).pipe(
-      catchError((error) => {
-        console.log(error.error);
-        throw error;
-      }),
-      take(1),
-    );
+    return this._http.post<IBook>(`${this._booksUrl}/`, book);
   }
 }
