@@ -14,8 +14,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
   MatMomentDateModule,
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+  provideMomentDateAdapter,
 } from '@angular/material-moment-adapter';
-import { MAT_DATE_FORMATS } from '@angular/material/core';
+import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import { MatNativeDateModule } from '@angular/material/core';
 
 
 import { BooksComponent } from './books.component';
@@ -25,6 +27,17 @@ import { BookCreateComponent } from './book-create/book-create.component';
 import { DatesValidatorDirective } from './validators/dates-validator.directive';
 import { FullnamePipe } from '../../core/pipes/fullname.pipe';
 
+const MY_FORMATS = {
+  parse: {
+    dateInput: 'YYYY-MM-DD',
+  },
+  display: {
+    dateInput: 'YYYY-MM-DD',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @NgModule({
   declarations: [
@@ -47,24 +60,28 @@ import { FullnamePipe } from '../../core/pipes/fullname.pipe';
     MatIconModule,
     MatDatepickerModule,
     MatMomentDateModule,
+    // MatNativeDateModule,
     FullnamePipe,
   ],
   providers: [
-    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
-    {
-      provide: MAT_DATE_FORMATS,
-      useValue: {
-        parse: {
-          dateInput: 'YYYY-MM-DD',
-        },
-        display: {
-          dateInput: 'YYYY-MM-DD',
-          monthYearLabel: 'MMM YYYY',
-          dateA11yLabel: 'LL',
-          monthYearA11yLabel: 'MMMM YYYY',
-        },
-      },
-    },
+    // { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+    // { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+    // {
+    //   provide: MAT_DATE_FORMATS,
+    //   useValue: {
+    //     parse: {
+    //       dateInput: 'YYYY-MM-DD',
+    //     },
+    //     display: {
+    //       dateInput: 'YYYY-MM-DD',
+    //       monthYearLabel: 'MMM YYYY',
+    //       dateA11yLabel: 'LL',
+    //       monthYearA11yLabel: 'MMMM YYYY',
+    //     },
+    //   },
+    // },
+    // provideNativeDateAdapter(MY_FORMATS),
+    provideMomentDateAdapter(MY_FORMATS),
   ],
   exports: [BooksComponent],
 })

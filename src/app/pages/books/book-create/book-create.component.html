@@ -1,3 +1,7 @@
+{{ bookForm.value | json }}
+<br>
+{{ redirectDelaySeconds }}
+
 <div [hidden]="submitted">
   <form #bookForm="ngForm" (ngSubmit)="onSubmit(bookForm.value)" appDatesValidator>
     <h2>Create book</h2>
@@ -73,6 +77,8 @@
         <input type="number" matInput ngModel="0" name="price" id="price">
       </mat-form-field>
     </div>
+
+    <mat-error *ngIf="submitError">Some error occurred. Try again later</mat-error>
 
     <button type="submit" mat-raised-button [disabled]="bookForm.form.invalid">Create</button>
   </form>
