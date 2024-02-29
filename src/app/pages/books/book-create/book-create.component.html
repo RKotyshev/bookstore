@@ -1,7 +1,3 @@
-{{ bookForm.value | json }}
-<br>
-{{ redirectDelaySeconds }}
-
 <div [hidden]="submitted">
   <form #bookForm="ngForm" (ngSubmit)="onSubmit(bookForm.value)" appDatesValidator>
     <h2>Create book</h2>

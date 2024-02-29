@@ -7,7 +7,6 @@ import {
   ValidatorFn,
 } from '@angular/forms';
 
-// import moment from 'moment';
 import { formatDate } from '../utils/format-date';
 
 
@@ -25,7 +24,6 @@ export class DatesValidatorDirective implements Validator {
   public static checkDates: ValidatorFn = (control: AbstractControl) => {
     const writingDate = control.get('writing_date')?.value;
     const releaseDate = control.get('release_date')?.value;
-    // const datesDiff = moment(releaseDate).diff(moment(writingDate));
     const datesDiff = Date.parse(releaseDate) - Date.parse(writingDate);
 
     return datesDiff < 0 ? {
