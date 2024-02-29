@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -23,6 +23,7 @@ import { BookDetailComponent } from './book-detail/book-detail.component';
 import { BookCreateComponent } from './book-create/book-create.component';
 import { DatesValidatorDirective } from './validators/dates-validator.directive';
 import { FullnamePipe } from '../../core/pipes/fullname.pipe';
+import { BookCreateReactiveComponent } from './book-create-reactive/book-create-reactive.component';
 
 
 @NgModule({
@@ -32,11 +33,13 @@ import { FullnamePipe } from '../../core/pipes/fullname.pipe';
     BookDetailComponent,
     BookCreateComponent,
     DatesValidatorDirective,
+    BookCreateReactiveComponent,
   ],
   imports: [
     CommonModule,
     RouterModule,
     FormsModule,
+    ReactiveFormsModule,
     MatCardModule,
     MatButtonModule,
     MatPaginatorModule,

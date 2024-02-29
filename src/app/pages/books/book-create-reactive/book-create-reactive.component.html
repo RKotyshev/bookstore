@@ -1,0 +1,39 @@
+<div [hidden]="submitted">
+  <form [formGroup]="bookForm">
+    <h2>Create book (reactive)</h2>
+
+    <div>
+      <mat-form-field>
+        <mat-label>Book title</mat-label>
+        <input type="text" matInput formControlName="title">
+        <mat-hint align="end">{{ title.getRawValue().length }}/25</mat-hint>
+        <mat-error *ngIf="title.invalid">{{ getErrorMessages(title) }}</mat-error>
+        <mat-error></mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Book description</mat-label>
+        <input type="text" matInput formControlName="description">
+        <mat-error *ngIf="description.invalid">{{ getErrorMessages(description) }}</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <mat-form-field>
+        <mat-label>Authors</mat-label>
+        <mat-select formControlName="author" multiple>
+          <mat-option *ngFor="let currentAuthor of authors$ | async">{{ currentAuthor | fullname }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="author.invalid">{{ getErrorMessages(author) }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Genres</mat-label>
+        <mat-select formControlName="genres" multiple>
+          <mat-option *ngFor="let currentGenre of genres$ | async">{{ currentGenre.title }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="genres.invalid">{{ getErrorMessages(genres) }}</mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</div>

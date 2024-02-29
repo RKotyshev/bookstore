@@ -7,12 +7,13 @@ import { AuthorsComponent } from './pages/authors/authors.component';
 import { AuthComponent } from './pages/auth/auth.component';
 import { CartComponent } from './pages/cart/cart.component';
 import { BookDetailComponent } from './pages/books/book-detail/book-detail.component';
-import { BookCreateComponent } from './pages/books/book-create/book-create.component';
+// import { BookCreateComponent } from './pages/books/book-create/book-create.component';
+import { BookCreateReactiveComponent } from './pages/books/book-create-reactive/book-create-reactive.component';
 
 
 const routes: Routes = [
   { path: 'books', component: BooksComponent },
-  { path: 'books/new', component: BookCreateComponent },
+  { path: 'books/new', component: BookCreateReactiveComponent },
   { path: 'books/:id', component: BookDetailComponent },
   { path: 'authors', component: AuthorsComponent },
   { path: 'auth', component: AuthComponent },
