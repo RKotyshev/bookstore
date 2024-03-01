@@ -1,5 +1,5 @@
 <div [hidden]="submitted">
-  <form [formGroup]="bookForm">
+  <form [formGroup]="bookForm" (ngSubmit)="onSubmit()" #form="ngForm">
     <h2>Create book (reactive)</h2>
 
     <div>
@@ -35,5 +35,41 @@
         <mat-error *ngIf="genres.invalid">{{ getErrorMessages(genres) }}</mat-error>
       </mat-form-field>
     </div>
+
+    <div>
+      <mat-form-field>
+        <mat-label>Writing date</mat-label>
+        <input matInput [matDatepicker]="writingPicker" formControlName="writing_date">
+        <mat-datepicker-toggle matIconSuffix [for]="writingPicker"></mat-datepicker-toggle>
+        <mat-datepicker #writingPicker></mat-datepicker>
+        <mat-hint>YYYY-MM-DD</mat-hint>
+        <mat-error *ngIf="writing_date.invalid">{{ getErrorMessages(writing_date) }}</mat-error>
+        <mat-error *ngIf="bookForm.errors?.['invalidWritingDate']">Writing date must be less than the release
+          date</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Release date</mat-label>
+        <input matInput [matDatepicker]="releasePicker" formControlName="release_date">
+        <mat-datepicker-toggle matIconSuffix [for]="releasePicker"></mat-datepicker-toggle>
+        <mat-datepicker #releasePicker></mat-datepicker>
+        <mat-hint>YYYY-MM-DD</mat-hint>
+        <mat-error *ngIf="release_date.invalid">{{ getErrorMessages(release_date) }}</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <mat-form-field>
+        <mat-label>In stock</mat-label>
+        <input type="number" matInput formControlName="in_stock">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Price</mat-label>
+        <input type="number" matInput formControlName="price">
+      </mat-form-field>
+    </div>
+
+    <button type="submit" mat-raised-button>Create</button>
   </form>
 </div>
