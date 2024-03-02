@@ -1,0 +1,47 @@
+<p>books-filter works!</p>
+<form [formGroup]="filterForm">
+  <div class="general">
+    <mat-form-field>
+      <mat-label>Title</mat-label>
+      <input type="text" matInput formControlName="title">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Author</mat-label>
+      <input type="text" matInput placeholder="Start typing author name" formControlName="author" [matAutocomplete]="authorComplete">
+      <mat-autocomplete #authorComplete="matAutocomplete">
+        <mat-option *ngFor="let author of authors$ | async" [value]="author | fullname">{{ author | fullname }}</mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    
+    <mat-form-field>
+      <mat-label>Genre</mat-label>
+      <mat-select formControlName="genre">
+        <mat-option *ngFor="let genre of genres$ | async" [value]="genre.title">{{ genre.title }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="prices" formGroupName="priceGroup">
+    <h4>Prices filter</h4>
+
+    <mat-form-field>
+      <mat-label>Certain price</mat-label>
+      <input type="number" matInput formControlName="price">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Price from</mat-label>
+      <input type="number" matInput formControlName="price_lte">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Price to</mat-label>
+      <input type="number" matInput formControlName="price_gte">
+    </mat-form-field>
+  </div>
+
+  <div class="writing-dates">
+    <h4>Writing date filter</h4>
+  </div>
+</form>

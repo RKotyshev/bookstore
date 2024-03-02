@@ -1,3 +1,12 @@
+.actions {
+  margin-bottom: 20px;
+
+  mat-card-content {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
 mat-paginator {
   margin-bottom: 10px;
 }

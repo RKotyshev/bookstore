@@ -16,6 +16,7 @@ import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
 } from '@angular/material-moment-adapter';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { BooksComponent } from './books.component';
 import { BooksListComponent } from './books-list/books-list.component';
@@ -24,6 +25,7 @@ import { BookCreateComponent } from './book-create/book-create.component';
 import { DatesValidatorDirective } from './validators/dates-validator.directive';
 import { FullnamePipe } from '../../core/pipes/fullname.pipe';
 import { BookCreateReactiveComponent } from './book-create-reactive/book-create-reactive.component';
+import { BooksFilterComponent } from './books-filter/books-filter.component';
 
 
 @NgModule({
@@ -34,6 +36,7 @@ import { BookCreateReactiveComponent } from './book-create-reactive/book-create-
     BookCreateComponent,
     DatesValidatorDirective,
     BookCreateReactiveComponent,
+    BooksFilterComponent,
   ],
   imports: [
     CommonModule,
@@ -49,6 +52,7 @@ import { BookCreateReactiveComponent } from './book-create-reactive/book-create-
     MatIconModule,
     MatDatepickerModule,
     MatMomentDateModule,
+    MatAutocompleteModule,
     FullnamePipe,
   ],
   providers: [
