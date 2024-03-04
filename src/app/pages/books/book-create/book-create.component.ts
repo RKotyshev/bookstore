@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Observable, catchError } from 'rxjs';
+import { Observable, Subject, catchError, takeUntil } from 'rxjs';
 
 import { BooksService } from '../../../core/services/books.service';
 import { AuthorsService } from '../../../core/services/authors.service';
@@ -18,12 +18,13 @@ import { handleError } from '../../../core/functions/handle-error';
   templateUrl: './book-create.component.html',
   styleUrl: './book-create.component.scss',
 })
-export class BookCreateComponent {
+export class BookCreateComponent implements OnDestroy {
   public submitted: boolean = false;
   public submitError: boolean = false;
   public redirectDelaySeconds: number = 9;
   public authors$: Observable<IAuthor[]> = this._authorService.getPaginatedAuthors(0, 100);
   public genres$: Observable<IGenre[]> = this._genresService.getPaginatedGenres(0, 100);
+  private _destroyed = new Subject<void>;
 
   constructor(
     private _authorService: AuthorsService,
@@ -42,6 +43,7 @@ export class BookCreateComponent {
       release_date: correctReleaseDate,
     }).pipe(
       catchError(handleError),
+      takeUntil(this._destroyed),
     )
       .subscribe({
         next: () => {
@@ -56,6 +58,11 @@ export class BookCreateComponent {
 
   public onRedirect(): void {
     this._router.navigate(['books']);
+  }
+
+  public ngOnDestroy(): void {
+    this._destroyed.next();
+    this._destroyed.complete();
   }
 
 }

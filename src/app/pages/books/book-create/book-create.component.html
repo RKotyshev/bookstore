@@ -83,9 +83,7 @@
 </div>
 
 <div *ngIf="submitted">
-  <app-display-with-timer [(timerDelay)]="redirectDelaySeconds" (timerAlert)="onRedirect()">
-    <h3>Book created!</h3>
-    <p>You will be redirected to the <a routerLink="/books"> books list page</a> in {{ redirectDelaySeconds }} seconds
-    </p>
-  </app-display-with-timer>
+  <h3>Book created!</h3>
+  <p>You will be redirected to the <a routerLink="/books"> books list page</a> in <app-display-timer
+      [timerDelay]="redirectDelaySeconds" (timerAlert)="onRedirect()"></app-display-timer> seconds</p>
 </div>
