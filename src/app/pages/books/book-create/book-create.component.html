@@ -1,4 +1,4 @@
-<div [hidden]="submitted">
+<div *ngIf="!submitted">
   <form #bookForm="ngForm" (ngSubmit)="onSubmit(bookForm.value)" appDatesValidator>
     <h2>Create book</h2>
 
@@ -65,12 +65,14 @@
     <div>
       <mat-form-field>
         <mat-label>In stock</mat-label>
-        <input type="number" matInput ngModel="0" name="in_stock" id="in_stock" #inStock="ngModel">
+        <input type="number" matInput ngModel="0" name="in_stock" id="in_stock" #inStock="ngModel" required>
+        <mat-error *ngIf="inStock.errors?.['required']">In stock required</mat-error>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Price</mat-label>
-        <input type="number" matInput ngModel="0" name="price" id="price">
+        <input type="number" matInput ngModel="0" name="price" id="price" #price="ngModel" required>
+        <mat-error *ngIf="price.errors?.['required']">Price required</mat-error>
       </mat-form-field>
     </div>
 
@@ -80,7 +82,8 @@
   </form>
 </div>
 
-<div [hidden]="!submitted">
-  <h2>New book created!</h2>
-  <p>You will be redirected to the <a routerLink="/books"> books list page</a> in {{ redirectDelaySeconds }} seconds</p>
+<div *ngIf="submitted">
+  <h3>Book created!</h3>
+  <p>You will be redirected to the <a routerLink="/books"> books list page</a> in <app-display-timer
+      [timerDelay]="redirectDelaySeconds" (timerAlert)="onRedirect()"></app-display-timer> seconds</p>
 </div>

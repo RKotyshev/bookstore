@@ -21,6 +21,7 @@ import { BooksComponent } from './books.component';
 import { BooksListComponent } from './books-list/books-list.component';
 import { BookDetailComponent } from './book-detail/book-detail.component';
 import { BookCreateComponent } from './book-create/book-create.component';
+import { DisplayTimerComponent } from '../../core/components/display-with-timer/display-timer.component';
 import { DatesValidatorDirective } from './validators/dates-validator.directive';
 import { FullnamePipe } from '../../core/pipes/fullname.pipe';
 import { BookCreateReactiveComponent } from './book-create-reactive/book-create-reactive.component';
@@ -50,6 +51,7 @@ import { BookCreateReactiveComponent } from './book-create-reactive/book-create-
     MatDatepickerModule,
     MatMomentDateModule,
     FullnamePipe,
+    DisplayTimerComponent,
   ],
   providers: [
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
