@@ -1,89 +1,86 @@
 <div *ngIf="!submitted">
-  <form #bookForm="ngForm" (ngSubmit)="onSubmit(bookForm.value)" appDatesValidator>
-    <h2>Create book</h2>
+  <form [formGroup]="bookForm" (ngSubmit)="onSubmit()" #form="ngForm">
+    <h2>Create book (reactive)</h2>
 
     <div>
       <mat-form-field>
         <mat-label>Book title</mat-label>
-        <input type="text" matInput ngModel placeholder="Title" name="title" id="title" #title="ngModel" required
-          maxlength="25">
-        <mat-hint align="end">{{ title.value?.length }}/25</mat-hint>
-        <mat-error *ngIf="title.errors?.['required']">Title is required</mat-error>
-        <mat-error *ngIf="title.errors?.['maxlength']">Title must not contain more than 25 characters</mat-error>
+        <input type="text" matInput formControlName="title">
+        <mat-hint align="end">{{ title.getRawValue().length }}/25</mat-hint>
+        <mat-error *ngIf="title.invalid">{{ getErrorMessages(title) }}</mat-error>
+        <mat-error></mat-error>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Book description</mat-label>
-        <input type="text" matInput ngModel placeholder="Description" name="description" id="description"
-          #description="ngModel" required>
-        <mat-error *ngIf="description.errors?.['required']">Description is required</mat-error>
+        <input type="text" matInput formControlName="description">
+        <mat-error *ngIf="description.invalid">{{ getErrorMessages(description) }}</mat-error>
       </mat-form-field>
     </div>
 
     <div>
       <mat-form-field>
         <mat-label>Authors</mat-label>
-        <mat-select ngModel name="author" id="author" #author="ngModel" multiple required>
-          <mat-option *ngFor="let author of authors$ | async" [value]="author.id">{{ author | fullname }}</mat-option>
+        <mat-select formControlName="author" multiple>
+          <mat-option *ngFor="let currentAuthor of authors$ | async" [value]="currentAuthor.id">{{ currentAuthor |
+            fullname }}</mat-option>
         </mat-select>
-        <mat-error *ngIf="author.errors?.['required']">One option must be selected at least</mat-error>
+        <mat-error *ngIf="author.invalid">{{ getErrorMessages(author) }}</mat-error>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Genres</mat-label>
-        <mat-select ngModel name="genres" id="genres" #genres="ngModel" multiple required>
-          <mat-option *ngFor="let genre of genres$ | async" [value]="genre.id">{{ genre.title }}</mat-option>
+        <mat-select formControlName="genres" multiple>
+          <mat-option *ngFor="let currentGenre of genres$ | async" [value]="currentGenre.id">{{ currentGenre.title
+            }}</mat-option>
         </mat-select>
-        <mat-error *ngIf="genres.errors?.['required']">One option must be selected at least</mat-error>
+        <mat-error *ngIf="genres.invalid">{{ getErrorMessages(genres) }}</mat-error>
       </mat-form-field>
     </div>
 
     <div>
       <mat-form-field>
         <mat-label>Writing date</mat-label>
-        <input matInput ngModel [matDatepicker]="writingPicker" name="writing_date" id="writing_date"
-          #writingDate="ngModel" [max]="releaseDate.value" required>
+        <input matInput [matDatepicker]="writingPicker" formControlName="writing_date" [max]="release_date.value">
         <mat-datepicker-toggle matIconSuffix [for]="writingPicker"></mat-datepicker-toggle>
         <mat-datepicker #writingPicker></mat-datepicker>
         <mat-hint>YYYY-MM-DD</mat-hint>
-        <mat-error *ngIf="writingDate.errors?.['required']">Writing date required</mat-error>
-        <mat-error *ngIf="bookForm.errors?.['invalidWritingDate']">Writing date must be less than the release
-          date</mat-error>
+        <mat-error *ngIf="writing_date.invalid">{{ getErrorMessages(writing_date) }}</mat-error>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Release date</mat-label>
-        <input matInput ngModel [matDatepicker]="releasePicker" name="release_date" id="release_date"
-          [min]="writingDate.value" #releaseDate="ngModel" required>
+        <input matInput [matDatepicker]="releasePicker" formControlName="release_date" [min]="writing_date.value">
         <mat-datepicker-toggle matIconSuffix [for]="releasePicker"></mat-datepicker-toggle>
         <mat-datepicker #releasePicker></mat-datepicker>
         <mat-hint>YYYY-MM-DD</mat-hint>
-        <mat-error *ngIf="releaseDate.errors?.['required']">Release date required</mat-error>
+        <mat-error *ngIf="release_date.invalid">{{ getErrorMessages(release_date) }}</mat-error>
       </mat-form-field>
     </div>
 
     <div>
       <mat-form-field>
         <mat-label>In stock</mat-label>
-        <input type="number" matInput ngModel="0" name="in_stock" id="in_stock" #inStock="ngModel" required>
-        <mat-error *ngIf="inStock.errors?.['required']">In stock required</mat-error>
+        <input type="number" matInput formControlName="in_stock">
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Price</mat-label>
-        <input type="number" matInput ngModel="0" name="price" id="price" #price="ngModel" required>
-        <mat-error *ngIf="price.errors?.['required']">Price required</mat-error>
+        <input type="number" matInput formControlName="price">
       </mat-form-field>
     </div>
 
-    <mat-error *ngIf="submitError">Some error occurred. Try again later</mat-error>
+    <mat-error *ngIf="bookForm.errors?.['invalidWritingDate']">Writing date must be less than the release
+      date</mat-error>
+    <mat-error *ngIf="submitError">
+      Some error was occurred. Try again later
+    </mat-error>
 
-    <button type="submit" mat-raised-button [disabled]="bookForm.form.invalid">Create</button>
+    <button type="submit" mat-raised-button [disabled]="bookForm.invalid">Create</button>
   </form>
 </div>
 
 <div *ngIf="submitted">
-  <h3>Book created!</h3>
-  <p>You will be redirected to the <a routerLink="/books"> books list page</a> in <app-display-timer
-      [timerDelay]="redirectDelaySeconds" (timerAlert)="onRedirect()"></app-display-timer> seconds</p>
+  <h2>New book created!</h2>
+  <p>You will be redirected to the <a routerLink="/books"> books list page</a> in {{ redirectDelaySeconds }} seconds</p>
 </div>

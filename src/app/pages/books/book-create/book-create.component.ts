@@ -1,16 +1,17 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { Observable, Subject, catchError, takeUntil } from 'rxjs';
+import { Observable, interval, last, take, tap } from 'rxjs';
 
 import { BooksService } from '../../../core/services/books.service';
 import { AuthorsService } from '../../../core/services/authors.service';
 import { GenresService } from '../../../core/services/genres.service';
 import { IAuthor } from '../../../core/interfaces/author';
-import { IBook } from '../../../core/interfaces/book';
 import { IGenre } from '../../../core/interfaces/genre';
+import { DatesValidator } from '../validators/dates-validator-reactive';
 import { formatDate } from '../utils/format-date';
-import { handleError } from '../../../core/functions/handle-error';
+import { ICreateBookForm } from '../../../core/interfaces/book';
 
 
 @Component({
@@ -18,51 +19,101 @@ import { handleError } from '../../../core/functions/handle-error';
   templateUrl: './book-create.component.html',
   styleUrl: './book-create.component.scss',
 })
-export class BookCreateComponent implements OnDestroy {
+export class BookCreateComponent implements OnInit {
   public submitted: boolean = false;
   public submitError: boolean = false;
   public redirectDelaySeconds: number = 9;
-  public authors$: Observable<IAuthor[]> = this._authorService.getPaginatedAuthors(0, 100);
+  public bookForm!: FormGroup<ICreateBookForm>;
+  public get title(): FormControl {
+    return this.bookForm.get('title') as FormControl;
+  }
+  public get description(): FormControl {
+    return this.bookForm.get('description') as FormControl;
+  }
+  public get author(): FormControl {
+    return this.bookForm.get('author') as FormControl;
+  }
+  public get genres(): FormControl {
+    return this.bookForm.get('genres') as FormControl;
+  }
+  public get writing_date(): FormControl {
+    return this.bookForm.get('writing_date') as FormControl;
+  }
+  public get release_date(): FormControl {
+    return this.bookForm.get('release_date') as FormControl;
+  }
+  public get in_stock(): FormControl {
+    return this.bookForm.get('in_stock') as FormControl;
+  }
+  public get price(): FormControl {
+    return this.bookForm.get('price') as FormControl;
+  }
+  public authors$: Observable<IAuthor[]> = this._authorsService.getPaginatedAuthors(0, 100);
   public genres$: Observable<IGenre[]> = this._genresService.getPaginatedGenres(0, 100);
-  private _destroyed = new Subject<void>;
 
   constructor(
-    private _authorService: AuthorsService,
+    private _formBuilder: NonNullableFormBuilder,
+    private _authorsService: AuthorsService,
     private _genresService: GenresService,
     private _booksService: BooksService,
     private _router: Router,
   ) { }
 
-  public onSubmit(book: IBook): void {
-    const correctWritingDate = formatDate(book.writing_date);
-    const correctReleaseDate = formatDate(book.release_date);
+  public ngOnInit(): void {
+    this.bookForm = this._initForm();
+  }
 
-    this._booksService.postBook({
-      ...book,
-      writing_date: correctWritingDate,
-      release_date: correctReleaseDate,
-    }).pipe(
-      catchError(handleError),
-      takeUntil(this._destroyed),
-    )
+  public getErrorMessages(control: FormControl): string {
+    if (control.hasError('required')) {
+      return 'This field is required';
+    }
+
+    if (control.hasError('maxlength')) {
+      return 'Number of characters exceeded';
+    }
+
+    return 'Incorrect value';
+  }
+
+  public onSubmit(): void {
+    this.writing_date.setValue(formatDate(this.writing_date.value));
+    this.release_date.setValue(formatDate(this.release_date.value));
+
+    this._booksService.postBook(this.bookForm.getRawValue())
       .subscribe({
         next: () => {
           this.submitted = true;
           this.submitError = false;
+
+          this.startRedirect();
         },
-        error: () => {
+        error: (error: Error) => {
           this.submitError = true;
+          console.error(error);
         },
       });
   }
 
-  public onRedirect(): void {
-    this._router.navigate(['books']);
+  public startRedirect(): void {
+    interval(1000).pipe(
+      take(this.redirectDelaySeconds),
+      tap(() => this.redirectDelaySeconds--),
+      last(),
+    ).subscribe(() => {
+      this._router.navigate(['books']);
+    });
   }
 
-  public ngOnDestroy(): void {
-    this._destroyed.next();
-    this._destroyed.complete();
+  private _initForm(): FormGroup<ICreateBookForm> {
+    return this._formBuilder.group({
+      title: ['', [Validators.required, Validators.maxLength(25), Validators.minLength(2)]],
+      description: ['', [Validators.required]],
+      author: this._formBuilder.control<number[]>([], [Validators.required]),
+      genres: this._formBuilder.control<number[]>([], [Validators.required]),
+      writing_date: ['', [Validators.required]],
+      release_date: ['', [Validators.required]],
+      in_stock: [0, [Validators.required]],
+      price: [0, [Validators.required]],
+    }, { validators: DatesValidator });
   }
-
 }

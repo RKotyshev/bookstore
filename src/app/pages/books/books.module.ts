@@ -20,11 +20,10 @@ import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { BooksComponent } from './books.component';
 import { BooksListComponent } from './books-list/books-list.component';
 import { BookDetailComponent } from './book-detail/book-detail.component';
-import { BookCreateComponent } from './book-create/book-create.component';
 import { DisplayTimerComponent } from '../../core/components/display-with-timer/display-timer.component';
 import { DatesValidatorDirective } from './validators/dates-validator.directive';
 import { FullnamePipe } from '../../core/pipes/fullname.pipe';
-import { BookCreateReactiveComponent } from './book-create-reactive/book-create-reactive.component';
+import { BookCreateComponent } from './book-create/book-create.component';
 
 
 @NgModule({
@@ -32,9 +31,8 @@ import { BookCreateReactiveComponent } from './book-create-reactive/book-create-
     BooksComponent,
     BooksListComponent,
     BookDetailComponent,
-    BookCreateComponent,
     DatesValidatorDirective,
-    BookCreateReactiveComponent,
+    BookCreateComponent,
   ],
   imports: [
     CommonModule,
