@@ -34,4 +34,11 @@ export class AuthorsService {
     return this._httpClient.get<IAuthor>(`${this._authorsUrl}/${id}/`);
   }
 
+  public getSuggestedAuthors(term: string): Observable<IAuthor[]> {
+    const params = {
+      search: term,
+    };
+
+    return this._httpClient.get<IAuthor[]>(`${this._authorsUrl}/suggestion`, { params });
+  }
 }

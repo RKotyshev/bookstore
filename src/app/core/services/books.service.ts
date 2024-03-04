@@ -33,4 +33,8 @@ export class BooksService {
   public getBook(id: string): Observable<IBook> {
     return this._http.get<IBook>(`${this._booksUrl}/${id}/`);
   }
+
+  public postBook(book: IBook): Observable<IBook> {
+    return this._http.post<IBook>(`${this._booksUrl}/`, book);
+  }
 }
