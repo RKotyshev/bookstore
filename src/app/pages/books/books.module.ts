@@ -17,6 +17,8 @@ import {
 } from '@angular/material-moment-adapter';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { CdkAccordionModule } from '@angular/cdk/accordion';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 import { BooksComponent } from './books.component';
 import { BooksListComponent } from './books-list/books-list.component';
@@ -53,6 +55,8 @@ import { BooksFilterComponent } from './books-filter/books-filter.component';
     MatDatepickerModule,
     MatMomentDateModule,
     MatAutocompleteModule,
+    CdkAccordionModule,
+    MatExpansionModule,
     FullnamePipe,
   ],
   providers: [
