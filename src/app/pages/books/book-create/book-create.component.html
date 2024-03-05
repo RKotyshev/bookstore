@@ -1,12 +1,12 @@
 <div *ngIf="!submitted">
-  <form [formGroup]="bookForm" (ngSubmit)="onSubmit()" #form="ngForm">
-    <h2>Create book (reactive)</h2>
+  <form [formGroup]="bookForm" (ngSubmit)="onSubmit()">
+    <h2>Create book</h2>
 
     <div>
       <mat-form-field>
         <mat-label>Book title</mat-label>
         <input type="text" matInput formControlName="title">
-        <mat-hint align="end">{{ title.getRawValue().length }}/25</mat-hint>
+        <mat-hint align="end">{{ title.value.length }}/25</mat-hint>
         <mat-error *ngIf="title.invalid">{{ getErrorMessages(title) }}</mat-error>
         <mat-error></mat-error>
       </mat-form-field>
@@ -62,15 +62,17 @@
       <mat-form-field>
         <mat-label>In stock</mat-label>
         <input type="number" matInput formControlName="in_stock">
+        <mat-error *ngIf="in_stock.invalid">{{ getErrorMessages(in_stock) }}</mat-error>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Price</mat-label>
         <input type="number" matInput formControlName="price">
+        <mat-error *ngIf="price.invalid">{{ getErrorMessages(price) }}</mat-error>
       </mat-form-field>
     </div>
 
-    <mat-error *ngIf="bookForm.errors?.['invalidWritingDate']">Writing date must be less than the release
+    <mat-error *ngIf="bookForm.hasError('invalidWritingDate')">Writing date must be less than the release
       date</mat-error>
     <mat-error *ngIf="submitError">
       Some error was occurred. Try again later
@@ -82,5 +84,6 @@
 
 <div *ngIf="submitted">
   <h2>New book created!</h2>
-  <p>You will be redirected to the <a routerLink="/books"> books list page</a> in {{ redirectDelaySeconds }} seconds</p>
+  <p>You will be redirected to the <a routerLink="/books"> books list page</a> in <app-display-timer
+      [timerDelay]="redirectDelaySeconds" (timerAlert)="onRedirect()"></app-display-timer> seconds</p>
 </div>

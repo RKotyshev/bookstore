@@ -21,9 +21,8 @@ import { BooksComponent } from './books.component';
 import { BooksListComponent } from './books-list/books-list.component';
 import { BookDetailComponent } from './book-detail/book-detail.component';
 import { DisplayTimerComponent } from '../../core/components/display-with-timer/display-timer.component';
-import { DatesValidatorDirective } from './validators/dates-validator.directive';
-import { FullnamePipe } from '../../core/pipes/fullname.pipe';
 import { BookCreateComponent } from './book-create/book-create.component';
+import { FullnamePipe } from '../../core/pipes/fullname.pipe';
 
 
 @NgModule({
@@ -31,7 +30,6 @@ import { BookCreateComponent } from './book-create/book-create.component';
     BooksComponent,
     BooksListComponent,
     BookDetailComponent,
-    DatesValidatorDirective,
     BookCreateComponent,
   ],
   imports: [
