@@ -41,7 +41,49 @@
     </mat-form-field>
   </div>
 
-  <div class="writing-dates">
+  <div class="writing-dates" formGroupName="writingDateGroup">
     <h4>Writing date filter</h4>
+
+    <mat-form-field>
+      <mat-label>Certain writing date</mat-label>
+      <input matInput [matDatepicker]="writingPicker" formControlName="writing_date">
+      <mat-datepicker-toggle matIconSuffix [for]="writingPicker"></mat-datepicker-toggle>
+      <mat-datepicker #writingPicker></mat-datepicker>
+      <mat-hint>YYYY-MM-DD</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Writing dates range</mat-label>
+      <mat-date-range-input [rangePicker]="writingRangePicker">
+        <input matEndDate placeholder="From" formControlName="writing_date_gte">
+        <input matStartDate placeholder="Till" formControlName="writing_date_lte">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matIconSuffix [for]="writingRangePicker"></mat-datepicker-toggle>
+      <mat-date-range-picker #writingRangePicker></mat-date-range-picker>
+      <mat-hint>YYYY-MM-DD - YYYY-MM-DD</mat-hint>
+    </mat-form-field>
+  </div>
+
+  <div class="release-dates" formGroupName="releaseDateGroup">
+    <h4>Release date filter</h4>
+
+    <mat-form-field>
+      <mat-label>Certain release date</mat-label>
+      <input matInput formControlName="release_date" [matDatepicker]="releasePicker">
+      <mat-datepicker-toggle matIconSuffix [for]="releasePicker"></mat-datepicker-toggle>
+      <mat-datepicker #releasePicker></mat-datepicker>
+      <mat-hint>YYYY-MM-DD</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Release dates range</mat-label>
+      <mat-date-range-input [rangePicker]="releaseRangePicker">
+        <input matStartDate placeholder="From" formControlName="release_date_gte">
+        <input matEndDate placeholder="Till" formControlName="release_date_lte">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matIconSuffix [for]="releaseRangePicker"></mat-datepicker-toggle>
+      <mat-date-range-picker #releaseRangePicker></mat-date-range-picker>
+      <mat-hint>YYYY-MM-DD - YYYY-MM-DD</mat-hint>
+    </mat-form-field>
   </div>
 </form>
