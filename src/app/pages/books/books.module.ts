@@ -23,10 +23,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { BooksComponent } from './books.component';
 import { BooksListComponent } from './books-list/books-list.component';
 import { BookDetailComponent } from './book-detail/book-detail.component';
+import { DisplayTimerComponent } from '../../core/components/display-with-timer/display-timer.component';
 import { BookCreateComponent } from './book-create/book-create.component';
-import { DatesValidatorDirective } from './validators/dates-validator.directive';
 import { FullnamePipe } from '../../core/pipes/fullname.pipe';
-import { BookCreateReactiveComponent } from './book-create-reactive/book-create-reactive.component';
 import { BooksFilterComponent } from './books-filter/books-filter.component';
 
 
@@ -36,8 +35,6 @@ import { BooksFilterComponent } from './books-filter/books-filter.component';
     BooksListComponent,
     BookDetailComponent,
     BookCreateComponent,
-    DatesValidatorDirective,
-    BookCreateReactiveComponent,
     BooksFilterComponent,
   ],
   imports: [
@@ -58,6 +55,7 @@ import { BooksFilterComponent } from './books-filter/books-filter.component';
     CdkAccordionModule,
     MatExpansionModule,
     FullnamePipe,
+    DisplayTimerComponent,
   ],
   providers: [
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
