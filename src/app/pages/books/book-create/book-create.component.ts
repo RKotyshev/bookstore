@@ -83,6 +83,10 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   }
 
   public onSubmit(): void {
+    if (this.bookForm.invalid) {
+      return;
+    }
+
     this.release_date.setValue(formatDate(this.release_date.value));
     this.writing_date.setValue(formatDate(this.writing_date.value));
 

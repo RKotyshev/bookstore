@@ -1,4 +1,4 @@
-<section class="mobile-wrapper" *ngIf="isMenuOpen">
+<section *ngIf="isMenuOpen" class="mobile-wrapper">
   <mat-nav-list class="mobile-list">
     <a mat-list-item routerLink="/" (click)="closeMenu()">Bookstore</a>
     <a mat-list-item routerLink="/books" (click)="closeMenu()">Books</a>
@@ -9,7 +9,7 @@
   </mat-nav-list>
 </section>
 
-<mat-toolbar class="header" color="accent">
+<mat-toolbar color="accent" class="header">
   <div class="container">
     <section class="site-navigation">
       <mat-nav-list class="bookstore-link">
@@ -23,18 +23,19 @@
     </section>
 
     <button 
-      class="navigation-toggle" 
-      (click)="isMenuOpen ? closeMenu() : openMenu()"
       mat-icon-button
-      aria-label="Icon button with a menu icon">
+      class="navigation-toggle" 
+      aria-label="Icon button with a menu icon"
+      (click)="isMenuOpen ? closeMenu() : openMenu()"
+      >
       <mat-icon [fontIcon]="isMenuOpen ? 'close' : 'menu'"></mat-icon>
     </button>
 
     <section class="user-navigation">
-      <a mat-icon-button aria-label="Icon button with an account_circle icon" routerLink="/auth">
+      <a mat-icon-button routerLink="/auth" aria-label="Icon button with an account_circle icon">
         <mat-icon fontIcon="account_circle"></mat-icon>
       </a>
-      <a mat-icon-button aria-label="Icon button with an shopping_bag icon" routerLink="/cart">
+      <a mat-icon-button routerLink="/cart" aria-label="Icon button with an shopping_bag icon">
         <mat-icon fontIcon="shopping_bag"></mat-icon>
       </a>
     </section>

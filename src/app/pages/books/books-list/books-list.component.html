@@ -1,8 +1,13 @@
 <h2 class="title">Books</h2>
 
-<button class="create-book" routerLink="/books/new" mat-stroked-button color="primary">Create book</button>
+<button 
+  mat-stroked-button
+  color="primary"
+  routerLink="/books/new"
+  class="create-book"
+  >Create book</button>
 
-<mat-card class="book" *ngFor="let book of booksList">
+<mat-card *ngFor="let book of booksList" class="book">
   <mat-card-header>
     <mat-card-title>
       <a [routerLink]="['/books', book.id]">{{ book.title }}</a>
@@ -11,14 +16,19 @@
       <a [routerLink]="['/books', book.id]">{{ book.price | currency }}</a>
     </mat-card-subtitle>
   </mat-card-header>
-  <img mat-card-image [routerLink]="['/books', book.id]" src="../../../assets/novelties-1.webp" [attr.alt]="book.title + ' cover image'">
+  <img 
+    mat-card-image
+    src="../../../assets/novelties-1.webp"
+    [routerLink]="['/books', book.id]"
+    [attr.alt]="book.title + ' cover image'"
+    >
   <mat-card-content>
     <a [routerLink]="['/books', book.id]">
       <p>{{ book.description }}</p>
     </a>
   </mat-card-content>
   <section class="actions">
-    <button class="favorite-button" mat-stroked-button color="primary">TO FAVORITES</button>
-    <button class="buy-button" mat-stroked-button color="primary">BUY</button>
+    <button mat-stroked-button color="primary" class="favorite-button">TO FAVORITES</button>
+    <button mat-stroked-button color="primary" class="buy-button">BUY</button>
   </section>
 </mat-card>

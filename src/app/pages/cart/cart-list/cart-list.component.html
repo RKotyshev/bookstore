@@ -1,9 +1,11 @@
 <h2>Cart</h2>
 
 <div class="cart-list">
-  <mat-card class="cart-item" *ngFor="let item of cartList">
+  <mat-card *ngFor="let item of cartList" class="cart-item">
     <mat-list class="item-info">
-      <span matListItem>{{ item.title }} <br> {{ item.price | currency }}</span>
+      <span matListItem>
+        {{ item.title }}<br>
+        {{ item.price | currency }}</span>
       <span matListItemLine>Amount: {{ item.in_stock }}</span>
     </mat-list>
     <mat-list class="date-info">
