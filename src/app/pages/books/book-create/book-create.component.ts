@@ -9,7 +9,7 @@ import { AuthorsService } from '../../../core/services/authors.service';
 import { GenresService } from '../../../core/services/genres.service';
 import { IAuthor } from '../../../core/interfaces/author';
 import { IGenre } from '../../../core/interfaces/genre';
-import { ICreateBookForm } from '../../../core/interfaces/book';
+import { IBook, ICreateBookForm } from '../../../core/interfaces/book';
 import { datesCompareValidator } from '../../../core/functions/validators/dates-compare-validator';
 import { formatDate } from '../utils/format-date';
 import { handleError } from '../../../core/functions/handle-error';
@@ -37,35 +37,35 @@ export class BookCreateComponent implements OnInit, OnDestroy {
     private _router: Router,
   ) { }
 
-  public get in_stock(): FormControl<number> {
+  public get inStockControl(): FormControl<number> {
     return this.bookForm.get('in_stock') as FormControl;
   }
 
-  public get title(): FormControl<string> {
+  public get titleControl(): FormControl<string> {
     return this.bookForm.get('title') as FormControl;
   }
 
-  public get description(): FormControl<string> {
+  public get descriptionControl(): FormControl<string> {
     return this.bookForm.get('description') as FormControl;
   }
 
-  public get price(): FormControl<number> {
+  public get priceControl(): FormControl<number> {
     return this.bookForm.get('price') as FormControl;
   }
 
-  public get genres(): FormControl<number[]> {
+  public get genresControl(): FormControl<number[]> {
     return this.bookForm.get('genres') as FormControl;
   }
   
-  public get author(): FormControl<number[]> {
+  public get authorControl(): FormControl<number[]> {
     return this.bookForm.get('author') as FormControl;
   }
   
-  public get release_date(): FormControl<string> {
+  public get releaseDateControl(): FormControl<string> {
     return this.bookForm.get('release_date') as FormControl;
   }
   
-  public get writing_date(): FormControl<string> {
+  public get writingDateControl(): FormControl<string> {
     return this.bookForm.get('writing_date') as FormControl;
   }
   
@@ -87,10 +87,6 @@ export class BookCreateComponent implements OnInit, OnDestroy {
       return 'Number of characters exceeded';
     }
 
-    if (control.hasError('min')) {
-      return 'Value can`t be less then zero';
-    }
-
     return 'Incorrect value';
   }
 
@@ -99,12 +95,16 @@ export class BookCreateComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const correctReleaseDate = formatDate(this.release_date.value);
-    const correctWritingDate = formatDate(this.writing_date.value);
-    this.release_date.setValue(correctReleaseDate);
-    this.writing_date.setValue(correctWritingDate);
+    const correctReleaseDate = formatDate(this.releaseDateControl.value);
+    const correctWritingDate = formatDate(this.writingDateControl.value);
 
-    this._booksService.postBook(this.bookForm.getRawValue()).pipe(
+    const newBook: IBook = {
+      ...this.bookForm.getRawValue(),
+      release_date: correctReleaseDate,
+      writing_date: correctWritingDate,
+    };
+
+    this._booksService.postBook(newBook).pipe(
       catchError(handleError),
       takeUntil(this._destroyed),
     ).subscribe({
