@@ -29,14 +29,14 @@ export class BooksComponent implements OnInit, OnDestroy {
     this._getBooks(this.pageIndexStart, this.pageSizeStart);
     this._getBooksCount();
   }
-
-  public getPaginatorData(event: PageEvent): void {
-    this._getBooks(event.pageIndex, event.pageSize);
-  }
-
+ 
   public ngOnDestroy(): void {
     this._destroyed.next();
     this._destroyed.complete();
+  }
+
+  public getPaginatorData(event: PageEvent): void {
+    this._getBooks(event.pageIndex, event.pageSize);
   }
 
   private _getBooks(pageIndex: number, pageSize: number): void {

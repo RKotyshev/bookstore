@@ -10,9 +10,9 @@ import { MobileMenuService } from './core/services/mobile-menu.service';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
+  @ViewChild(HeaderComponent) public headerComponent!: HeaderComponent;
   public title = 'bookstore-initial';
   public isMenuOpen: boolean = false;
-  @ViewChild(HeaderComponent) public headerComponent!: HeaderComponent;
 
   constructor(private _menuService: MobileMenuService) { }
 

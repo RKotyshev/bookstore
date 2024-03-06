@@ -1,24 +1,28 @@
-<mat-card class="novelties" color="accent">
+<mat-card color="accent" class="novelties">
   <mat-card-header>
     <mat-card-title>Novelties of literature</mat-card-title>
   </mat-card-header>
   <mat-card-content class="books">
-    <mat-card class="book-card" *ngFor="let novelty of noveltiesList">
+    <mat-card *ngFor="let novelty of noveltiesList" class="book-card">
       <mat-card-header>
         <a [routerLink]="['/books', novelty.id]">
           <mat-card-title>{{ novelty.title }}</mat-card-title>
           <mat-card-subtitle>{{ novelty.price | currency }}</mat-card-subtitle>
         </a>
       </mat-card-header>
-        <img mat-card-image [routerLink]="['/books', novelty.id]" src="../../../../assets/novelties-1.webp" [attr.alt]="novelty.title + ' cover image'"
-          width="140px" />
+        <img
+          mat-card-image
+          src="../../../../assets/novelties-1.webp"
+          width="140px" [routerLink]="['/books', novelty.id]"
+          [attr.alt]="novelty.title + ' cover image'"
+          />
       <mat-card-content>
         <a [routerLink]="['/books', novelty.id]">
           <p>{{ novelty.description | sliceSentence : 100 }}</p>
         </a>
       </mat-card-content>
-      <button class="favorite-button" mat-stroked-button color="primary">TO FAVORITES</button>
-      <button class="buy-button" mat-stroked-button color="primary">BUY</button>
+      <button mat-stroked-button color="primary" class="favorite-button">TO FAVORITES</button>
+      <button mat-stroked-button color="primary" class="buy-button">BUY</button>
     </mat-card>
   </mat-card-content>
 </mat-card>
