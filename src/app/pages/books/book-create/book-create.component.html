@@ -7,14 +7,14 @@
         <mat-label>Book title</mat-label>
         <input matInput formControlName="title" type="text">
         <mat-hint align="end">{{ title.value.length }}/25</mat-hint>
-        <mat-error *ngIf="title.invalid">{{ getErrorMessages(title) }}</mat-error>
+        <mat-error *ngIf="title.invalid">{{ getErrorMessage(title) }}</mat-error>
         <mat-error></mat-error>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Book description</mat-label>
         <input matInput formControlName="description" type="text">
-        <mat-error *ngIf="description.invalid">{{ getErrorMessages(description) }}</mat-error>
+        <mat-error *ngIf="description.invalid">{{ getErrorMessage(description) }}</mat-error>
       </mat-form-field>
     </div>
 
@@ -26,7 +26,7 @@
             {{ currentAuthor | fullname }}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="author.invalid">{{ getErrorMessages(author) }}</mat-error>
+        <mat-error *ngIf="author.invalid">{{ getErrorMessage(author) }}</mat-error>
       </mat-form-field>
 
       <mat-form-field>
@@ -36,7 +36,7 @@
             {{ currentGenre.title }}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="genres.invalid">{{ getErrorMessages(genres) }}</mat-error>
+        <mat-error *ngIf="genres.invalid">{{ getErrorMessage(genres) }}</mat-error>
       </mat-form-field>
     </div>
 
@@ -52,7 +52,7 @@
         <mat-datepicker-toggle matIconSuffix [for]="writingPicker"></mat-datepicker-toggle>
         <mat-datepicker #writingPicker></mat-datepicker>
         <mat-hint>YYYY-MM-DD</mat-hint>
-        <mat-error *ngIf="writing_date.invalid">{{ getErrorMessages(writing_date) }}</mat-error>
+        <mat-error *ngIf="writing_date.invalid">{{ getErrorMessage(writing_date) }}</mat-error>
       </mat-form-field>
 
       <mat-form-field>
@@ -66,21 +66,21 @@
         <mat-datepicker-toggle matIconSuffix [for]="releasePicker"></mat-datepicker-toggle>
         <mat-datepicker #releasePicker></mat-datepicker>
         <mat-hint>YYYY-MM-DD</mat-hint>
-        <mat-error *ngIf="release_date.invalid">{{ getErrorMessages(release_date) }}</mat-error>
+        <mat-error *ngIf="release_date.invalid">{{ getErrorMessage(release_date) }}</mat-error>
       </mat-form-field>
     </div>
 
     <div>
       <mat-form-field>
         <mat-label>In stock</mat-label>
-        <input matInput formControlName="in_stock" type="number">
-        <mat-error *ngIf="in_stock.invalid">{{ getErrorMessages(in_stock) }}</mat-error>
+        <input matInput formControlName="in_stock" type="number" min="0">
+        <mat-error *ngIf="in_stock.invalid">{{ getErrorMessage(in_stock) }}</mat-error>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Price</mat-label>
-        <input matInput formControlName="price" type="number">
-        <mat-error *ngIf="price.invalid">{{ getErrorMessages(price) }}</mat-error>
+        <input matInput formControlName="price" type="number" min="0">
+        <mat-error *ngIf="price.invalid">{{ getErrorMessage(price) }}</mat-error>
       </mat-form-field>
     </div>
 
@@ -101,7 +101,7 @@
     You will be redirected to the
      <a routerLink="/books">books list page</a>
       in 
-    <app-display-timer [timerDelay]="redirectDelaySeconds" (timerAlert)="onRedirect()"></app-display-timer>
+    <app-display-timer [timerDelay]="redirectDelaySeconds" (timerFinished)="onRedirect()"></app-display-timer>
      seconds
   </p>
 </div>
