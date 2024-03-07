@@ -1,29 +1,40 @@
 <form [formGroup]="filterForm">
-
   <mat-accordion>
+
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>General filters</mat-panel-title>
         <mat-panel-description>Set general filter parameters here</mat-panel-description>
       </mat-expansion-panel-header>
       <div class="fields-wrapper">
+
         <mat-form-field>
           <mat-label>Title</mat-label>
-          <input type="text" matInput formControlName="title">
+          <input matInput formControlName="title" type="text">
         </mat-form-field>
     
         <mat-form-field>
           <mat-label>Author</mat-label>
-          <input type="text" matInput placeholder="Start typing author name" formControlName="author" [matAutocomplete]="authorComplete">
+          <input
+            matInput
+            formControlName="author"
+            placeholder="Start typing author name"
+            type="text"
+            [matAutocomplete]="authorComplete"
+            >
           <mat-autocomplete #authorComplete="matAutocomplete">
-            <mat-option *ngFor="let author of authors$ | async" [value]="author | fullname">{{ author | fullname }}</mat-option>
+            <mat-option *ngFor="let author of authors$ | async" [value]="author | fullname">
+              {{ author | fullname }}
+            </mat-option>
           </mat-autocomplete>
         </mat-form-field>
         
         <mat-form-field>
           <mat-label>Genre</mat-label>
           <mat-select formControlName="genre">
-            <mat-option *ngFor="let genre of genres$ | async" [value]="genre.title">{{ genre.title }}</mat-option>
+            <mat-option *ngFor="let genre of genres$ | async" [value]="genre.title">
+              {{ genre.title }}
+            </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
@@ -34,21 +45,21 @@
         <mat-panel-title>Price filters</mat-panel-title>
         <mat-panel-description>Set price filter parameters here</mat-panel-description>
       </mat-expansion-panel-header>
-
       <div class="fields-wrapper">
+
         <mat-form-field>
           <mat-label>Certain price</mat-label>
-          <input type="number" matInput formControlName="price">
+          <input matInput formControlName="price" type="number">
         </mat-form-field>
     
         <mat-form-field>
           <mat-label>Price from</mat-label>
-          <input type="number" matInput formControlName="price_lte">
+          <input matInput formControlName="price_lte" type="number">
         </mat-form-field>
     
         <mat-form-field>
           <mat-label>Price to</mat-label>
-          <input type="number" matInput formControlName="price_gte">
+          <input matInput formControlName="price_gte" type="number">
         </mat-form-field>
       </div>
     </mat-expansion-panel>
@@ -58,11 +69,11 @@
         <mat-panel-title>Writing filters</mat-panel-title>
         <mat-panel-description>Set writing filter parameters here</mat-panel-description>
       </mat-expansion-panel-header>
-
       <div class="fields-wrapper">
+
         <mat-form-field>
           <mat-label>Certain writing date</mat-label>
-          <input matInput [matDatepicker]="writingPicker" formControlName="writing_date">
+          <input matInput formControlName="writing_date" [matDatepicker]="writingPicker">
           <mat-datepicker-toggle matIconSuffix [for]="writingPicker"></mat-datepicker-toggle>
           <mat-datepicker #writingPicker></mat-datepicker>
           <mat-hint>YYYY-MM-DD</mat-hint>
@@ -71,8 +82,8 @@
         <mat-form-field>
           <mat-label>Writing dates range</mat-label>
           <mat-date-range-input [rangePicker]="writingRangePicker">
-            <input matStartDate placeholder="From" formControlName="writing_date_gte">
-            <input matEndDate placeholder="Till" formControlName="writing_date_lte">
+            <input matStartDate formControlName="writing_date_gte" placeholder="From">
+            <input matEndDate formControlName="writing_date_lte" placeholder="Till">
           </mat-date-range-input>
           <mat-datepicker-toggle matIconSuffix [for]="writingRangePicker"></mat-datepicker-toggle>
           <mat-date-range-picker #writingRangePicker></mat-date-range-picker>
@@ -86,8 +97,8 @@
         <mat-panel-title>Release filters</mat-panel-title>
         <mat-panel-description>Set release filter parameters here</mat-panel-description>
       </mat-expansion-panel-header>
-
       <div class="fields-wrapper">
+
         <mat-form-field>
           <mat-label>Certain release date</mat-label>
           <input matInput formControlName="release_date" [matDatepicker]="releasePicker">
@@ -99,8 +110,8 @@
         <mat-form-field>
           <mat-label>Release dates range</mat-label>
           <mat-date-range-input [rangePicker]="releaseRangePicker">
-            <input matStartDate placeholder="From" formControlName="release_date_gte">
-            <input matEndDate placeholder="Till" formControlName="release_date_lte">
+            <input matStartDate formControlName="release_date_gte" placeholder="From">
+            <input matEndDate formControlName="release_date_lte" placeholder="Till">
           </mat-date-range-input>
           <mat-datepicker-toggle matIconSuffix [for]="releaseRangePicker"></mat-datepicker-toggle>
           <mat-date-range-picker #releaseRangePicker></mat-date-range-picker>
@@ -110,92 +121,5 @@
     </mat-expansion-panel>
   </mat-accordion>
 
-  <button type="submit" mat-stroked-button color="primary">Apply filters</button>
-
-  <!-- <div class="general">
-    <mat-form-field>
-      <mat-label>Title</mat-label>
-      <input type="text" matInput formControlName="title">
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-label>Author</mat-label>
-      <input type="text" matInput placeholder="Start typing author name" formControlName="author" [matAutocomplete]="authorComplete">
-      <mat-autocomplete #authorComplete="matAutocomplete">
-        <mat-option *ngFor="let author of authors$ | async" [value]="author | fullname">{{ author | fullname }}</mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
-    
-    <mat-form-field>
-      <mat-label>Genre</mat-label>
-      <mat-select formControlName="genre">
-        <mat-option *ngFor="let genre of genres$ | async" [value]="genre.title">{{ genre.title }}</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
-
-  <div class="prices" formGroupName="priceGroup">
-    <h4>Prices filter</h4>
-
-    <mat-form-field>
-      <mat-label>Certain price</mat-label>
-      <input type="number" matInput formControlName="price">
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-label>Price from</mat-label>
-      <input type="number" matInput formControlName="price_lte">
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-label>Price to</mat-label>
-      <input type="number" matInput formControlName="price_gte">
-    </mat-form-field>
-  </div>
-
-  <div class="writing-dates" formGroupName="writingDateGroup">
-    <h4>Writing date filter</h4>
-
-    <mat-form-field>
-      <mat-label>Certain writing date</mat-label>
-      <input matInput [matDatepicker]="writingPicker" formControlName="writing_date">
-      <mat-datepicker-toggle matIconSuffix [for]="writingPicker"></mat-datepicker-toggle>
-      <mat-datepicker #writingPicker></mat-datepicker>
-      <mat-hint>YYYY-MM-DD</mat-hint>
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-label>Writing dates range</mat-label>
-      <mat-date-range-input [rangePicker]="writingRangePicker">
-        <input matEndDate placeholder="From" formControlName="writing_date_gte">
-        <input matStartDate placeholder="Till" formControlName="writing_date_lte">
-      </mat-date-range-input>
-      <mat-datepicker-toggle matIconSuffix [for]="writingRangePicker"></mat-datepicker-toggle>
-      <mat-date-range-picker #writingRangePicker></mat-date-range-picker>
-      <mat-hint>YYYY-MM-DD - YYYY-MM-DD</mat-hint>
-    </mat-form-field>
-  </div>
-
-  <div class="release-dates" formGroupName="releaseDateGroup">
-    <h4>Release date filter</h4>
-
-    <mat-form-field>
-      <mat-label>Certain release date</mat-label>
-      <input matInput formControlName="release_date" [matDatepicker]="releasePicker">
-      <mat-datepicker-toggle matIconSuffix [for]="releasePicker"></mat-datepicker-toggle>
-      <mat-datepicker #releasePicker></mat-datepicker>
-      <mat-hint>YYYY-MM-DD</mat-hint>
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-label>Release dates range</mat-label>
-      <mat-date-range-input [rangePicker]="releaseRangePicker">
-        <input matStartDate placeholder="From" formControlName="release_date_gte">
-        <input matEndDate placeholder="Till" formControlName="release_date_lte">
-      </mat-date-range-input>
-      <mat-datepicker-toggle matIconSuffix [for]="releaseRangePicker"></mat-datepicker-toggle>
-      <mat-date-range-picker #releaseRangePicker></mat-date-range-picker>
-      <mat-hint>YYYY-MM-DD - YYYY-MM-DD</mat-hint>
-    </mat-form-field>
-  </div> -->
+  <button mat-stroked-button color="primary" type="submit">Apply filters</button>
 </form>
