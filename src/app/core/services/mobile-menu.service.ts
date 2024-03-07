@@ -7,8 +7,6 @@ import { Injectable } from '@angular/core';
 export class MobileMenuService {
   private _isMenuOpen: boolean = false;
 
-  constructor() { }
-
   public openMenu(): void {
     this._isMenuOpen = true;
   }

@@ -50,5 +50,4 @@ export class AuthorsComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._destroyed))
       .subscribe((authors: IAuthor[]) => this.currentAuthorsList = authors);
   }
-
 }
