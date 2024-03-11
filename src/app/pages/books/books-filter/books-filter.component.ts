@@ -8,6 +8,7 @@ import { GenresService } from '../../../core/services/genres.service';
 import { IAuthor } from '../../../core/interfaces/author';
 import { IGenre } from '../../../core/interfaces/genre';
 import { IFilterBookForm } from '../../../core/interfaces/book';
+import { BooksSortList } from '../../../utils/constants/sorting';
 
 
 @Component({
@@ -19,6 +20,7 @@ export class BooksFilterComponent implements OnInit {
   public filterForm!: FormGroup<IFilterBookForm>;
   public authors$!: Observable<IAuthor[]>;
   public genres$!: Observable<IGenre[]>;
+  public sortList: string[] = BooksSortList;
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -39,63 +41,45 @@ export class BooksFilterComponent implements OnInit {
   }
 
   private _initForm(): void {
-    this.filterForm = this._formBuilder.group({
+    this.filterForm = this._formBuilder.group<IFilterBookForm>({
       title: this._formBuilder.control({ 
-        value: null as string | null, 
+        value: null, 
         disabled: false,
       }),
       author: this._formBuilder.control({
-        value: null as string | null,
+        value: null,
         disabled: false,
       }),
       genre: this._formBuilder.control({
-        value: null as string | null,
+        value: null,
         disabled: false,
       }),
-      priceGroup: this._formBuilder.group({
-        price: this._formBuilder.control({
-          value: null as number | null,
-          disabled: false,
-        }),
-        price_lte: this._formBuilder.control({
-          value: null as number | null,
-          disabled: false,
-        }),
-        price_gte: this._formBuilder.control({
-          value: null as number | null,
-          disabled: false,
-        }),
+      price_lte: this._formBuilder.control({
+        value: null,
+        disabled: false,
       }),
-      writingDateGroup: this._formBuilder.group({
-        writing_date: this._formBuilder.control({
-          value: null as string | null,
-          disabled: false,
-        }),
-        writing_date_gte: this._formBuilder.control({
-          value: null as string | null,
-          disabled: false,
-        }),
-        writing_date_lte: this._formBuilder.control({
-          value: null as string | null,
-          disabled: false,
-        }),
+      price_gte: this._formBuilder.control({
+        value: null,
+        disabled: false,
       }),
-      releaseDateGroup: this._formBuilder.group({
-        release_date: this._formBuilder.control({
-          value: null as string | null,
-          disabled: false,
-        }),
-        release_date_gte: this._formBuilder.control({
-          value: null as string | null,
-          disabled: false,
-        }),
-        release_date_lte: this._formBuilder.control({
-          value: null as string | null,
-          disabled: false,
-        }),
+      writing_date_gte: this._formBuilder.control({
+        value: null,
+        disabled: false,
+      }),
+      writing_date_lte: this._formBuilder.control({
+        value: null,
+        disabled: false,
+      }),
+      release_date_gte: this._formBuilder.control({
+        value: null,
+        disabled: false,
+      }),
+      release_date_lte: this._formBuilder.control({
+        value: null,
+        disabled: false,
       }),
       ordering: this._formBuilder.control({
-        value: null as string | null,
+        value: null,
         disabled: false,
       }),
     });

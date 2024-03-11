@@ -1,4 +1,4 @@
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 
 export interface IBook {
   id?: number,
@@ -25,22 +25,13 @@ export interface ICreateBookForm {
 
 export interface IFilterBookForm {
   title: FormControl<string | null>,
-  priceGroup: FormGroup<{
-    price: FormControl<number | null>,
-    price_gte: FormControl<number | null>,
-    price_lte: FormControl<number | null>,
-  }>,
+  price_gte: FormControl<number | null>,
+  price_lte: FormControl<number | null>,
   genre: FormControl<string | null>,
   author: FormControl<string | null>,
-  releaseDateGroup: FormGroup<{
-    release_date: FormControl<string | null>,
-    release_date_gte: FormControl<string | null>,
-    release_date_lte: FormControl<string | null>,
-  }>,
-  writingDateGroup: FormGroup<{
-    writing_date: FormControl<string | null>,
-    writing_date_gte: FormControl<string | null>,
-    writing_date_lte: FormControl<string | null>,
-  }>,
+  release_date_gte: FormControl<string | null>,
+  release_date_lte: FormControl<string | null>,
+  writing_date_gte: FormControl<string | null>,
+  writing_date_lte: FormControl<string | null>,
   ordering: FormControl<string | null>,
 }

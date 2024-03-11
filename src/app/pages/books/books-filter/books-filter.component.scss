@@ -1,20 +1,58 @@
 @import '../../../styles/variables.scss';
 
 
+// .fields-wrapper {
+//   display: flex;
+//   flex-direction: column;
+//   padding-top: 10px;
+
+//   @media(min-width: $mobile-width-horizontal) {
+//     flex-direction: row;
+//     justify-content: space-around;
+//     column-gap: 10px;
+//   } 
+// }
+
+// button[type="submit"] {
+//   display: block;
+//   margin: 0 auto;
+//   margin-top: 20px;
+// }
+
 .fields-wrapper {
   display: flex;
-  flex-direction: column;
-  padding-top: 10px;
+  flex-wrap: wrap;
+  column-gap: 20px;
+
+  section {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    // align-items: center;
+    // justify-content: flex-end;
+  }
+}
+
+.actions {
+  display: flex;
+  flex-direction: column-reverse;
+  row-gap: 10px;
+  padding-top: 20px;
 
   @media(min-width: $mobile-width-horizontal) {
     flex-direction: row;
-    justify-content: space-around;
-    column-gap: 10px;
-  } 
-}
+    row-gap: 0;
+    padding-top: 0px;
+    align-items: center;
+    justify-content: flex-end;
+  
+    button:first-of-type {
+      margin-right: 20px;
+    }
+  
+    mat-form-field {
+      margin-left: auto;
+    }
+  }
 
-button[type="submit"] {
-  display: block;
-  margin: 0 auto;
-  margin-top: 20px;
 }

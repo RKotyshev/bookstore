@@ -2,6 +2,10 @@
 @import '../../../styles/mixins';
 
 
+h2 {
+  margin-top: 20px;
+}
+
 .book {
   display: flex;
   flex-direction: row;
