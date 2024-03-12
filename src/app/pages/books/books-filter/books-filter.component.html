@@ -1,4 +1,4 @@
-<form [formGroup]="filterForm">
+<form [formGroup]="filterForm" (ngSubmit)="onSubmit()">
   <mat-accordion>
 
     <mat-expansion-panel>
@@ -49,12 +49,12 @@
           
           <mat-form-field>
             <mat-label>Price from</mat-label>
-            <input matInput formControlName="price_lte" type="number">
+            <input matInput formControlName="price_gte" type="number">
           </mat-form-field>
       
           <mat-form-field>
             <mat-label>Price to</mat-label>
-            <input matInput formControlName="price_gte" type="number">
+            <input matInput formControlName="price_lte" type="number">
           </mat-form-field>
         </section>
 
@@ -88,14 +88,27 @@
       <section class="actions">
         <button mat-stroked-button color="primary" type="submit">Apply filters</button>
         <button mat-stroked-button color="warn" type="button">Reset filters</button>
+
         <mat-form-field>
           <mat-label>Sort by</mat-label>
-          <mat-select formControlName="ordering">
-            <mat-option *ngFor="let sortType of sortList" [value]="sortType">{{ sortType }}</mat-option>
+          <mat-select formControlName="filterType">
+            <mat-option *ngFor="let sortType of sortList" [value]="sortType.value">
+              {{ sortType.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Sort order</mat-label>
+          <mat-select formControlName="direction">
+            <mat-option value="">Descending</mat-option>
+            <mat-option value="-">Ascending</mat-option>
           </mat-select>
         </mat-form-field>
       </section>
     </mat-expansion-panel>
+
+    {{ filterForm.value | json }}
   </mat-accordion>
 
 </form>

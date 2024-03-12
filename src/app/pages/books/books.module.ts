@@ -25,8 +25,8 @@ import { BooksListComponent } from './books-list/books-list.component';
 import { BookDetailComponent } from './book-detail/book-detail.component';
 import { DisplayTimerComponent } from '../../core/components/display-with-timer/display-timer.component';
 import { BookCreateComponent } from './book-create/book-create.component';
-import { FullnamePipe } from '../../core/pipes/fullname.pipe';
 import { BooksFilterComponent } from './books-filter/books-filter.component';
+import { FullnamePipe } from '../../core/pipes/fullname.pipe';
 
 
 @NgModule({
@@ -54,8 +54,8 @@ import { BooksFilterComponent } from './books-filter/books-filter.component';
     MatAutocompleteModule,
     CdkAccordionModule,
     MatExpansionModule,
-    FullnamePipe,
     DisplayTimerComponent,
+    FullnamePipe,
   ],
   providers: [
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },

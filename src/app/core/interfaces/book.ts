@@ -33,5 +33,44 @@ export interface IFilterBookForm {
   release_date_lte: FormControl<string | null>,
   writing_date_gte: FormControl<string | null>,
   writing_date_lte: FormControl<string | null>,
-  ordering: FormControl<string | null>,
+  filterType?: FormControl<string | null>,
+  direction?: FormControl<string | null>,
 }
+
+export interface IFilterBookValues {
+  title: string | null,
+  price_gte: number | null,
+  price_lte: number | null,
+  genre: string | null,
+  author: string | null,
+  release_date_gte: string | null,
+  release_date_lte: string | null,
+  writing_date_gte: string | null,
+  writing_date_lte: string | null,
+  ordering: string | null,
+  // filterType?: string | null,
+  // direction?: '' | '-' | null,
+}
+
+export interface IBookFilterParams {
+  title?: string,
+  price?: number,
+  price_gte?: number,
+  price_lte?: number,
+  genre?: string,
+  author?: string,
+  release_date?: string,
+  release_date_gte?: string,
+  release_date_lte?: string,
+  writing_date?: string,
+  writing_date_gte?: string,
+  writing_date_lte?: string,
+  ordering?: string,
+}
+
+export interface IBookPaginatorParams {
+  page?: number,
+  page_size?: number,
+}
+
+export interface IBookAllParams extends IBookFilterParams, IBookPaginatorParams {}

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { Observable, map } from 'rxjs';
 
-import { IBook } from '../interfaces/book';
+import { IBook, IBookAllParams, IBookFilterParams, IFilterBookForm, IFilterBookValues } from '../interfaces/book';
 import { IResponse } from '../interfaces/response';
 
 
@@ -36,5 +36,35 @@ export class BooksService {
 
   public postBook(book: IBook): Observable<IBook> {
     return this._http.post<IBook>(`${this._booksUrl}/`, book);
+  }
+
+  public getBooksList(inputParams: IFilterBookValues): Observable<IBook[]> {
+    const params = {
+      ...inputParams,
+    };
+    const processedParams = Object.fromEntries(
+      Object.entries(params).filter(([, value]: [string, string | number | null]) => {
+        return value !== null && value !== '';
+      }),
+    );
+
+    console.log(processedParams);
+
+
+    const httpParams: HttpParams = new HttpParams({
+      fromObject: processedParams as { [s: string]: string | number } },
+    );
+
+    // Object.keys(processedParams).forEach((key: string) => {
+    //   // console.log(`${key}: ${JSON.stringify(processedParams[key])}`);
+    //   httpParams = httpParams.append(key, JSON.stringify(processedParams[key]));
+    // });
+
+    console.log(`Http params: ${httpParams}`);
+    // console.log(processedParams);
+
+    return this._http.get<IResponse<IBook>>(`${this._booksUrl}/`, { params: httpParams }).pipe(
+      map((response: IResponse<IBook>) => response.result),
+    );
   }
 }
