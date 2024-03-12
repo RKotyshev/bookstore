@@ -9,7 +9,7 @@ import { IAuthor } from '../../../core/interfaces/author';
 import { IGenre } from '../../../core/interfaces/genre';
 import { IFilterBookForm, IRequestBook } from '../../../core/interfaces/book';
 import { BooksSortList, IFilterType } from '../../../utils/constants/sorting';
-import { BooksService } from '../../../core/services/books.service';
+// import { BooksService } from '../../../core/services/books.service';
 import { formatDate } from '../utils/format-date';
 
 
@@ -19,7 +19,7 @@ import { formatDate } from '../utils/format-date';
   styleUrl: './books-filter.component.scss',
 })
 export class BooksFilterComponent implements OnInit {
-  @Output() public filterValueChange: EventEmitter<IRequestBook> = new EventEmitter();
+  @Output() public filterValueChange = new EventEmitter<IRequestBook>();
   public filterForm!: FormGroup<IFilterBookForm>;
   public authors$!: Observable<IAuthor[]>;
   public genres$!: Observable<IGenre[]>;
@@ -29,7 +29,7 @@ export class BooksFilterComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private _authorsService: AuthorsService,
     private _genresService: GenresService,
-    private _booksService: BooksService,
+    // private _booksService: BooksService,
   ) {}
 
   public get author(): FormControl {

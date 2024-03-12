@@ -38,7 +38,7 @@ export class BooksService {
     return this._http.post<IBook>(`${this._booksUrl}/`, book);
   }
 
-  public getBooksList(inputValues: IRequestBook): Observable<IBook[]> {
+  public getBooksList(inputValues: IRequestBook): Observable<IResponse<IBook>> {
     const values = {
       ...inputValues,
     };
@@ -56,8 +56,9 @@ export class BooksService {
 
     console.log(`Http params: ${params}`);
 
-    return this._http.get<IResponse<IBook>>(`${this._booksUrl}/`, { params }).pipe(
-      map((response: IResponse<IBook>) => response.result),
-    );
+    // return this._http.get<IResponse<IBook>>(`${this._booksUrl}/`, { params }).pipe(
+    //   map((response: IResponse<IBook>) => response.result),
+    // );
+    return this._http.get<IResponse<IBook>>(`${this._booksUrl}/`, { params });
   }
 }
