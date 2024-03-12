@@ -2,10 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { PageEvent } from '@angular/material/paginator';
 
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, map } from 'rxjs';
 
 import { BooksService } from '../../core/services/books.service';
-import { IBook } from '../../core/interfaces/book';
+import { IBook, IRequestBook } from '../../core/interfaces/book';
 import { IResponse } from '../../core/interfaces/response';
 import { PageSizeOptions } from '../../utils/constants/paginator';
 
@@ -16,23 +16,30 @@ import { PageSizeOptions } from '../../utils/constants/paginator';
   styleUrl: './books.component.scss',
 })
 export class BooksComponent implements OnInit, OnDestroy {
-  public currentBooksList: IBook[] = [];
-  public pageIndexStart = 0;
-  public pageSizeStart = 5;
+  // public currentBooksList: IBook[] = [];
+  // public pageIndexStart = 0;
+  // public pageSizeStart = 5;
 
-  public pageIndexCurrent = 0;
+  public pageIndexCurrent = 1;
   public pageSizeCurrent = 5;
 
-  public totalBooks!: number;
+  // public totalBooks!: number;
   public pageSize = PageSizeOptions;
-  // public currentBooksList$!: Observable<IBook[]> = [];
+  public totalBooks$!: Observable<number>;
+  public currentBooksList$!: Observable<IBook[]>;
+  public filterInput!: IRequestBook;
   private _destroyed = new Subject<void>;
 
   constructor(private _bookService: BooksService) { }
 
   public ngOnInit(): void {
-    this._getBooks(this.pageIndexStart, this.pageSizeStart);
-    this._getBooksCount();
+    // this._getBooks(this.pageIndexStart, this.pageSizeStart);
+    // this._getBooksCount();
+    this._getBooksCurrent();
+    this.totalBooks$ = this._bookService.getBooksData().pipe(
+      map((response: IResponse<IBook>) => response.total_items),
+      // tap(console.log),
+    );
   }
  
   public ngOnDestroy(): void {
@@ -41,25 +48,42 @@ export class BooksComponent implements OnInit, OnDestroy {
   }
 
   public getPaginatorData(event: PageEvent): void {
-    this._getBooks(event.pageIndex, event.pageSize);
-
-    this.pageIndexCurrent = event.pageIndex;
+    // this._getBooks(event.pageIndex, event.pageSize);
+    // console.log('test');
+    this.pageIndexCurrent = event.pageIndex + 1;
     this.pageSizeCurrent = event.pageSize;
+    this._getBooksCurrent();
   }
 
-  private _getBooks(pageIndex: number, pageSize: number): void {
-    this._bookService.getPaginatedBooks(pageIndex, pageSize)
-      .pipe(takeUntil(this._destroyed))
-      .subscribe((books: IBook[]) => this.currentBooksList = books);
-  }
-
-  // private _getBooksCurrent() {
-  //   this._bookService.getBooksList()
+  // private _getBooks(pageIndex: number, pageSize: number): void {
+  //   this._bookService.getPaginatedBooks(pageIndex, pageSize)
+  //     .pipe(takeUntil(this._destroyed))
+  //     .subscribe((books: IBook[]) => this.currentBooksList = books);
   // }
 
-  private _getBooksCount(): void {
-    this._bookService.getBooksData()
-      .pipe(takeUntil(this._destroyed))
-      .subscribe((response: IResponse<IBook>) => this.totalBooks = response.total_items);
+  public onInput(value: IRequestBook): void {
+    console.log(`Value from books component: ${JSON.stringify(value)}`);
+    this.filterInput = value;
+    this._getBooksCurrent();
   }
+
+  private _getBooksCurrent(): void {
+    const requestValue = {
+      ...this.filterInput,
+      page: this.pageIndexCurrent,
+      page_size: this.pageSizeCurrent,
+    };
+
+    console.log(`Request value: ${JSON.stringify(requestValue)}`);
+
+    this.currentBooksList$ = this._bookService.getBooksList(requestValue);
+  }
+
+  // private _getBooksCount(): void {
+  //   this._bookService.getBooksData()
+  //     .pipe(takeUntil(this._destroyed))
+  //     .subscribe((response: IResponse<IBook>) => this.totalBooks = response.total_items);
+  // }
+
+
 }

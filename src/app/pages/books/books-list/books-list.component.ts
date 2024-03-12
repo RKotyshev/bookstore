@@ -9,5 +9,5 @@ import { IBook } from '../../../core/interfaces/book';
   styleUrl: './books-list.component.scss',
 })
 export class BooksListComponent {
-  @Input() public booksList!: IBook[];
+  @Input() public booksList!: IBook[] | null;
 }

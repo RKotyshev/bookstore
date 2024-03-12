@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 import { Observable, switchMap } from 'rxjs';
@@ -7,7 +7,7 @@ import { AuthorsService } from '../../../core/services/authors.service';
 import { GenresService } from '../../../core/services/genres.service';
 import { IAuthor } from '../../../core/interfaces/author';
 import { IGenre } from '../../../core/interfaces/genre';
-import { IBookFilterParams, IFilterBookForm } from '../../../core/interfaces/book';
+import { IFilterBookForm, IRequestBook } from '../../../core/interfaces/book';
 import { BooksSortList, IFilterType } from '../../../utils/constants/sorting';
 import { BooksService } from '../../../core/services/books.service';
 import { formatDate } from '../utils/format-date';
@@ -19,6 +19,7 @@ import { formatDate } from '../utils/format-date';
   styleUrl: './books-filter.component.scss',
 })
 export class BooksFilterComponent implements OnInit {
+  @Output() public filterValueChange: EventEmitter<IRequestBook> = new EventEmitter();
   public filterForm!: FormGroup<IFilterBookForm>;
   public authors$!: Observable<IAuthor[]>;
   public genres$!: Observable<IGenre[]>;
@@ -44,32 +45,12 @@ export class BooksFilterComponent implements OnInit {
   }
 
   public onSubmit(): void {
-    // const title = this.filterForm.get('title')?.getRawValue();
-    // const priceGte = this.filterForm.get('priceGte')?.getRawValue();
-    // const priceLte = this.filterForm.get('priceLte')?.getRawValue();
-    // const genre = this.filterForm.get('genre')?.getRawValue();
-    // const author = this.filterForm.get('author')?.getRawValue();
     const releaseDateGte = formatDate(this.filterForm.get('release_date_gte')?.getRawValue());
     const releaseDateLte = formatDate(this.filterForm.get('release_date_lte')?.getRawValue());
     const writingDateGte = formatDate(this.filterForm.get('writing_date_gte')?.getRawValue());
     const writingDateLte = formatDate(this.filterForm.get('writing_date_lte')?.getRawValue());
     const ordering: string | null = this.filterForm.get('direction')?.getRawValue() + 
     this.filterForm.get('filterType')?.getRawValue();
-    // console.log(releaseDateGte);
-
-    // const completedFormValue = {
-    //   title: title,
-    //   price_gte: priceGte,
-    //   price_lte: priceLte,
-    //   genre: genre,
-    //   author: author,
-    //   release_date_gte: releaseDateGte,
-    //   release_date_lte: releaseDateLte,
-    //   writing_date_gte: writingDateGte,
-    //   writing_date_lte: writingDateLte,
-    //   ordering: ordering,
-    // };
-
     
     const completedFormRawValue = {
       ...this.filterForm.getRawValue(),
@@ -85,7 +66,9 @@ export class BooksFilterComponent implements OnInit {
 
     console.log(completedFormRawValue);
 
-    this._booksService.getBooksList(completedFormRawValue).subscribe(console.log);
+    this.filterValueChange.emit(completedFormRawValue);
+
+    // this._booksService.getBooksList(completedFormRawValue).subscribe(console.log);
   }
 
   private _initForm(): void {
