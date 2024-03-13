@@ -51,10 +51,3 @@ export interface IRequestBook {
   page?: number,
   page_size?: number
 }
-
-export interface IBookPaginatorParams {
-  page?: number,
-  page_size?: number,
-}
-
-export interface IBookAllParams extends IBookPaginatorParams {}

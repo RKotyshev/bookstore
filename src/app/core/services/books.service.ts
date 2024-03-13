@@ -38,27 +38,21 @@ export class BooksService {
     return this._http.post<IBook>(`${this._booksUrl}/`, book);
   }
 
-  public getBooksList(inputValues: IRequestBook): Observable<IResponse<IBook>> {
+  public getFilteredBooks(inputValues: IRequestBook): Observable<IResponse<IBook>> {
     const values = {
       ...inputValues,
     };
+  
     const processedValues = Object.fromEntries(
       Object.entries(values).filter(([, value]: [string, string | number | null]) => {
         return value !== null && value !== '';
       }),
     );
 
-    console.log(processedValues);
-
     const params: HttpParams = new HttpParams({
       fromObject: processedValues as { [s: string]: string | number } },
     );
 
-    console.log(`Http params: ${params}`);
-
-    // return this._http.get<IResponse<IBook>>(`${this._booksUrl}/`, { params }).pipe(
-    //   map((response: IResponse<IBook>) => response.result),
-    // );
     return this._http.get<IResponse<IBook>>(`${this._booksUrl}/`, { params });
   }
 }

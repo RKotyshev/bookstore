@@ -1,8 +1,8 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
-import { Observable, filter, switchMap } from 'rxjs';
+import { Observable, Subject, filter, switchMap, takeUntil } from 'rxjs';
 
 import { AuthorsService } from '../../../core/services/authors.service';
 import { GenresService } from '../../../core/services/genres.service';
@@ -10,7 +10,6 @@ import { IAuthor } from '../../../core/interfaces/author';
 import { IGenre } from '../../../core/interfaces/genre';
 import { IFilterBookForm, IRequestBook } from '../../../core/interfaces/book';
 import { BooksSortList, IFilterType } from '../../../utils/constants/sorting';
-// import { BooksService } from '../../../core/services/books.service';
 import { formatDate } from '../utils/format-date';
 
 
@@ -19,22 +18,21 @@ import { formatDate } from '../utils/format-date';
   templateUrl: './books-filter.component.html',
   styleUrl: './books-filter.component.scss',
 })
-export class BooksFilterComponent implements OnInit {
+export class BooksFilterComponent implements OnInit, OnDestroy {
   @Output() public filterValueChange = new EventEmitter<IRequestBook>();
-  public filterForm!: FormGroup<IFilterBookForm>;
   public sortList: IFilterType[] = BooksSortList;
+  public filterForm!: FormGroup<IFilterBookForm>;
   public authors$!: Observable<IAuthor[]>;
   public genres$!: Observable<IGenre[]>;
   private _queryParams$: Observable<Params> = this._route.queryParams;
-  private _params!: Params;
-  // public query!: Params;
+  private _destroyed = new Subject<void>;
 
   constructor(
     private _formBuilder: NonNullableFormBuilder,
     private _authorsService: AuthorsService,
     private _genresService: GenresService,
-    // private _booksService: BooksService,
     private _route: ActivatedRoute,
+    private _router: Router,
   ) {}
 
   public get titleControl(): FormControl<string | null> {
@@ -88,16 +86,30 @@ export class BooksFilterComponent implements OnInit {
       switchMap((term: string) => this._authorsService.getSuggestedAuthors(term)),
     );
     this.genres$ = this._genresService.getPaginatedGenres(0, 100);
-    // this.query = this._route.snapshot.queryParams;
-    // this.filterForm.get('title')?.setValue(this.query['title']);
   }
 
-  public onSubmit(): void { 
+  public ngOnDestroy(): void {
+    this._destroyed.next();
+    this._destroyed.complete();
+  }
+
+  public onSubmit(): void {
     const releaseDateGte = formatDate(this.releaseDateGteControl.getRawValue());
     const releaseDateLte = formatDate(this.releaseDateLteControl.getRawValue());
     const writingDateGte = formatDate(this.writingDateGteControl.getRawValue());
     const writingDateLte = formatDate(this.writingDateLteControl.getRawValue());
     const ordering = this.directionControl.getRawValue() + this.filterTypeControl.getRawValue();
+
+    this._router.navigate(['/books'], {
+      queryParams: {
+        ...this.filterForm.getRawValue(),
+        release_date_gte: releaseDateGte || null,
+        release_date_lte: releaseDateLte || null,
+        writing_date_gte: writingDateGte || null,
+        writing_date_lte: writingDateLte || null,
+      },
+      onSameUrlNavigation: undefined,
+    });
     
     const completedFormRawValue = {
       ...this.filterForm.getRawValue(),
@@ -111,11 +123,7 @@ export class BooksFilterComponent implements OnInit {
     delete completedFormRawValue.filterType;
     delete completedFormRawValue.direction;
 
-    console.log(completedFormRawValue);
-
     this.filterValueChange.emit(completedFormRawValue);
-
-    // this._booksService.getBooksList(completedFormRawValue).subscribe(console.log);
   }
 
   public onReset(): void {
@@ -125,7 +133,7 @@ export class BooksFilterComponent implements OnInit {
   private _initForm(): void {
     this.filterForm = this._formBuilder.group<IFilterBookForm>({
       title: this._formBuilder.control({ 
-        value: this._params?.['title'] || null, 
+        value: null, 
         disabled: false,
       }),
       author: this._formBuilder.control({
@@ -170,40 +178,22 @@ export class BooksFilterComponent implements OnInit {
       }),
     });
 
-    this._queryParams$.subscribe((params: Params) => {
-      this._setQueryValue(params);
+    this._queryParams$.pipe(
+      takeUntil(this._destroyed),
+    ).subscribe((params: Params) => {
+      this.filterForm.setValue({
+        title: params['title'] ?? null,
+        author: params['author'] ?? null,
+        genre: params['genre'] ?? null,
+        price_lte: params['price_lte'] ?? null,
+        price_gte: params['price_gte'] ?? null,
+        writing_date_lte: params['writing_date_lte'] ?? null,
+        writing_date_gte: params['writing_date_gte'] ?? null,
+        release_date_lte: params['release_date_lte'] ?? null,
+        release_date_gte: params['release_date_gte'] ?? null,
+        filterType: params['filterType'] ?? 'id',
+        direction: params['direction'] ?? '',
+      });
     });
-  }
-
-  private _setQueryValue(params: Params): void {
-    // const direction: boolean = params['ordering']?.startsWith('-');
-    // const filterTypeValue: string = direction ? params['ordering'].slice(1) : params['ordering'];
-    // const directionValue: string = direction ? '-' : '';
-
-    this.filterForm.setValue({
-      title: params['title'] ?? null,
-      author: params['author'] ?? null,
-      genre: params['genre'] ?? null,
-      price_lte: params['params_lte'] ?? null,
-      price_gte: params['params_gte'] ?? null,
-      writing_date_lte: params['writing_date_lte'] ?? null,
-      writing_date_gte: params['writing_date_gte'] ?? null,
-      release_date_lte: params['release_date_lte'] ?? null,
-      release_date_gte: params['release_date_gte'] ?? null,
-      filterType: params['filterType'] ?? 'id',
-      direction: params['direction'] ?? '',
-    });
-
-    // this.titleControl.setValue(params['title'] ?? null);
-    // this.authorControl.setValue(params['author']);
-    // this.genreControl.setValue(params['genre']);
-    // this.priceLteControl.setValue(params['price_lte']);
-    // this.priceGteControl.setValue(params['price_gte']);
-    // this.writingDateLteControl.setValue(params['writing_date_lte']);
-    // this.writingDateGteControl.setValue(params['writing_date_gte']);
-    // this.releaseDateGteControl.setValue(params['release_date_gte']);
-    // this.releaseDateLteControl.setValue(params['release_date_lte']);
-    // this.filterTypeControl.setValue(filterTypeValue ?? 'id');
-    // this.directionControl.setValue(directionValue);
   }
 }

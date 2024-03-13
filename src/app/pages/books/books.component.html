@@ -6,15 +6,7 @@
     >Create book</button>
   <app-books-filter (filterValueChange)="filterUpdate($event)"></app-books-filter>
 
-<app-books-list [booksList]="currentBooksList2$ | async"></app-books-list>
-
-<!-- <mat-paginator 
-  #paginator
-  [length]="totalBooks$ | async"
-  [pageSize]="pageSizeCurrent"
-  [pageSizeOptions]="pageSize"
-  (page)="getPaginatorData($event)"
-  ></mat-paginator> -->
+<app-books-list [booksList]="currentBooksList$ | async"></app-books-list>
   
 <mat-paginator 
   #paginator

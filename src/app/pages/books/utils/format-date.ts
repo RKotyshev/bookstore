@@ -7,7 +7,8 @@ export function formatDate(inputDate: string | null): string {
   const year = fullDate.getFullYear();
   const monthNumber = fullDate.getMonth() + 1;
   const month = monthNumber < 10 ? `0${monthNumber}` : monthNumber;
-  const date = fullDate.getDate();
+  const dateNumber = fullDate.getDate();
+  const date = dateNumber < 10 ? `0${dateNumber}` : dateNumber;
 
   return `${year}-${month}-${date}`;
 }
