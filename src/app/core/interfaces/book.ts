@@ -47,7 +47,7 @@ export interface IRequestBook {
   release_date_lte?: string | null,
   writing_date_gte?: string | null,
   writing_date_lte?: string | null,
-  ordering?: string | null,
+  ordering?: string,
   page?: number,
   page_size?: number
 }
