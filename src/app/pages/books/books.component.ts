@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import {  MatPaginator, PageEvent } from '@angular/material/paginator';
 
@@ -8,6 +8,7 @@ import { BooksService } from '../../core/services/books.service';
 import { IBook, IRequestBook } from '../../core/interfaces/book';
 import { IResponse } from '../../core/interfaces/response';
 import { PageSizeOptions } from '../../utils/constants/paginator';
+import { BooksFilterComponent } from './books-filter/books-filter.component';
 
 
 @Component({
@@ -15,8 +16,9 @@ import { PageSizeOptions } from '../../utils/constants/paginator';
   templateUrl: './books.component.html',
   styleUrl: './books.component.scss',
 })
-export class BooksComponent implements OnInit, OnDestroy {
+export class BooksComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('paginator') public paginator!: MatPaginator;
+  @ViewChild('filter') public filter!: BooksFilterComponent;
   public pageSizes = PageSizeOptions;
   public totalBooks!: number;
   public currentBooksList$!: Observable<IBook[]>;
@@ -46,6 +48,11 @@ export class BooksComponent implements OnInit, OnDestroy {
         return response.result;
       }),
     );
+  }
+
+  public ngAfterViewInit(): void {
+    this.filter.filterForm.markAsTouched();
+    this.filter.onSubmit();
   }
 
   public ngOnDestroy(): void {

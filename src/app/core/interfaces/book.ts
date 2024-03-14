@@ -33,8 +33,8 @@ export interface IFilterBookForm {
   release_date_lte: FormControl<string | null>,
   writing_date_gte: FormControl<string | null>,
   writing_date_lte: FormControl<string | null>,
-  filterType?: FormControl<string | null>,
-  direction?: FormControl<string | null>,
+  filterType?: FormControl<string>,
+  direction?: FormControl<string>,
 }
 
 export interface IRequestBook {
@@ -49,5 +49,7 @@ export interface IRequestBook {
   writing_date_lte?: string | null,
   ordering?: string,
   page?: number,
-  page_size?: number
+  page_size?: number,
+  filterType?: string,
+  direction?: string,
 }

@@ -25,3 +25,8 @@
     <button mat-stroked-button color="primary" class="buy-button">BUY</button>
   </section>
 </mat-card>
+
+<section *ngIf="!booksList?.length" class="no-list">
+  <h3>Nothing was found</h3>
+  <h3>Change filter parameters and try again</h3>
+</section>

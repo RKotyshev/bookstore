@@ -101,8 +101,8 @@
         <mat-form-field>
           <mat-label>Sort order</mat-label>
           <mat-select formControlName="direction">
-            <mat-option value="">Descending</mat-option>
-            <mat-option value="-">Ascending</mat-option>
+            <mat-option [value]="sortDirection.descending">Descending</mat-option>
+            <mat-option [value]="sortDirection.ascending">Ascending</mat-option>
           </mat-select>
         </mat-form-field>
       </section>

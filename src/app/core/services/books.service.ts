@@ -5,6 +5,7 @@ import { Observable, map } from 'rxjs';
 
 import { IBook, IRequestBook } from '../interfaces/book';
 import { IResponse } from '../interfaces/response';
+import { SortDirection } from '../../utils/constants/sorting';
 
 
 @Injectable({
@@ -42,7 +43,17 @@ export class BooksService {
     const values = {
       ...inputValues,
     };
+
+    if (values.filterType) {
+      const direction = values.direction === SortDirection.Ascending ? '' : '-';
+      const ordering = direction + values.filterType;
   
+      values.ordering = ordering;
+  
+      delete values.filterType;
+      delete values.direction;
+    }
+
     const processedValues = Object.fromEntries(
       Object.entries(values).filter(([, value]: [string, string | number | null]) => {
         return value !== null && value !== '';

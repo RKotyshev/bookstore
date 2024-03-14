@@ -1,12 +1,3 @@
-// export const BooksSortList: string[] = [
-//   'price',
-//   '-price',
-//   'release_date',
-//   '-release_date',
-//   'writing_date',
-//   'Writing date',
-// ];
-
 export interface IFilterType {
   label: string,
   value: string,
@@ -31,3 +22,7 @@ export const BooksSortList: IFilterType[] = [
   },
 ];
 
+export const enum SortDirection {
+  Ascending = 'asc',
+  Descending = 'desc',
+}

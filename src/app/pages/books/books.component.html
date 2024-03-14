@@ -4,7 +4,7 @@
     class="create-book"
     routerLink="/books/new"
     >Create book</button>
-  <app-books-filter (filterValueChange)="filterUpdate($event)"></app-books-filter>
+  <app-books-filter #filter (filterValueChange)="filterUpdate($event)"></app-books-filter>
 
 <app-books-list [booksList]="currentBooksList$ | async"></app-books-list>
   
