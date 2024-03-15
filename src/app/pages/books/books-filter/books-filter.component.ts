@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/cor
 import { FormControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
-import { Observable, Subject, filter, switchMap, takeUntil } from 'rxjs';
+import { Observable, Subject, debounceTime, filter, switchMap, takeUntil } from 'rxjs';
 
 import { AuthorsService } from '../../../core/services/authors.service';
 import { GenresService } from '../../../core/services/genres.service';
@@ -11,6 +11,10 @@ import { IGenre } from '../../../core/interfaces/genre';
 import { IFilterBookForm, IRequestBook } from '../../../core/interfaces/book';
 import { BooksSortList, IFilterType, SortDirection } from '../../../utils/constants/sorting';
 import { formatDate } from '../utils/format-date';
+
+function isNotNull(value: string | null): value is string {
+  return value !== null;
+}
 
 
 @Component({
@@ -39,24 +43,8 @@ export class BooksFilterComponent implements OnInit, OnDestroy {
     private _router: Router,
   ) {}
 
-  public get titleControl(): FormControl<string | null> {
-    return this.filterForm.get('title') as FormControl<string | null>;
-  }
-
   public get authorControl(): FormControl<string | null> {
     return this.filterForm.get('author') as FormControl<string | null>;
-  }
-
-  public get genreControl(): FormControl<string | null> {
-    return this.filterForm.get('genre') as FormControl<string | null>;
-  }
-
-  public get priceLteControl(): FormControl<number | null> {
-    return this.filterForm.get('price_lte') as FormControl<number | null>;
-  }
-  
-  public get priceGteControl(): FormControl<number | null> {
-    return this.filterForm.get('price_gte') as FormControl<number | null>;
   }
 
   public get writingDateLteControl(): FormControl<string | null> {
@@ -75,22 +63,11 @@ export class BooksFilterComponent implements OnInit, OnDestroy {
     return this.filterForm.get('release_date_lte') as FormControl<string | null>;
   }
 
-  public get filterTypeControl(): FormControl<string> {
-    return this.filterForm.get('filterType') as FormControl<string>;
-  }
-
-  public get directionControl(): FormControl<string> {
-    return this.filterForm.get('direction') as FormControl<string>;
-  }
-
   public ngOnInit(): void {
     this._initForm();
 
-    function isNotNull(value: string | null): value is string {
-      return value !== null;
-    }
-
     this.authors$ = this.authorControl.valueChanges.pipe(
+      debounceTime(200),
       filter(isNotNull),
       switchMap((term: string) => this._authorsService.getSuggestedAuthors(term)),
     );
@@ -103,10 +80,6 @@ export class BooksFilterComponent implements OnInit, OnDestroy {
   }
 
   public onSubmit(): void {
-    if (!this.filterForm.touched) {
-      return;
-    }
-
     const releaseDateGte = formatDate(this.releaseDateGteControl.getRawValue());
     const releaseDateLte = formatDate(this.releaseDateLteControl.getRawValue());
     const writingDateGte = formatDate(this.writingDateGteControl.getRawValue());
@@ -126,8 +99,6 @@ export class BooksFilterComponent implements OnInit, OnDestroy {
     });
 
     this.filterValueChange.emit(completedFormRawValue);
-
-    this.filterForm.markAsUntouched();
   }
 
   public onReset(): void {

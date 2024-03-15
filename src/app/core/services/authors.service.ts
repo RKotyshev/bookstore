@@ -39,6 +39,6 @@ export class AuthorsService {
       search: term,
     };
 
-    return this._httpClient.get<IAuthor[]>(`${this._authorsUrl}/suggestion`, { params });
+    return this._httpClient.get<IAuthor[]>(`${this._authorsUrl}/suggestion/`, { params });
   }
 }

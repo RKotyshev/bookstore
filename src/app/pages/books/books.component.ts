@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular
 
 import {  MatPaginator, PageEvent } from '@angular/material/paginator';
 
-import { BehaviorSubject, Observable, Subject, combineLatest, map, switchMap } from 'rxjs';
+import { Observable, Subject, debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs';
 
 import { BooksService } from '../../core/services/books.service';
 import { IBook, IRequestBook } from '../../core/interfaces/book';
@@ -22,25 +22,23 @@ export class BooksComponent implements OnInit, OnDestroy, AfterViewInit {
   public pageSizes = PageSizeOptions;
   public totalBooks!: number;
   public currentBooksList$!: Observable<IBook[]>;
-  private _paginatorInitState = {
-    page: 1,
+  private _requestState: IRequestBook = {
+    page: 0,
     page_size: 5,
   };
-  private _paginatorSubject = new BehaviorSubject<IRequestBook>(this._paginatorInitState);
-  private _filterSubject = new BehaviorSubject<IRequestBook>({});
+  private _requestSubject = new Subject<IRequestBook>();
   private _destroyed = new Subject<void>();
 
   constructor(private _bookService: BooksService) { }
 
   public ngOnInit(): void {
-    this.currentBooksList$ = combineLatest(this._paginatorSubject, this._filterSubject).pipe(
-      switchMap(([paginatorValue, filterValue]: [IRequestBook, IRequestBook]) => {
-        const requestValue = {
-          ...paginatorValue,
-          ...filterValue,
-        };
-
-        return this._bookService.getFilteredBooks(requestValue);
+    this.currentBooksList$ = this._requestSubject.pipe(
+      distinctUntilChanged((prev: IRequestBook, curr: IRequestBook) => {
+        return JSON.stringify(prev) === JSON.stringify(curr);
+      }),
+      debounceTime(300),
+      switchMap((request: IRequestBook) => {
+        return this._bookService.getFilteredBooks(request);
       }),
       map((response: IResponse<IBook>) => {
         this.totalBooks = response.total_items;
@@ -51,30 +49,33 @@ export class BooksComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
-    this.filter.filterForm.markAsTouched();
     this.filter.onSubmit();
   }
 
   public ngOnDestroy(): void {
-    this._paginatorSubject.complete();
-    this._filterSubject.complete();
+    this._requestSubject.complete();
     this._destroyed.next();
     this._destroyed.complete();
   }
 
   public paginatorUpdate(event: PageEvent): void {
-    const pageNumber = event.pageIndex + 1;
-    const pageSize = event.pageSize;
-    const completedValue = {
-      page: pageNumber,
-      page_size: pageSize,
+    this._requestState.page = event.pageIndex;
+    this._requestState.page_size = event.pageSize;
+    const request = {
+      ...this._requestState,
     };
 
-    this._paginatorSubject.next(completedValue);
+    this._requestSubject.next(request);
   }
 
   public filterUpdate(value: IRequestBook): void {
     this.paginator.firstPage();
-    this._filterSubject.next(value);
+
+    Object.assign(this._requestState, value);
+    const request = {
+      ...this._requestState,
+    };
+
+    this._requestSubject.next(request);
   }
 }

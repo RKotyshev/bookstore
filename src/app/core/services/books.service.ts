@@ -16,6 +16,32 @@ export class BooksService {
 
   constructor(private _http: HttpClient) { }
 
+  public static convertRequest(inputReq: IRequestBook): IRequestBook {
+    let outputReq = {
+      ...inputReq,
+    };
+    
+    const pageNumber = outputReq.page! + 1;
+    const pageSize = outputReq.page_size;
+    const direction = outputReq.direction === SortDirection.Ascending ? '' : '-';
+    const ordering = direction + outputReq.filterType;
+
+    outputReq.page = pageNumber;
+    outputReq.page_size = pageSize;
+    outputReq.ordering = ordering;
+
+    delete outputReq.filterType;
+    delete outputReq.direction;
+
+    outputReq = Object.fromEntries(
+      Object.entries(outputReq).filter(([_, value]: [string, string | number | null]) => {
+        return value !== null && value !== '' && value !== undefined;
+      }),
+    );
+
+    return outputReq;
+  }
+
   public getBooksData(): Observable<IResponse<IBook>> {
     return this._http.get<IResponse<IBook>>(`${this._booksUrl}/`);
   }
@@ -39,29 +65,11 @@ export class BooksService {
     return this._http.post<IBook>(`${this._booksUrl}/`, book);
   }
 
-  public getFilteredBooks(inputValues: IRequestBook): Observable<IResponse<IBook>> {
-    const values = {
-      ...inputValues,
-    };
-
-    if (values.filterType) {
-      const direction = values.direction === SortDirection.Ascending ? '' : '-';
-      const ordering = direction + values.filterType;
-  
-      values.ordering = ordering;
-  
-      delete values.filterType;
-      delete values.direction;
-    }
-
-    const processedValues = Object.fromEntries(
-      Object.entries(values).filter(([, value]: [string, string | number | null]) => {
-        return value !== null && value !== '';
-      }),
-    );
+  public getFilteredBooks(inputReq: IRequestBook): Observable<IResponse<IBook>> {
+    const correctReq = BooksService.convertRequest(inputReq);
 
     const params: HttpParams = new HttpParams({
-      fromObject: processedValues as { [s: string]: string | number } },
+      fromObject: correctReq as { [s: string]: string | number } },
     );
 
     return this._http.get<IResponse<IBook>>(`${this._booksUrl}/`, { params });
