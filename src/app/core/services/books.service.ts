@@ -6,6 +6,7 @@ import { Observable, map } from 'rxjs';
 import { IBook, IRequestBook } from '../interfaces/book';
 import { IResponse } from '../interfaces/response';
 import { SortDirection } from '../../utils/constants/sorting';
+import { formatDate } from '../../pages/books/utils/format-date';
 
 
 @Injectable({
@@ -21,13 +22,27 @@ export class BooksService {
       ...inputReq,
     };
     
-    const pageNumber = outputReq.page! + 1;
-    const pageSize = outputReq.page_size;
+    const correctWritingDateGte = outputReq.writing_date_gte ? 
+      formatDate(outputReq.writing_date_gte) : 
+      null;
+    const correctWritingDateLte = outputReq.writing_date_lte ? 
+      formatDate(outputReq.writing_date_lte) : 
+      null;
+    const correctReleaseDateGte = outputReq.release_date_gte ? 
+      formatDate(outputReq.release_date_gte) : 
+      null;
+    const correctReleaseDateLte = outputReq.release_date_lte ? 
+      formatDate(outputReq.release_date_lte) : 
+      null;
+    const correctPage = outputReq.page! + 1;
     const direction = outputReq.direction === SortDirection.Ascending ? '' : '-';
     const ordering = direction + outputReq.filterType;
 
-    outputReq.page = pageNumber;
-    outputReq.page_size = pageSize;
+    outputReq.writing_date_gte = correctWritingDateGte;
+    outputReq.writing_date_lte = correctWritingDateLte;
+    outputReq.release_date_gte = correctReleaseDateGte;
+    outputReq.release_date_lte = correctReleaseDateLte;
+    outputReq.page = correctPage;
     outputReq.ordering = ordering;
 
     delete outputReq.filterType;

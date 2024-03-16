@@ -80,17 +80,8 @@ export class BooksFilterComponent implements OnInit, OnDestroy {
   }
 
   public onSubmit(): void {
-    const releaseDateGte = formatDate(this.releaseDateGteControl.getRawValue());
-    const releaseDateLte = formatDate(this.releaseDateLteControl.getRawValue());
-    const writingDateGte = formatDate(this.writingDateGteControl.getRawValue());
-    const writingDateLte = formatDate(this.writingDateLteControl.getRawValue());
-
     const completedFormRawValue = {
       ...this.filterForm.getRawValue(),
-      release_date_gte: releaseDateGte || null,
-      release_date_lte: releaseDateLte || null,
-      writing_date_gte: writingDateGte || null,
-      writing_date_lte: writingDateLte || null,
     };
 
     this._router.navigate(['/books'], {
@@ -162,10 +153,10 @@ export class BooksFilterComponent implements OnInit, OnDestroy {
         genre: params['genre'] ?? null,
         price_lte: params['price_lte'] ?? null,
         price_gte: params['price_gte'] ?? null,
-        writing_date_lte: params['writing_date_lte'] ?? null,
-        writing_date_gte: params['writing_date_gte'] ?? null,
-        release_date_lte: params['release_date_lte'] ?? null,
-        release_date_gte: params['release_date_gte'] ?? null,
+        writing_date_lte: formatDate(params['writing_date_lte']) || null,
+        writing_date_gte: formatDate(params['writing_date_gte']) || null,
+        release_date_lte: formatDate(params['release_date_lte']) || null,
+        release_date_gte: formatDate(params['release_date_gte']) || null,
         filterType: params['filterType'] ?? 'id',
         direction: params['direction'] ?? this.sortDirection.ascending,
       });
