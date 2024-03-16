@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import {  MatPaginator, PageEvent } from '@angular/material/paginator';
 
@@ -17,7 +17,6 @@ import { BooksService } from '../../core/services/books.service';
 import { IBook, IRequestBook } from '../../core/interfaces/book';
 import { IResponse } from '../../core/interfaces/response';
 import { PageSizeOptions } from '../../utils/constants/paginator';
-import { BooksFilterComponent } from './books-filter/books-filter.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SortDirection } from '../../utils/constants/sorting';
 
@@ -27,13 +26,11 @@ import { SortDirection } from '../../utils/constants/sorting';
   templateUrl: './books.component.html',
   styleUrl: './books.component.scss',
 })
-export class BooksComponent implements OnInit, OnDestroy, AfterViewInit {
+export class BooksComponent implements OnInit, OnDestroy {
   @ViewChild('paginator') public paginator!: MatPaginator;
-  @ViewChild('filter') public filter!: BooksFilterComponent;
   public pageSizes = PageSizeOptions;
   public totalBooks!: number;
   public currentBooksList1$!: Observable<IBook[]>;
-  public filterValues$!: Observable<IRequestBook>;
   public paramsState: IRequestBook = {
     filterType: 'id',
     direction: SortDirection.Ascending,
@@ -59,7 +56,7 @@ export class BooksComponent implements OnInit, OnDestroy, AfterViewInit {
   public ngOnInit(): void {
     this.currentBooksList1$ = this.params$.pipe(
       switchMap((params: IRequestBook) => {
-        return this._bookService.getFilteredBooks1(params);
+        return this._bookService.getFilteredBooks(params);
       }),
       map((response: IResponse<IBook>) => {
         this.totalBooks = response.total_items;
@@ -67,11 +64,6 @@ export class BooksComponent implements OnInit, OnDestroy, AfterViewInit {
         return response.result;
       }),
     );
-
-  }
-
-  public ngAfterViewInit(): void {
-    // this.filter.onSubmit();
   }
 
   public ngOnDestroy(): void {

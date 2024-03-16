@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
-import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { Observable, Subject, debounceTime, filter, switchMap, takeUntil } from 'rxjs';
 
@@ -33,7 +32,6 @@ export class BooksFilterComponent implements OnInit, OnDestroy {
   public filterForm!: FormGroup<IFilterBookForm>;
   public authors$!: Observable<IAuthor[]>;
   public genres$!: Observable<IGenre[]>;
-  private _queryParams$: Observable<Params> = this._route.queryParams;
   private _destroyed = new Subject<void>;
 
 
@@ -41,8 +39,6 @@ export class BooksFilterComponent implements OnInit, OnDestroy {
     private _formBuilder: NonNullableFormBuilder,
     private _authorsService: AuthorsService,
     private _genresService: GenresService,
-    private _route: ActivatedRoute,
-    private _router: Router,
   ) {}
 
   public get authorControl(): FormControl<string | null> {
@@ -85,12 +81,6 @@ export class BooksFilterComponent implements OnInit, OnDestroy {
     const completedFormRawValue = {
       ...this.filterForm.getRawValue(),
     };
-
-    // this._router.navigate(['/books'], {
-    //   queryParams: completedFormRawValue,
-    //   onSameUrlNavigation: undefined,
-    // });
-    console.log(completedFormRawValue);
 
     this.filterValueChange.emit(completedFormRawValue);
   }
@@ -146,24 +136,6 @@ export class BooksFilterComponent implements OnInit, OnDestroy {
         disabled: false,
       }),
     });
-
-    // this._queryParams$.pipe(
-    //   takeUntil(this._destroyed),
-    // ).subscribe((params: Params) => {
-    //   this.filterForm.setValue({
-    //     title: params['title'] ?? null,
-    //     author: params['author'] ?? null,
-    //     genre: params['genre'] ?? null,
-    //     price_lte: params['price_lte'] ?? null,
-    //     price_gte: params['price_gte'] ?? null,
-    //     writing_date_lte: formatDate(params['writing_date_lte']) || null,
-    //     writing_date_gte: formatDate(params['writing_date_gte']) || null,
-    //     release_date_lte: formatDate(params['release_date_lte']) || null,
-    //     release_date_gte: formatDate(params['release_date_gte']) || null,
-    //     filterType: params['filterType'] ?? 'id',
-    //     direction: params['direction'] ?? this.sortDirection.ascending,
-    //   });
-    // });
 
     this.inputFilterValues.pipe(
       takeUntil(this._destroyed),

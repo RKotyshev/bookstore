@@ -80,17 +80,7 @@ export class BooksService {
     return this._http.post<IBook>(`${this._booksUrl}/`, book);
   }
 
-  public getFilteredBooks(inputReq: IRequestBook): Observable<IResponse<IBook>> {
-    const correctReq = BooksService.convertRequest(inputReq);
-
-    const params: HttpParams = new HttpParams({
-      fromObject: correctReq as { [s: string]: string | number } },
-    );
-
-    return this._http.get<IResponse<IBook>>(`${this._booksUrl}/`, { params });
-  }
-
-  public getFilteredBooks1(inputParams: IRequestBook): Observable<IResponse<IBook>> {
+  public getFilteredBooks(inputParams: IRequestBook): Observable<IResponse<IBook>> {
     const correctParams = BooksService.convertRequest(inputParams);
 
     const params: HttpParams = new HttpParams({
