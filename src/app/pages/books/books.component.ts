@@ -3,15 +3,13 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular
 import {  MatPaginator, PageEvent } from '@angular/material/paginator';
 
 import { 
-  // BehaviorSubject,
   Observable,
   Subject,
   debounceTime,
   distinctUntilChanged,
+  filter,
   map,
-  skip,
-  // skipWhile,
-  // startWith,
+  startWith,
   switchMap,
 } from 'rxjs';
 
@@ -34,13 +32,7 @@ export class BooksComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('filter') public filter!: BooksFilterComponent;
   public pageSizes = PageSizeOptions;
   public totalBooks!: number;
-  public currentBooksList$!: Observable<IBook[]>;
   public currentBooksList1$!: Observable<IBook[]>;
-  private _requestState: IRequestBook = {
-    page: 0,
-    page_size: 5,
-  };
-  private _requestSubject = new Subject<IRequestBook>();
   private _destroyed = new Subject<void>();
 
   private _params1: IRequestBook = {
@@ -49,7 +41,6 @@ export class BooksComponent implements OnInit, OnDestroy, AfterViewInit {
     page: 0,
     page_size: 5,
   };
-  // private _paramsSubject = new BehaviorSubject(this._initialParams1);
   
 
   constructor(
@@ -59,24 +50,15 @@ export class BooksComponent implements OnInit, OnDestroy, AfterViewInit {
   ) { }
 
   public ngOnInit(): void {
-    this.currentBooksList$ = this._requestSubject.pipe(
-      distinctUntilChanged((prev: IRequestBook, curr: IRequestBook) => {
-        return JSON.stringify(prev) === JSON.stringify(curr);
-      }),
-      debounceTime(300),
-      switchMap((request: IRequestBook) => {
-        return this._bookService.getFilteredBooks(request);
-      }),
-      map((response: IResponse<IBook>) => {
-        this.totalBooks = response.total_items;
-
-        return response.result;
-      }),
-    );
+    // this._router.navigate(['/books'], {
+    //   queryParams: this._params1,
+    //   onSameUrlNavigation: undefined,
+    // });
 
     this.currentBooksList1$ = this._route.queryParams.pipe(
-      skip(1),
-      // startWith(this._params1),
+      filter((params: IRequestBook) => !(params.page === undefined)),
+      startWith(this._params1),
+      debounceTime(300),
       distinctUntilChanged((prev: IRequestBook, curr: IRequestBook) => {
         return JSON.stringify(prev) === JSON.stringify(curr);
       }),
@@ -90,11 +72,6 @@ export class BooksComponent implements OnInit, OnDestroy, AfterViewInit {
       }),
     );
 
-    this._router.navigate(['/books'], {
-      queryParams: this._params1,
-      onSameUrlNavigation: undefined,
-    });
-
   }
 
   public ngAfterViewInit(): void {
@@ -102,19 +79,8 @@ export class BooksComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public ngOnDestroy(): void {
-    this._requestSubject.complete();
     this._destroyed.next();
     this._destroyed.complete();
-  }
-
-  public paginatorUpdate(event: PageEvent): void {
-    this._requestState.page = event.pageIndex;
-    this._requestState.page_size = event.pageSize;
-    const request = {
-      ...this._requestState,
-    };
-
-    this._requestSubject.next(request);
   }
 
   public paginatorUpdate1(event: PageEvent): void {
@@ -128,17 +94,6 @@ export class BooksComponent implements OnInit, OnDestroy, AfterViewInit {
       queryParams: this._params1,
       onSameUrlNavigation: undefined,
     });
-  }
-
-  public filterUpdate(value: IRequestBook): void {
-    this.paginator.firstPage();
-
-    Object.assign(this._requestState, value);
-    const request = {
-      ...this._requestState,
-    };
-
-    this._requestSubject.next(request);
   }
 
   public filterUpdate1(value: IRequestBook): void {
