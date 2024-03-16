@@ -84,10 +84,11 @@ export class BooksFilterComponent implements OnInit, OnDestroy {
       ...this.filterForm.getRawValue(),
     };
 
-    this._router.navigate(['/books'], {
-      queryParams: completedFormRawValue,
-      onSameUrlNavigation: undefined,
-    });
+    // this._router.navigate(['/books'], {
+    //   queryParams: completedFormRawValue,
+    //   onSameUrlNavigation: undefined,
+    // });
+    console.log(completedFormRawValue);
 
     this.filterValueChange.emit(completedFormRawValue);
   }

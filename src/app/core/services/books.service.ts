@@ -18,7 +18,7 @@ export class BooksService {
   constructor(private _http: HttpClient) { }
 
   public static convertRequest(inputReq: IRequestBook): IRequestBook {
-    let outputReq = {
+    let outputReq: IRequestBook = {
       ...inputReq,
     };
     
@@ -34,7 +34,7 @@ export class BooksService {
     const correctReleaseDateLte = outputReq.release_date_lte ? 
       formatDate(outputReq.release_date_lte) : 
       null;
-    const correctPage = outputReq.page! + 1;
+    const correctPage = +outputReq.page! + 1;
     const direction = outputReq.direction === SortDirection.Ascending ? '' : '-';
     const ordering = direction + outputReq.filterType;
 
@@ -85,6 +85,16 @@ export class BooksService {
 
     const params: HttpParams = new HttpParams({
       fromObject: correctReq as { [s: string]: string | number } },
+    );
+
+    return this._http.get<IResponse<IBook>>(`${this._booksUrl}/`, { params });
+  }
+
+  public getFilteredBooks1(inputParams: IRequestBook): Observable<IResponse<IBook>> {
+    const correctParams = BooksService.convertRequest(inputParams);
+
+    const params: HttpParams = new HttpParams({
+      fromObject: correctParams as { [s: string]: string | number } },
     );
 
     return this._http.get<IResponse<IBook>>(`${this._booksUrl}/`, { params });
