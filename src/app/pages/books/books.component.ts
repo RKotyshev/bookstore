@@ -33,15 +33,22 @@ export class BooksComponent implements OnInit, OnDestroy, AfterViewInit {
   public pageSizes = PageSizeOptions;
   public totalBooks!: number;
   public currentBooksList1$!: Observable<IBook[]>;
-  private _destroyed = new Subject<void>();
-
-  private _params1: IRequestBook = {
+  public filterValues$!: Observable<IRequestBook>;
+  public paramsState: IRequestBook = {
     filterType: 'id',
     direction: SortDirection.Ascending,
     page: 0,
     page_size: 5,
   };
-  
+  public params$ = this._route.queryParams.pipe(
+    filter((params: IRequestBook) => !(params.page === undefined)),
+    startWith(this.paramsState),
+    debounceTime(300),
+    distinctUntilChanged((prev: IRequestBook, curr: IRequestBook) => {
+      return JSON.stringify(prev) === JSON.stringify(curr);
+    }),
+  );
+  private _destroyed = new Subject<void>();
 
   constructor(
     private _bookService: BooksService,
@@ -50,18 +57,7 @@ export class BooksComponent implements OnInit, OnDestroy, AfterViewInit {
   ) { }
 
   public ngOnInit(): void {
-    // this._router.navigate(['/books'], {
-    //   queryParams: this._params1,
-    //   onSameUrlNavigation: undefined,
-    // });
-
-    this.currentBooksList1$ = this._route.queryParams.pipe(
-      filter((params: IRequestBook) => !(params.page === undefined)),
-      startWith(this._params1),
-      debounceTime(300),
-      distinctUntilChanged((prev: IRequestBook, curr: IRequestBook) => {
-        return JSON.stringify(prev) === JSON.stringify(curr);
-      }),
+    this.currentBooksList1$ = this.params$.pipe(
       switchMap((params: IRequestBook) => {
         return this._bookService.getFilteredBooks1(params);
       }),
@@ -84,27 +80,27 @@ export class BooksComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public paginatorUpdate1(event: PageEvent): void {
-    this._params1 = {
-      ...this._params1,
+    this.paramsState = {
+      ...this.paramsState,
       page: event.pageIndex,
       page_size: event.pageSize,
     };
 
     this._router.navigate(['/books'], {
-      queryParams: this._params1,
+      queryParams: this.paramsState,
       onSameUrlNavigation: undefined,
     });
   }
 
   public filterUpdate1(value: IRequestBook): void {
-    this._params1 = {
-      ...this._params1,
+    this.paramsState = {
+      ...this.paramsState,
       ...value,
     };
 
-    if (this._params1.page === 0) {
+    if (this.paramsState.page === 0) {
       this._router.navigate(['/books'], {
-        queryParams: this._params1,
+        queryParams: this.paramsState,
         onSameUrlNavigation: undefined,
       });
     } 

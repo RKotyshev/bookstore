@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
@@ -23,6 +23,7 @@ function isNotNull(value: string | null): value is string {
   styleUrl: './books-filter.component.scss',
 })
 export class BooksFilterComponent implements OnInit, OnDestroy {
+  @Input() public inputFilterValues!: Observable<IRequestBook>;
   @Output() public filterValueChange = new EventEmitter<IRequestBook>();
   public sortList: IFilterType[] = BooksSortList;
   public sortDirection = {
@@ -34,6 +35,7 @@ export class BooksFilterComponent implements OnInit, OnDestroy {
   public genres$!: Observable<IGenre[]>;
   private _queryParams$: Observable<Params> = this._route.queryParams;
   private _destroyed = new Subject<void>;
+
 
   constructor(
     private _formBuilder: NonNullableFormBuilder,
@@ -145,21 +147,47 @@ export class BooksFilterComponent implements OnInit, OnDestroy {
       }),
     });
 
-    this._queryParams$.pipe(
+    // this._queryParams$.pipe(
+    //   takeUntil(this._destroyed),
+    // ).subscribe((params: Params) => {
+    //   this.filterForm.setValue({
+    //     title: params['title'] ?? null,
+    //     author: params['author'] ?? null,
+    //     genre: params['genre'] ?? null,
+    //     price_lte: params['price_lte'] ?? null,
+    //     price_gte: params['price_gte'] ?? null,
+    //     writing_date_lte: formatDate(params['writing_date_lte']) || null,
+    //     writing_date_gte: formatDate(params['writing_date_gte']) || null,
+    //     release_date_lte: formatDate(params['release_date_lte']) || null,
+    //     release_date_gte: formatDate(params['release_date_gte']) || null,
+    //     filterType: params['filterType'] ?? 'id',
+    //     direction: params['direction'] ?? this.sortDirection.ascending,
+    //   });
+    // });
+
+    this.inputFilterValues.pipe(
       takeUntil(this._destroyed),
-    ).subscribe((params: Params) => {
+    ).subscribe((inputValues: IRequestBook) => {
       this.filterForm.setValue({
-        title: params['title'] ?? null,
-        author: params['author'] ?? null,
-        genre: params['genre'] ?? null,
-        price_lte: params['price_lte'] ?? null,
-        price_gte: params['price_gte'] ?? null,
-        writing_date_lte: formatDate(params['writing_date_lte']) || null,
-        writing_date_gte: formatDate(params['writing_date_gte']) || null,
-        release_date_lte: formatDate(params['release_date_lte']) || null,
-        release_date_gte: formatDate(params['release_date_gte']) || null,
-        filterType: params['filterType'] ?? 'id',
-        direction: params['direction'] ?? this.sortDirection.ascending,
+        title: inputValues.title ?? null,
+        author: inputValues.author ?? null,
+        genre: inputValues.genre ?? null,
+        price_lte: inputValues.price_lte ?? null,
+        price_gte: inputValues.price_gte ?? null,
+        writing_date_lte: inputValues.writing_date_lte ?
+          formatDate(inputValues.writing_date_lte) : 
+          null,
+        writing_date_gte: inputValues.writing_date_gte ?
+          formatDate(inputValues.writing_date_gte) : 
+          null,
+        release_date_lte: inputValues.release_date_lte ?
+          formatDate(inputValues.release_date_lte) :
+          null,
+        release_date_gte: inputValues.release_date_gte ?
+          formatDate(inputValues.release_date_gte) :
+          null,
+        filterType: inputValues.filterType ?? 'id',
+        direction: inputValues.direction ?? this.sortDirection.ascending,
       });
     });
   }
