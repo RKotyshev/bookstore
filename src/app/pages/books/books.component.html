@@ -4,13 +4,13 @@
     class="create-book"
     routerLink="/books/new"
     >Create book</button>
-  <app-books-filter [inputFilterValues]="params$" (filterValueChange)="filterUpdate1($event)"></app-books-filter>
+  <app-books-filter [inputFilterValues]="params$" (filterValueChange)="filterUpdate($event)"></app-books-filter>
 
-<app-books-list [booksList]="currentBooksList1$ | async"></app-books-list>
+<app-books-list [booksList]="currentBooksList$ | async"></app-books-list>
   
 <mat-paginator 
   #paginator
   [length]="totalBooks"
   [pageSizeOptions]="pageSizes"
-  (page)="paginatorUpdate1($event)"
+  (page)="paginatorUpdate($event)"
   ></mat-paginator>

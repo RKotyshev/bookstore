@@ -22,7 +22,7 @@ function isNotNull(value: string | null): value is string {
   styleUrl: './books-filter.component.scss',
 })
 export class BooksFilterComponent implements OnInit, OnDestroy {
-  @Input() public inputFilterValues!: Observable<IRequestBook>;
+  @Input('inputFilterValues') public inputFilterValues$!: Observable<IRequestBook>;
   @Output() public filterValueChange = new EventEmitter<IRequestBook>();
   public sortList: IFilterType[] = BooksSortList;
   public sortDirection = {
@@ -78,11 +78,11 @@ export class BooksFilterComponent implements OnInit, OnDestroy {
   }
 
   public onSubmit(): void {
-    const completedFormRawValue = {
+    const formValue = {
       ...this.filterForm.getRawValue(),
     };
 
-    this.filterValueChange.emit(completedFormRawValue);
+    this.filterValueChange.emit(formValue);
   }
 
   public onReset(): void {
@@ -137,7 +137,7 @@ export class BooksFilterComponent implements OnInit, OnDestroy {
       }),
     });
 
-    this.inputFilterValues.pipe(
+    this.inputFilterValues$.pipe(
       takeUntil(this._destroyed),
     ).subscribe((inputValues: IRequestBook) => {
       this.filterForm.setValue({

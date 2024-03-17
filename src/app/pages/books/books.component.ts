@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import {  MatPaginator, PageEvent } from '@angular/material/paginator';
 
@@ -17,7 +18,6 @@ import { BooksService } from '../../core/services/books.service';
 import { IBook, IRequestBook } from '../../core/interfaces/book';
 import { IResponse } from '../../core/interfaces/response';
 import { PageSizeOptions } from '../../utils/constants/paginator';
-import { ActivatedRoute, Router } from '@angular/router';
 import { SortDirection } from '../../utils/constants/sorting';
 
 
@@ -30,7 +30,7 @@ export class BooksComponent implements OnInit, OnDestroy {
   @ViewChild('paginator') public paginator!: MatPaginator;
   public pageSizes = PageSizeOptions;
   public totalBooks!: number;
-  public currentBooksList1$!: Observable<IBook[]>;
+  public currentBooksList$!: Observable<IBook[]>;
   public paramsState: IRequestBook = {
     filterType: 'id',
     direction: SortDirection.Ascending,
@@ -54,7 +54,7 @@ export class BooksComponent implements OnInit, OnDestroy {
   ) { }
 
   public ngOnInit(): void {
-    this.currentBooksList1$ = this.params$.pipe(
+    this.currentBooksList$ = this.params$.pipe(
       switchMap((params: IRequestBook) => {
         return this._bookService.getFilteredBooks(params);
       }),
@@ -71,7 +71,7 @@ export class BooksComponent implements OnInit, OnDestroy {
     this._destroyed.complete();
   }
 
-  public paginatorUpdate1(event: PageEvent): void {
+  public paginatorUpdate(event: PageEvent): void {
     this.paramsState = {
       ...this.paramsState,
       page: event.pageIndex,
@@ -84,7 +84,7 @@ export class BooksComponent implements OnInit, OnDestroy {
     });
   }
 
-  public filterUpdate1(value: IRequestBook): void {
+  public filterUpdate(value: IRequestBook): void {
     this.paramsState = {
       ...this.paramsState,
       ...value,
