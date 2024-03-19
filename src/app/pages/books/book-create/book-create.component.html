@@ -105,3 +105,8 @@
      seconds
   </p>
 </div>
+
+<label for="fileUpload">Choose a file</label>
+<input #upload id="fileUpload" type="file">
+<button type="button" (click)="uploadFile(upload)">Upload</button>
+<img *ngIf="imageReady" [src]="imageUrl" alt="Upload image of book preview">

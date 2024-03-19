@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { Observable, Subject, catchError, takeUntil } from 'rxjs';
+import { Observable, Subject, catchError, from, takeUntil } from 'rxjs';
 
 import { BooksService } from '../../../core/services/books.service';
 import { AuthorsService } from '../../../core/services/authors.service';
@@ -13,6 +13,7 @@ import { IBook, ICreateBookForm } from '../../../core/interfaces/book';
 import { datesCompareValidator } from '../../../core/functions/validators/dates-compare-validator';
 import { formatDate } from '../utils/format-date';
 import { handleError } from '../../../core/functions/handle-error';
+import { Storage, getDownloadURL, ref, uploadBytesResumable } from '@angular/fire/storage';
 
 
 @Component({
@@ -27,6 +28,8 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   public bookForm!: FormGroup<ICreateBookForm>;
   public genres$: Observable<IGenre[]> = this._genresService.getPaginatedGenres(0, 100);
   public authors$: Observable<IAuthor[]> = this._authorsService.getPaginatedAuthors(0, 100);
+  public imageReady: boolean = false;
+  public imageUrl!: string;
   private _destroyed = new Subject<void>;
   
   constructor(
@@ -35,6 +38,7 @@ export class BookCreateComponent implements OnInit, OnDestroy {
     private _authorsService: AuthorsService,
     private _booksService: BooksService,
     private _router: Router,
+    private _storage: Storage,
   ) { }
 
   public get inStockControl(): FormControl<number> {
@@ -88,6 +92,30 @@ export class BookCreateComponent implements OnInit, OnDestroy {
     }
 
     return 'Incorrect value';
+  }
+
+  public uploadFile(input: HTMLInputElement): void {
+    if (!input.files) {
+      return;
+    }
+
+    const files: FileList = input.files;
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files.item(i);
+
+      if (file) {
+        const storageRef = ref(this._storage, file.name);
+        uploadBytesResumable(storageRef, file);
+        const link = getDownloadURL(storageRef);
+        from(link).subscribe((url: string) => {
+          this.imageReady = true;
+          this.imageUrl = url;
+          console.log(url);
+        });
+        
+      }
+    }
   }
 
   public onSubmit(): void {
