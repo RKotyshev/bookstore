@@ -16,19 +16,19 @@
   (click)="uploadInput.click(); onTouched()"
   >Select image</button>
 
-<div *ngIf="imagesState.length">
+<div *ngIf="displayPreview">
   <h3>Preview:</h3>
 
   <section class="preview">
-    <div *ngFor="let state of imagesState">
+    <div *ngFor="let item of inputValue">
       <img
       width="200px"
       height="200px"
       alt="Uploaded image preview"
-      [src]="state.blobLink"
-      [class.pending]="state.uploadStatus === 'pending'"
+      [src]="item.blobLink"
+      [class.pending]="item.uploadStatus === 'pending'"
       >
-      <mat-spinner *ngIf="state.uploadStatus === 'pending'" diameter="50"></mat-spinner>
+      <mat-spinner *ngIf="item.uploadStatus === 'pending'" diameter="50"></mat-spinner>
     </div>
   </section>
 </div>

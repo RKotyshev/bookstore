@@ -1,16 +1,17 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { IItem } from './attach-image';
 
 
 export function maxFileSize(maxSize: number): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
-    const files: FileList | null = control.value;
+    const items: IItem[] | null = control.value;
 
-    if (!files) {
+    if (!items) {
       return null;
     }
 
-    const invalidSizeFiles = Array.from(files).filter((file: File) => {
-      return file.size > maxSize;
+    const invalidSizeFiles = Array.from(items).filter((item: IItem) => {
+      return item.size > maxSize;
     });
 
     return invalidSizeFiles.length ? { fileMaxSize: invalidSizeFiles } : null;
@@ -20,16 +21,16 @@ export function maxFileSize(maxSize: number): ValidatorFn {
 
 export function acceptFileType(acceptTypes: string[]): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
-    const files: FileList | null = control.value;
+    const items: IItem[] | null = control.value;
 
-    if (!files) {
+    if (!items) {
       return null;
     }
 
-    const invalidTypeFiles = Array.from(files).filter((file: File) => {
-      console.log(file.type);
+    const invalidTypeFiles = Array.from(items).filter((item: IItem) => {
+      console.log(item.type);
       
-      return !acceptTypes.includes(file.type);
+      return !acceptTypes.includes(item.type);
     });
 
     return invalidTypeFiles.length ? { acceptFileType: invalidTypeFiles } : null;

@@ -10,7 +10,7 @@ import {
 
 import { MatButton } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { IImageState } from './attach-image';
+import { IItem } from './attach-image';
 import { Storage, UploadTask, getDownloadURL, ref, uploadBytesResumable } from '@angular/fire/storage';
 import { Observable, from } from 'rxjs';
 
@@ -38,10 +38,12 @@ export class AttachImageInputComponent implements ControlValueAccessor, OnInit {
   public onTouched!: ()=> void;
   public disabled: boolean = false;
   // public imagesPreviewUrls: string[] = [];
-  public imagesState: IImageState[] = [];
+  public imagesState: IItem[] = [];
+  public displayPreview: boolean = false;
   // public uploadControl!: FormControl;
-  private _inputValue: FileList | null = null;
-  private _onChange!: (value: FileList | null)=> void;
+  // private _inputValue: FileList | null = null;
+  public inputValue: IItem[] | null = null;
+  private _onChange!: (value: IItem[] | null)=> void;
   private _control!: AbstractControl | undefined | null;
 
   constructor(
@@ -61,11 +63,11 @@ export class AttachImageInputComponent implements ControlValueAccessor, OnInit {
     }
   }
 
-  public writeValue(obj: FileList | null): void {
-    this._inputValue = obj;
+  public writeValue(obj: IItem[] | null): void {
+    this.inputValue = obj;
   }
 
-  public registerOnChange(fn: ((value: FileList | null)=> void)): void {
+  public registerOnChange(fn: ((value: IItem[] | null)=> void)): void {
     this._onChange = fn;
   }
 
@@ -78,69 +80,86 @@ export class AttachImageInputComponent implements ControlValueAccessor, OnInit {
   }
 
   public addFiles(files: FileList | null): void {
-    console.log(files);
-    this._onChange(files);
-    this._uploadFiles(files);
+    // console.log(files);
+    const items = this._transformFiles(files);
+    
+    if (!items) {
+      return;
+    }
+
+    const concatedItems = this.inputValue ? 
+      [...this.inputValue, ...items] : 
+      items;
+    this.inputValue = concatedItems;
+    console.log(this.inputValue);
+    console.log(concatedItems);
+    this._onChange(concatedItems);
+    this._uploadItems(concatedItems);
   }
 
   public onInfo(): void {
     console.log(this.imagesState);
   }
 
-  private _uploadFiles(files: FileList | null): void {
+  private _uploadItems(items: IItem[] | null): void {
     // if (files && this._control?.valid) {
     //   this.imagesPreviewUrls = Array.from(files).map((file: File) => {
     //     return URL.createObjectURL(file);
     //   });
     // }
 
-    if (files && this._control?.valid) {
+    if (items?.length && this._control?.valid) {
 
-      Array.from(files).forEach((file: File) => {
-        const blobLink = URL.createObjectURL(file);
-        // const storageRef = ref(this.storage, file.name);
-        // uploadBytesResumable(storageRef, file);
-        // const storageLink: Observable<string> = from(getDownloadURL(storageRef));
+      // Array.from(files).forEach((file: File) => {
+      //   const blobLink = URL.createObjectURL(file);
+      //   // const storageRef = ref(this.storage, file.name);
+      //   // uploadBytesResumable(storageRef, file);
+      //   // const storageLink: Observable<string> = from(getDownloadURL(storageRef));
         
-        this.imagesState.push({
-          filename: file.name,
-          blobLink: blobLink,
-          uploadStatus: 'pending',
-        });
+      //   this.imagesState.push({
+      //     file: file,
+      //     filename: file.name,
+      //     size: file.size,
+      //     type: file.type,
+      //     blobLink: blobLink,
+      //     uploadStatus: 'pending',
+      //   });
 
 
-      });
+      // });
 
-      for (let i = 0; i < files.length; i++) {
-        const file = files.item(i);
+      this.displayPreview = true;
+      
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
 
-        if (file) {
-          const storageRef = ref(this.storage, file.name);
-          const uploadTask: UploadTask = uploadBytesResumable(storageRef, file);
+        if (item) {
+          const storageRef = ref(this.storage, item.name);
+          const uploadTask: UploadTask = uploadBytesResumable(storageRef, item.file);
 
           uploadTask.then(() => {
             const storageLink: Promise<string> = getDownloadURL(storageRef);
 
             from(storageLink).subscribe((url: string) => {
-              const currentState = this.imagesState.find((state: IImageState) => {
-                return file.name === state.filename;
+              const currentItem = this.inputValue?.find((current: IItem) => {
+                return item.name === current.name;
               });
-  
-              currentState!.storageLink = url;
-              currentState!.uploadStatus = 'uploaded';
+              
+              currentItem!.storageLink = url;
+              currentItem!.uploadStatus = 'uploaded';
             });
           }, () => {
-            const currentState = this.imagesState.find((state: IImageState) => {
-              return file.name === state.filename;
+            const currentItem = this.inputValue?.find((current: IItem) => {
+              return item.name === current.name;
             });
 
-            currentState!.storageLink = null;
-            currentState!.uploadStatus = 'canceled';
+            currentItem!.storageLink = null;
+            currentItem!.uploadStatus = 'canceled';
           });
           
           // from(storageLink).subscribe({
           //   next: (url: string) => {
-          //     const currentState = this.imagesState.find((state: IImageState) => {
+          //     const currentState = this.imagesState.find((state: IItem) => {
           //       return file.name === state.filename;
           //     });
   
@@ -148,7 +167,7 @@ export class AttachImageInputComponent implements ControlValueAccessor, OnInit {
           //     currentState!.uploadStatus = 'uploaded';
           //   },
           //   error: () => {
-          //     const currentState = this.imagesState.find((state: IImageState) => {
+          //     const currentState = this.imagesState.find((state: IItem) => {
           //       return file.name === state.filename;
           //     });
   
@@ -165,4 +184,24 @@ export class AttachImageInputComponent implements ControlValueAccessor, OnInit {
 
     // console.log(this.imagesPreviewUrls);
   }
+
+  private _transformFiles(files: FileList | null): IItem[] | null {
+    if (!files) {
+      return null;
+    }
+
+    return Array.from(files).map((file: File) => {
+      const blobLink = URL.createObjectURL(file);
+
+      return {
+        file: file,
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        blobLink: blobLink,
+        uploadStatus: 'pending',
+      };
+    });
+  }
+
 }
