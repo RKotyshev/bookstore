@@ -1,7 +1,13 @@
 .preview {
   display: flex;
   align-items: center;
-  h4 {
+  margin-bottom: 20px;
+
+  img {
     margin-right: 20px;
+
+    &.pending {
+      opacity: 0.5;
+    }
   }
 }

@@ -5,7 +5,8 @@
   id="uploadImage"
   type="file"
   [accept]="acceptTypes"
-  (change)="onImage(uploadInput.files)"
+  (change)="addFiles(uploadInput.files)"
+  multiple
   >
 
 <button 
@@ -15,12 +16,16 @@
   (click)="uploadInput.click(); onTouched()"
   >Select image</button>
 
-<section class="preview">
-  <h4>Image preview:</h4>
-  <img 
-    src="https://firebasestorage.googleapis.com/v0/b/bookstore-b00f2.appspot.com/o/17033915515310.jpg?alt=media&token=29ebfa9c-1357-49c8-b73a-b34fddaa63a1"
+<section *ngIf="imagesState.length">
+  <h4>Preview:</h4>
+  <div *ngFor="let state of imagesState" class="preview">
+    <img
     width="100px"
     height="100px"
     alt="Uploaded image preview"
+    [src]="state.blobLink"
+    [class.pending]="state.uploadStatus === 'pending'"
     >
+    <mat-spinner *ngIf="state.uploadStatus === 'pending'" diameter="50"></mat-spinner>
+  </div>
 </section>
