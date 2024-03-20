@@ -27,6 +27,7 @@ import { DisplayTimerComponent } from '../../core/components/display-with-timer/
 import { BookCreateComponent } from './book-create/book-create.component';
 import { BooksFilterComponent } from './books-filter/books-filter.component';
 import { FullnamePipe } from '../../core/pipes/fullname.pipe';
+import { AttachImageInputComponent } from '../../core/components/attach-image-input/attach-image-input.component';
 
 
 @NgModule({
@@ -55,6 +56,7 @@ import { FullnamePipe } from '../../core/pipes/fullname.pipe';
     CdkAccordionModule,
     MatExpansionModule,
     DisplayTimerComponent,
+    AttachImageInputComponent,
     FullnamePipe,
   ],
   providers: [

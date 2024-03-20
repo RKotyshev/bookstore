@@ -21,6 +21,7 @@ export interface ICreateBookForm {
   author: FormControl<number[]>,
   release_date: FormControl<string>,
   writing_date: FormControl<string>,
+  cover?: FormControl<FileList | null>,
 } 
 
 export interface IFilterBookForm {

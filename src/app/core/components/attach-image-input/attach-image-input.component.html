@@ -1,0 +1,26 @@
+<label for="uploadImage"></label>
+<input 
+  #uploadInput
+  hidden
+  id="uploadImage"
+  type="file"
+  [accept]="acceptTypes"
+  (change)="onImage(uploadInput.files)"
+  >
+
+<button 
+  mat-raised-button
+  type="button"
+  [disabled]="disabled"
+  (click)="uploadInput.click(); onTouched()"
+  >Select image</button>
+
+<section class="preview">
+  <h4>Image preview:</h4>
+  <img 
+    src="https://firebasestorage.googleapis.com/v0/b/bookstore-b00f2.appspot.com/o/17033915515310.jpg?alt=media&token=29ebfa9c-1357-49c8-b73a-b34fddaa63a1"
+    width="100px"
+    height="100px"
+    alt="Uploaded image preview"
+    >
+</section>

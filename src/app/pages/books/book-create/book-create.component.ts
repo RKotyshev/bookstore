@@ -14,6 +14,7 @@ import { datesCompareValidator } from '../../../core/functions/validators/dates-
 import { formatDate } from '../utils/format-date';
 import { handleError } from '../../../core/functions/handle-error';
 import { Storage, getDownloadURL, ref, uploadBytesResumable } from '@angular/fire/storage';
+import { acceptFileType, maxFileSize } from '../../../core/components/attach-image-input/image-validators';
 
 
 @Component({
@@ -28,6 +29,7 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   public bookForm!: FormGroup<ICreateBookForm>;
   public genres$: Observable<IGenre[]> = this._genresService.getPaginatedGenres(0, 100);
   public authors$: Observable<IAuthor[]> = this._authorsService.getPaginatedAuthors(0, 100);
+  public imageTypes: string[] = ['image/jpeg'];
   public imageReady: boolean = false;
   public imageUrl!: string;
   private _destroyed = new Subject<void>;
@@ -151,15 +153,71 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   }
 
   private _initForm(): void {
-    this.bookForm = this._formBuilder.group({
-      in_stock: [0, [Validators.required, Validators.min(0)]],
-      title: ['', [Validators.required, Validators.maxLength(25)]],
-      description: ['', [Validators.required]],
-      price: [0, [Validators.required, Validators.min(0)]],
-      genres: [<number[]>[], [Validators.required]],
-      author: [<number[]>[], [Validators.required]],
-      release_date: ['', [Validators.required]],
-      writing_date: ['', [Validators.required]],
+    this.bookForm = this._formBuilder.group<ICreateBookForm>({
+      in_stock: this._formBuilder.control({
+        value: 0,
+        disabled: false,
+      }, {
+        validators: [Validators.required, Validators.min(0)],
+      }),
+      title: this._formBuilder.control({
+        value: '',
+        disabled: false,
+      }, {
+        validators: [Validators.required, Validators.maxLength(25)],
+      }),
+      description: this._formBuilder.control({
+        value: '',
+        disabled: false,
+      }, {
+        validators: [Validators.required],
+      }),
+      price: this._formBuilder.control({
+        value: 0,
+        disabled: false,
+      }, {
+        validators: [Validators.required, Validators.min(0)],
+      }),
+      genres: this._formBuilder.control({
+        value: [],
+        disabled: false,
+      }, {
+        validators: [Validators.required],
+      }),
+      author: this._formBuilder.control({
+        value: [],
+        disabled: false,
+      }, {
+        validators: [Validators.required],
+      }),
+      release_date: this._formBuilder.control({
+        value: '',
+        disabled: false,
+      }, {
+        validators: [Validators.required],
+      }),
+      writing_date: this._formBuilder.control({
+        value: '',
+        disabled: false,
+      }, {
+        validators: [Validators.required],
+      }),
+      cover: this._formBuilder.control({
+        value: null,
+        disabled: false,
+      }, {
+        validators: [maxFileSize(51000000), acceptFileType(this.imageTypes)],
+      }),
+
+      // in_stock: [0, [Validators.required, Validators.min(0)]],
+      // title: ['', [Validators.required, Validators.maxLength(25)]],
+      // description: ['', [Validators.required]],
+      // price: [0, [Validators.required, Validators.min(0)]],
+      // genres: [<number[]>[], [Validators.required]],
+      // author: [<number[]>[], [Validators.required]],
+      // release_date: ['', [Validators.required]],
+      // writing_date: ['', [Validators.required]],
+      // cover: [{ value: null, disa }]
     }, { validators: datesCompareValidator('writing_date', 'release_date') });
   }
 }
