@@ -11,6 +11,8 @@ import {
 import { MatButton } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { IImageState } from './attach-image';
+import { Storage, UploadTask, getDownloadURL, ref, uploadBytesResumable } from '@angular/fire/storage';
+import { Observable, from } from 'rxjs';
 
 @Component({
   selector: 'app-attach-image-input',
@@ -32,6 +34,7 @@ import { IImageState } from './attach-image';
 export class AttachImageInputComponent implements ControlValueAccessor, OnInit {
   @Input() public formControlName!: string;
   @Input() public acceptTypes!: string[];
+  @Input() public storage!: Storage;
   public onTouched!: ()=> void;
   public disabled: boolean = false;
   // public imagesPreviewUrls: string[] = [];
@@ -76,9 +79,12 @@ export class AttachImageInputComponent implements ControlValueAccessor, OnInit {
 
   public addFiles(files: FileList | null): void {
     console.log(files);
-    this._inputValue = files;
     this._onChange(files);
     this._uploadFiles(files);
+  }
+
+  public onInfo(): void {
+    console.log(this.imagesState);
   }
 
   private _uploadFiles(files: FileList | null): void {
@@ -89,14 +95,72 @@ export class AttachImageInputComponent implements ControlValueAccessor, OnInit {
     // }
 
     if (files && this._control?.valid) {
+
       Array.from(files).forEach((file: File) => {
         const blobLink = URL.createObjectURL(file);
+        // const storageRef = ref(this.storage, file.name);
+        // uploadBytesResumable(storageRef, file);
+        // const storageLink: Observable<string> = from(getDownloadURL(storageRef));
+        
         this.imagesState.push({
           filename: file.name,
           blobLink: blobLink,
           uploadStatus: 'pending',
         });
+
+
       });
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files.item(i);
+
+        if (file) {
+          const storageRef = ref(this.storage, file.name);
+          const uploadTask: UploadTask = uploadBytesResumable(storageRef, file);
+
+          uploadTask.then(() => {
+            const storageLink: Promise<string> = getDownloadURL(storageRef);
+
+            from(storageLink).subscribe((url: string) => {
+              const currentState = this.imagesState.find((state: IImageState) => {
+                return file.name === state.filename;
+              });
+  
+              currentState!.storageLink = url;
+              currentState!.uploadStatus = 'uploaded';
+            });
+          }, () => {
+            const currentState = this.imagesState.find((state: IImageState) => {
+              return file.name === state.filename;
+            });
+
+            currentState!.storageLink = null;
+            currentState!.uploadStatus = 'canceled';
+          });
+          
+          // from(storageLink).subscribe({
+          //   next: (url: string) => {
+          //     const currentState = this.imagesState.find((state: IImageState) => {
+          //       return file.name === state.filename;
+          //     });
+  
+          //     currentState!.storageLink = url;
+          //     currentState!.uploadStatus = 'uploaded';
+          //   },
+          //   error: () => {
+          //     const currentState = this.imagesState.find((state: IImageState) => {
+          //       return file.name === state.filename;
+          //     });
+  
+          //     currentState!.storageLink = null;
+          //     currentState!.uploadStatus = 'canceled';
+          //   },
+          // });
+        }
+
+
+      }
+      
     }
 
     // console.log(this.imagesPreviewUrls);

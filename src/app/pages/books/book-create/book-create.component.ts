@@ -30,6 +30,7 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   public genres$: Observable<IGenre[]> = this._genresService.getPaginatedGenres(0, 100);
   public authors$: Observable<IAuthor[]> = this._authorsService.getPaginatedAuthors(0, 100);
   public imageTypes: string[] = ['image/jpeg'];
+  public saveLocation: Storage = this._storage;
   public imageReady: boolean = false;
   public imageUrl!: string;
   private _destroyed = new Subject<void>;
