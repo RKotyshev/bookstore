@@ -37,11 +37,8 @@ export class AttachImageInputComponent implements ControlValueAccessor, OnInit {
   @Input() public storage!: Storage;
   public onTouched!: ()=> void;
   public disabled: boolean = false;
-  // public imagesPreviewUrls: string[] = [];
-  public imagesState: IItem[] = [];
   public displayPreview: boolean = false;
   // public uploadControl!: FormControl;
-  // private _inputValue: FileList | null = null;
   public inputValue: IItem[] | null = null;
   private _onChange!: (value: IItem[] | null)=> void;
   private _control!: AbstractControl | undefined | null;
@@ -80,7 +77,6 @@ export class AttachImageInputComponent implements ControlValueAccessor, OnInit {
   }
 
   public addFiles(files: FileList | null): void {
-    // console.log(files);
     const items = this._transformFiles(files);
     
     if (!items) {
@@ -88,105 +84,80 @@ export class AttachImageInputComponent implements ControlValueAccessor, OnInit {
     }
 
     const concatedItems = this.inputValue ? 
-      [...this.inputValue, ...items] : 
+      [...structuredClone(this.inputValue), ...items] : 
       items;
-    this.inputValue = concatedItems;
+    this.inputValue = concatedItems; // value
     console.log(this.inputValue);
     console.log(concatedItems);
-    this._onChange(concatedItems);
-    this._uploadItems(concatedItems);
+    this._onChange(concatedItems);  // Control
+    this._uploadItems(concatedItems); // to firebase handle
   }
 
-  public onInfo(): void {
-    console.log(this.imagesState);
-  }
+  private _uploadItems(inputItems: IItem[] | null): void {
+    const items = structuredClone(inputItems);
 
-  private _uploadItems(items: IItem[] | null): void {
-    // if (files && this._control?.valid) {
-    //   this.imagesPreviewUrls = Array.from(files).map((file: File) => {
-    //     return URL.createObjectURL(file);
-    //   });
-    // }
-
-    if (items?.length && this._control?.valid) {
-
-      // Array.from(files).forEach((file: File) => {
-      //   const blobLink = URL.createObjectURL(file);
-      //   // const storageRef = ref(this.storage, file.name);
-      //   // uploadBytesResumable(storageRef, file);
-      //   // const storageLink: Observable<string> = from(getDownloadURL(storageRef));
-        
-      //   this.imagesState.push({
-      //     file: file,
-      //     filename: file.name,
-      //     size: file.size,
-      //     type: file.type,
-      //     blobLink: blobLink,
-      //     uploadStatus: 'pending',
-      //   });
-
-
-      // });
-
-      this.displayPreview = true;
-      
-      for (let i = 0; i < items.length; i++) {
-        const item = items[i];
-
-        if (item) {
-          const storageRef = ref(this.storage, item.name);
-          const uploadTask: UploadTask = uploadBytesResumable(storageRef, item.file);
-
-          uploadTask.then(() => {
-            const storageLink: Promise<string> = getDownloadURL(storageRef);
-
-            from(storageLink).subscribe((url: string) => {
-              const currentItem = this.inputValue?.find((current: IItem) => {
-                return item.name === current.name;
-              });
-              
-              currentItem!.storageLink = url;
-              currentItem!.uploadStatus = 'uploaded';
-            });
-          }, () => {
-            const currentItem = this.inputValue?.find((current: IItem) => {
-              return item.name === current.name;
-            });
-
-            currentItem!.storageLink = null;
-            currentItem!.uploadStatus = 'canceled';
-          });
-          
-          // from(storageLink).subscribe({
-          //   next: (url: string) => {
-          //     const currentState = this.imagesState.find((state: IItem) => {
-          //       return file.name === state.filename;
-          //     });
-  
-          //     currentState!.storageLink = url;
-          //     currentState!.uploadStatus = 'uploaded';
-          //   },
-          //   error: () => {
-          //     const currentState = this.imagesState.find((state: IItem) => {
-          //       return file.name === state.filename;
-          //     });
-  
-          //     currentState!.storageLink = null;
-          //     currentState!.uploadStatus = 'canceled';
-          //   },
-          // });
-        }
-
-
-      }
-      
+    if (!items?.length || this._control?.invalid) {
+      return;
     }
 
-    // console.log(this.imagesPreviewUrls);
+    this.displayPreview = true;
+    
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+
+      if (!item || item.uploadStatus !== 'waiting') {
+        continue;
+      }
+      console.log(`will upload ${item.name}`);
+
+      const storageRef = ref(this.storage, item.name);
+      const uploadTask: UploadTask = uploadBytesResumable(storageRef, item.file);
+      item.uploadStatus = 'pending';
+
+      uploadTask.then(() => {
+        const storageLink: Promise<string> = getDownloadURL(storageRef);
+
+        from(storageLink).subscribe((url: string) => {
+          const currentItem = items?.find((current: IItem) => {
+            return item.name === current.name;
+          });
+          
+          currentItem!.storageLink = url;
+          currentItem!.uploadStatus = 'uploaded';
+
+          const updatedItems = structuredClone(items);
+          this.inputValue = updatedItems;
+          this._onChange(updatedItems);
+        });
+      }, () => {
+        const currentItem = items.find((current: IItem) => {
+          return item.name === current.name;
+        });
+
+        currentItem!.storageLink = null;
+        currentItem!.uploadStatus = 'canceled';
+
+        const updatedItems = structuredClone(items);
+        this.inputValue = updatedItems;
+        this._onChange(updatedItems);
+      });
+      
+    }
   }
 
   private _transformFiles(files: FileList | null): IItem[] | null {
     if (!files) {
+      return null;
+    }
+
+    const existNames = this.inputValue?.map((item: IItem) => {
+      return item.name;
+    });
+    const newFiles = Array.from(files).filter((file: File) => {
+      return !existNames?.includes(file.name);
+    });
+
+    if (!newFiles.length) {
       return null;
     }
 
@@ -199,7 +170,8 @@ export class AttachImageInputComponent implements ControlValueAccessor, OnInit {
         size: file.size,
         type: file.type,
         blobLink: blobLink,
-        uploadStatus: 'pending',
+        storageLink: null,
+        uploadStatus: 'waiting',
       };
     });
   }

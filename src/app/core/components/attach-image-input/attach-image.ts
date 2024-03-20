@@ -4,6 +4,6 @@ export interface IItem {
   size: number,
   type: string,
   blobLink: string,
-  storageLink?: string | null,
-  uploadStatus: 'pending' | 'uploaded' | 'canceled',
+  storageLink: string | null,
+  uploadStatus: 'pending' | 'uploaded' | 'canceled' | 'waiting',
 }

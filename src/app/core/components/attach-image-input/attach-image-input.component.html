@@ -26,13 +26,13 @@
       height="200px"
       alt="Uploaded image preview"
       [src]="item.blobLink"
-      [class.pending]="item.uploadStatus === 'pending'"
+      [class.pending]="item.uploadStatus === 'waiting' || item.uploadStatus === 'pending'"
       >
-      <mat-spinner *ngIf="item.uploadStatus === 'pending'" diameter="50"></mat-spinner>
+      <mat-spinner *ngIf="item.uploadStatus === 'waiting' || item.uploadStatus === 'pending'" diameter="50"></mat-spinner>
     </div>
   </section>
 </div>
 
 
 
-<button type="button" (click)="onInfo()">Get state info</button>
+<!-- <button type="button" (click)="onInfo()">Get state info</button> -->
