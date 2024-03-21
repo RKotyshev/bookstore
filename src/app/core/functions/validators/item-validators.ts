@@ -1,5 +1,5 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { IItem } from './attach-image';
+import { IItem } from '../../interfaces/item';
 
 
 export function maxFileSize(maxSize: number): ValidatorFn {

@@ -10,7 +10,7 @@ import {
 
 import { MatButton } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { IItem } from './attach-image';
+import { IItem } from '../../interfaces/item';
 import { Storage, UploadTask, getDownloadURL, ref, uploadBytesResumable } from '@angular/fire/storage';
 import { Observable, from } from 'rxjs';
 
@@ -77,6 +77,12 @@ export class AttachImageInputComponent implements ControlValueAccessor, OnInit {
   }
 
   public addFiles(files: FileList | null): void {
+    // if (!files) {
+    //   return;
+    // }
+    // const filesArray = Array.from(files);
+
+
     const items = this._transformFiles(files);
     
     if (!items) {
@@ -90,7 +96,13 @@ export class AttachImageInputComponent implements ControlValueAccessor, OnInit {
     console.log(this.inputValue);
     console.log(concatedItems);
     this._onChange(concatedItems);  // Control
-    this._uploadItems(concatedItems); // to firebase handle
+    // this._uploadItems(concatedItems); // to firebase handle
+
+    if (!items?.length || this._control?.invalid) {
+      return;
+    }
+
+    this.displayPreview = true;
   }
 
   private _uploadItems(inputItems: IItem[] | null): void {
@@ -100,7 +112,7 @@ export class AttachImageInputComponent implements ControlValueAccessor, OnInit {
       return;
     }
 
-    this.displayPreview = true;
+    // this.displayPreview = true;
     
     for (let i = 0; i < items.length; i++) {
       const item = items[i];

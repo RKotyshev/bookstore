@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { Observable, Subject, catchError, from, takeUntil } from 'rxjs';
+import { Observable, Subject, catchError, concatMap, distinctUntilChanged, exhaustMap, filter, from, of, switchMap, takeUntil } from 'rxjs';
 
 import { BooksService } from '../../../core/services/books.service';
 import { AuthorsService } from '../../../core/services/authors.service';
@@ -10,11 +10,20 @@ import { GenresService } from '../../../core/services/genres.service';
 import { IAuthor } from '../../../core/interfaces/author';
 import { IGenre } from '../../../core/interfaces/genre';
 import { IBook, ICreateBookForm } from '../../../core/interfaces/book';
-import { datesCompareValidator } from '../../../core/functions/validators/dates-compare-validator';
+import { datesCompareValidator } from '../../../core/functions/validators/dates-compare-validators';
 import { formatDate } from '../utils/format-date';
 import { handleError } from '../../../core/functions/handle-error';
 import { Storage, getDownloadURL, ref, uploadBytesResumable } from '@angular/fire/storage';
-import { acceptFileType, maxFileSize } from '../../../core/components/attach-image-input/image-validators';
+import {
+  acceptFileType,
+  maxFileSize,
+} from '../../../core/functions/validators/item-validators';
+import { IItem } from '../../../core/interfaces/item';
+import { FirebaseStorageService } from '../../../core/services/firebase-storage.service';
+
+function isNotNull(value: IItem[] | null): value is IItem[] {
+  return value !== null;
+}
 
 
 @Component({
@@ -30,7 +39,7 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   public genres$: Observable<IGenre[]> = this._genresService.getPaginatedGenres(0, 100);
   public authors$: Observable<IAuthor[]> = this._authorsService.getPaginatedAuthors(0, 100);
   public imageTypes: string[] = ['image/jpeg'];
-  public saveLocation: Storage = this._storage;
+  // public saveLocation: Storage = this._storage;
   public imageReady: boolean = false;
   public imageUrl!: string;
   private _destroyed = new Subject<void>;
@@ -41,7 +50,8 @@ export class BookCreateComponent implements OnInit, OnDestroy {
     private _authorsService: AuthorsService,
     private _booksService: BooksService,
     private _router: Router,
-    private _storage: Storage,
+    // private _storage: Storage,
+    private _storage: FirebaseStorageService,
   ) { }
 
   public get inStockControl(): FormControl<number> {
@@ -75,9 +85,33 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   public get writingDateControl(): FormControl<string> {
     return this.bookForm.get('writing_date') as FormControl;
   }
+
+  public get coverControl(): FormControl<IItem[] | null> {
+    return this.bookForm.get('cover') as FormControl;
+  }
   
   public ngOnInit(): void {
     this._initForm();
+
+    this.coverControl.valueChanges.pipe(
+      filter(isNotNull),
+      distinctUntilChanged((prevItems: IItem[], currItems: IItem[]) => {
+        const prevNames = prevItems.map((item: IItem) => item.name).join('');
+        const currNames = currItems.map((item: IItem) => item.name).join('');
+        console.log(`prev names: ${prevNames}`);
+        console.log(`current names: ${currNames}`);
+        
+        return prevNames === currNames;
+      }),
+      concatMap((items: IItem[]) => {
+        console.log(`input items: ${JSON.stringify(items)}`);
+
+        return this._storage.uploadItems(items);
+      }),
+    ).subscribe((items: IItem[]) => {
+      console.log(`output items: ${JSON.stringify(items)}`);
+      this.coverControl.setValue(items);
+    });
   }
   
   public ngOnDestroy(): void {
@@ -97,29 +131,29 @@ export class BookCreateComponent implements OnInit, OnDestroy {
     return 'Incorrect value';
   }
 
-  public uploadFile(input: HTMLInputElement): void {
-    if (!input.files) {
-      return;
-    }
+  // public uploadFile(input: HTMLInputElement): void {
+  //   if (!input.files) {
+  //     return;
+  //   }
 
-    const files: FileList = input.files;
+  //   const files: FileList = input.files;
 
-    for (let i = 0; i < files.length; i++) {
-      const file = files.item(i);
+  //   for (let i = 0; i < files.length; i++) {
+  //     const file = files.item(i);
 
-      if (file) {
-        const storageRef = ref(this._storage, file.name);
-        uploadBytesResumable(storageRef, file);
-        const link = getDownloadURL(storageRef);
-        from(link).subscribe((url: string) => {
-          this.imageReady = true;
-          this.imageUrl = url;
-          console.log(url);
-        });
+  //     if (file) {
+  //       const storageRef = ref(this._storage, file.name);
+  //       uploadBytesResumable(storageRef, file);
+  //       const link = getDownloadURL(storageRef);
+  //       from(link).subscribe((url: string) => {
+  //         this.imageReady = true;
+  //         this.imageUrl = url;
+  //         console.log(url);
+  //       });
         
-      }
-    }
-  }
+  //     }
+  //   }
+  // }
 
   public onSubmit(): void {
     if (this.bookForm.invalid) {
@@ -209,16 +243,6 @@ export class BookCreateComponent implements OnInit, OnDestroy {
       }, {
         validators: [maxFileSize(51000000), acceptFileType(this.imageTypes)],
       }),
-
-      // in_stock: [0, [Validators.required, Validators.min(0)]],
-      // title: ['', [Validators.required, Validators.maxLength(25)]],
-      // description: ['', [Validators.required]],
-      // price: [0, [Validators.required, Validators.min(0)]],
-      // genres: [<number[]>[], [Validators.required]],
-      // author: [<number[]>[], [Validators.required]],
-      // release_date: ['', [Validators.required]],
-      // writing_date: ['', [Validators.required]],
-      // cover: [{ value: null, disa }]
     }, { validators: datesCompareValidator('writing_date', 'release_date') });
   }
 }

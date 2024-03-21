@@ -84,7 +84,7 @@
       </mat-form-field>
     </div>
 
-    <app-attach-image-input formControlName="cover" [acceptTypes]="imageTypes" [storage]="saveLocation"></app-attach-image-input>
+    <app-attach-image-input formControlName="cover" [acceptTypes]="imageTypes"></app-attach-image-input>
 
     <mat-error *ngIf="bookForm.hasError('datesCompare')">
       Writing date must be less than the release date
