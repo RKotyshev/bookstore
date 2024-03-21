@@ -16,7 +16,7 @@
   (click)="uploadInput.click(); onTouched()"
   >Select image</button>
 
-<div *ngIf="displayPreview">
+<div *ngIf="inputValue?.length && outerControl?.valid">
   <h3>Preview:</h3>
 
   <section class="preview">
@@ -32,7 +32,3 @@
     </div>
   </section>
 </div>
-
-
-
-<!-- <button type="button" (click)="onInfo()">Get state info</button> -->

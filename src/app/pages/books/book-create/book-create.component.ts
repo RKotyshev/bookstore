@@ -2,7 +2,15 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { Observable, Subject, catchError, concatMap, distinctUntilChanged, exhaustMap, filter, from, of, switchMap, takeUntil } from 'rxjs';
+import {
+  Observable,
+  Subject,
+  catchError,
+  concatMap,
+  distinctUntilChanged,
+  filter,
+  takeUntil,
+} from 'rxjs';
 
 import { BooksService } from '../../../core/services/books.service';
 import { AuthorsService } from '../../../core/services/authors.service';
@@ -13,11 +21,10 @@ import { IBook, ICreateBookForm } from '../../../core/interfaces/book';
 import { datesCompareValidator } from '../../../core/functions/validators/dates-compare-validators';
 import { formatDate } from '../utils/format-date';
 import { handleError } from '../../../core/functions/handle-error';
-import { Storage, getDownloadURL, ref, uploadBytesResumable } from '@angular/fire/storage';
 import {
   acceptFileType,
   maxFileSize,
-} from '../../../core/functions/validators/item-validators';
+} from '../../../core/functions/validators/file-validators';
 import { IItem } from '../../../core/interfaces/item';
 import { FirebaseStorageService } from '../../../core/services/firebase-storage.service';
 
@@ -39,9 +46,6 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   public genres$: Observable<IGenre[]> = this._genresService.getPaginatedGenres(0, 100);
   public authors$: Observable<IAuthor[]> = this._authorsService.getPaginatedAuthors(0, 100);
   public imageTypes: string[] = ['image/jpeg'];
-  // public saveLocation: Storage = this._storage;
-  public imageReady: boolean = false;
-  public imageUrl!: string;
   private _destroyed = new Subject<void>;
   
   constructor(
@@ -50,7 +54,6 @@ export class BookCreateComponent implements OnInit, OnDestroy {
     private _authorsService: AuthorsService,
     private _booksService: BooksService,
     private _router: Router,
-    // private _storage: Storage,
     private _storage: FirebaseStorageService,
   ) { }
 
@@ -95,9 +98,11 @@ export class BookCreateComponent implements OnInit, OnDestroy {
 
     this.coverControl.valueChanges.pipe(
       filter(isNotNull),
+      filter(() => this.coverControl.valid),
       distinctUntilChanged((prevItems: IItem[], currItems: IItem[]) => {
         const prevNames = prevItems.map((item: IItem) => item.name).join('');
         const currNames = currItems.map((item: IItem) => item.name).join('');
+
         console.log(`prev names: ${prevNames}`);
         console.log(`current names: ${currNames}`);
         
@@ -110,6 +115,7 @@ export class BookCreateComponent implements OnInit, OnDestroy {
       }),
     ).subscribe((items: IItem[]) => {
       console.log(`output items: ${JSON.stringify(items)}`);
+
       this.coverControl.setValue(items);
     });
   }
@@ -130,30 +136,6 @@ export class BookCreateComponent implements OnInit, OnDestroy {
 
     return 'Incorrect value';
   }
-
-  // public uploadFile(input: HTMLInputElement): void {
-  //   if (!input.files) {
-  //     return;
-  //   }
-
-  //   const files: FileList = input.files;
-
-  //   for (let i = 0; i < files.length; i++) {
-  //     const file = files.item(i);
-
-  //     if (file) {
-  //       const storageRef = ref(this._storage, file.name);
-  //       uploadBytesResumable(storageRef, file);
-  //       const link = getDownloadURL(storageRef);
-  //       from(link).subscribe((url: string) => {
-  //         this.imageReady = true;
-  //         this.imageUrl = url;
-  //         console.log(url);
-  //       });
-        
-  //     }
-  //   }
-  // }
 
   public onSubmit(): void {
     if (this.bookForm.invalid) {
@@ -241,7 +223,7 @@ export class BookCreateComponent implements OnInit, OnDestroy {
         value: null,
         disabled: false,
       }, {
-        validators: [maxFileSize(51000000), acceptFileType(this.imageTypes)],
+        validators: [maxFileSize(5100000), acceptFileType(this.imageTypes)],
       }),
     }, { validators: datesCompareValidator('writing_date', 'release_date') });
   }

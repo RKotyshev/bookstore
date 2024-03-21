@@ -84,7 +84,7 @@
       </mat-form-field>
     </div>
 
-    <app-attach-image-input formControlName="cover" [acceptTypes]="imageTypes"></app-attach-image-input>
+    <app-input-file formControlName="cover" [acceptTypes]="imageTypes"></app-input-file>
 
     <mat-error *ngIf="bookForm.hasError('datesCompare')">
       Writing date must be less than the release date
@@ -96,6 +96,8 @@
     <p>Cover invalid: {{ bookForm.get('cover')?.invalid }}</p>
 
     <button mat-raised-button type="submit" [disabled]="bookForm.untouched">Create</button>
+
+    <button type="button" (click)="bookForm.reset()">Reset</button>
   </form>
 </div>
 
@@ -109,9 +111,3 @@
      seconds
   </p>
 </div>
-
-<!-- <label for="fileUpload">Choose a file</label>
-<input #upload id="fileUpload" type="file">
-<button type="button" (click)="uploadFile(upload)">Upload</button>
-<img *ngIf="imageReady" [src]="imageUrl" alt="Upload image of book preview"> -->
-

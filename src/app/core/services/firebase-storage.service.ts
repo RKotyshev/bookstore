@@ -1,8 +1,19 @@
 import { Injectable } from '@angular/core';
 
-import { Observable, Subject, Subscriber, Subscription, Unsubscribable, from } from 'rxjs';
+import { 
+  Observable,
+  Subscriber,
+  Unsubscribable,
+  from,
+} from 'rxjs';
 
-import { Storage, UploadTask, getDownloadURL, ref, uploadBytesResumable } from '@angular/fire/storage';
+import {
+  Storage,
+  UploadTask,
+  getDownloadURL,
+  ref,
+  uploadBytesResumable,
+} from '@angular/fire/storage';
 
 import { IItem } from '../interfaces/item';
 
@@ -72,7 +83,6 @@ export class FirebaseStorageService {
 
       }
 
-      // subscriber.complete();
       const completeTimer = setInterval(() => {
         if (itemsCount === 0) {
           subscriber.complete();
@@ -89,9 +99,6 @@ export class FirebaseStorageService {
       };
 
     };
-    // return updatedItems;
-
-    // updatedItems = new Observable(subscribeOnUpdates);
 
     const updatedItems: Observable<IItem[]> = new Observable(subscribeOnUpdates);
 

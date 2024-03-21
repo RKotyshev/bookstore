@@ -23,11 +23,11 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { BooksComponent } from './books.component';
 import { BooksListComponent } from './books-list/books-list.component';
 import { BookDetailComponent } from './book-detail/book-detail.component';
-import { DisplayTimerComponent } from '../../core/components/display-with-timer/display-timer.component';
+import { DisplayTimerComponent } from '../../core/components/display-timer/display-timer.component';
 import { BookCreateComponent } from './book-create/book-create.component';
 import { BooksFilterComponent } from './books-filter/books-filter.component';
 import { FullnamePipe } from '../../core/pipes/fullname.pipe';
-import { AttachImageInputComponent } from '../../core/components/attach-image-input/attach-image-input.component';
+import { InputFileComponent } from '../../core/components/input-file/input-file.component';
 
 
 @NgModule({
@@ -56,7 +56,7 @@ import { AttachImageInputComponent } from '../../core/components/attach-image-in
     CdkAccordionModule,
     MatExpansionModule,
     DisplayTimerComponent,
-    AttachImageInputComponent,
+    InputFileComponent,
     FullnamePipe,
   ],
   providers: [
