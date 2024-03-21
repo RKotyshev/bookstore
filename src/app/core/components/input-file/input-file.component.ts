@@ -1,4 +1,13 @@
-import { Component, Host, Input, OnInit, Optional, SkipSelf } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Host,
+  Input,
+  OnInit,
+  Optional,
+  Output,
+  SkipSelf,
+} from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
 import { 
   AbstractControl,
@@ -9,6 +18,7 @@ import {
 
 import { MatButton } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 import { IItem } from '../../interfaces/item';
 import { transformFiles } from '../../functions/file-transform';
 
@@ -32,6 +42,7 @@ import { transformFiles } from '../../functions/file-transform';
 export class InputFileComponent implements ControlValueAccessor, OnInit {
   @Input() public formControlName!: string;
   @Input() public acceptTypes!: string[];
+  @Output() public delete: EventEmitter<IItem> = new EventEmitter();
   public onTouched!: ()=> void;
   public disabled: boolean = false;
   public inputValue: IItem[] | null = null;
@@ -95,6 +106,11 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
 
     console.log(this.inputValue);
     console.log(combinedItems);
+  }
+
+  public onDelete(item: IItem): void {
+    item.uploadStatus = 'waiting';
+    this.delete.emit(item);
   }
 
 }

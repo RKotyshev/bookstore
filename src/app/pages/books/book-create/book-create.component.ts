@@ -169,6 +169,21 @@ export class BookCreateComponent implements OnInit, OnDestroy {
     this._router.navigate(['books']);
   }
 
+  public onDeleteItem(item: IItem): void {
+    this._storage.deleteItem(item).subscribe(() => {
+      let updatedItems: IItem[] | undefined | null = this.coverControl.value?.filter(
+        (currentItem: IItem) => {
+          return item.name !== currentItem.name;
+        });
+
+      if(!updatedItems) {
+        updatedItems = null;
+      }
+
+      this.coverControl.setValue(updatedItems);
+    });
+  }
+
   private _initForm(): void {
     this.bookForm = this._formBuilder.group<ICreateBookForm>({
       in_stock: this._formBuilder.control({

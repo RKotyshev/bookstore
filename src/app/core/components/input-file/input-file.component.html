@@ -29,6 +29,7 @@
       [class.pending]="item.uploadStatus === 'waiting' || item.uploadStatus === 'pending'"
       >
       <mat-spinner *ngIf="item.uploadStatus === 'waiting' || item.uploadStatus === 'pending'" diameter="50"></mat-spinner>
+      <button type="button" (click)="onDelete(item)">Delete</button>
     </div>
   </section>
 </div>

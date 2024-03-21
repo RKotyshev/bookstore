@@ -10,6 +10,7 @@ import {
 import {
   Storage,
   UploadTask,
+  deleteObject,
   getDownloadURL,
   ref,
   uploadBytesResumable,
@@ -26,6 +27,12 @@ export class FirebaseStorageService {
   constructor(
     private _storage: Storage,
   ) { }
+
+  public deleteItem(item: IItem): Observable<void> {
+    const storageRef = ref(this._storage, item.name);
+
+    return from(deleteObject(storageRef));
+  }
 
   public uploadItems(inputItems: IItem[]): Observable<IItem[]> {
     const items = structuredClone(inputItems);
