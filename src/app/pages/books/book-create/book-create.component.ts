@@ -9,7 +9,9 @@ import {
   concatMap,
   distinctUntilChanged,
   filter,
+  map,
   takeUntil,
+  tap,
 } from 'rxjs';
 
 import { BooksService } from '../../../core/services/books.service';
@@ -97,16 +99,57 @@ export class BookCreateComponent implements OnInit, OnDestroy {
     this._initForm();
 
     this.coverControl.valueChanges.pipe(
-      filter(isNotNull),
-      distinctUntilChanged((prevItems: IItem[], currItems: IItem[]) => {
-        const prevNames = prevItems.map((item: IItem) => item.name).join('');
-        const currNames = currItems.map((item: IItem) => item.name).join('');
+      // filter(isNotNull),
+      // distinctUntilChanged((prevItems: IItem[], currItems: IItem[]) => {
+      //   const prevNames = prevItems.map((item: IItem) => item.name).join('');
+      //   const currNames = currItems.map((item: IItem) => item.name).join('');
+
+      //   console.log(`prev names: ${prevNames}`);
+      //   console.log(`current names: ${currNames}`);
+        
+      //   return prevNames === currNames;
+      // }),
+      map((items: IItem[] | null) => {
+        if (!items) {
+          this.coverControl.setValue(items, { emitEvent: false });
+
+          return items;
+        }
+
+        const blockedItems = this.coverControl?.getError('maxFileSize');
+
+        if (!blockedItems) {
+          this.coverControl.setValue(items, { emitEvent: false });
+
+          return items;
+        }
+
+        const blockedNames = blockedItems.map((currentItem: IItem) => {
+          return currentItem.name;
+        });
+        let updatedItems: IItem[] | null | undefined = items.filter((currentItem: IItem) => {
+          return !blockedNames.includes(currentItem.name);
+        });
+
+        if (updatedItems === undefined) {
+          updatedItems = null;
+        }
+
+        console.log('Before map setValue');
+        this.coverControl.setValue(updatedItems, { emitEvent: false });
+
+        return updatedItems;
+      }),
+      distinctUntilChanged((prevItems: IItem[] | null, currItems: IItem[] | null) => {
+        const prevNames = prevItems ? prevItems.map((item: IItem) => item.name).join('') : '';
+        const currNames = currItems ? currItems.map((item: IItem) => item.name).join('') : '';
 
         console.log(`prev names: ${prevNames}`);
         console.log(`current names: ${currNames}`);
         
         return prevNames === currNames;
       }),
+      filter(isNotNull),
       filter((items: IItem[]) => this.coverControl.valid && !!items.length),
       concatMap((items: IItem[]) => {
         console.log(`input items: ${JSON.stringify(items)}`);
@@ -115,8 +158,9 @@ export class BookCreateComponent implements OnInit, OnDestroy {
       }),
     ).subscribe((items: IItem[]) => {
       console.log(`output items: ${JSON.stringify(items)}`);
+      // console.log(this.coverControl.status);
 
-      this.coverControl.setValue(items);
+      this.coverControl.setValue(items, { emitEvent: false });
     });
   }
   
@@ -176,7 +220,7 @@ export class BookCreateComponent implements OnInit, OnDestroy {
           return item.name !== currentItem.name;
         });
 
-      if(!updatedItems) {
+      if(!updatedItems?.length || !updatedItems) {
         updatedItems = null;
       }
 

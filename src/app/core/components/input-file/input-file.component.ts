@@ -48,7 +48,7 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
   @Output() public delete: EventEmitter<IItem> = new EventEmitter();
   public onTouched!: ()=> void;
   public disabled: boolean = false;
-  public _inputValue: IItem[] | null = null;
+  public inputValue: IItem[] | null = null;
   public uploadControl!: FormControl<FileList | null>;
   public outerControl!: AbstractControl | undefined | null;
   private _onChange!: (value: IItem[] | null)=> void;
@@ -57,7 +57,7 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
     @Optional() @Host() @SkipSelf() private _controlContainer: ControlContainer,
   ) {}
 
-  public set inputValue(value: IItem[] | null) {
+  public set _inputValue(value: IItem[] | null) {
     if (value === null) {
       this._inputValue = value;
 
@@ -91,7 +91,7 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
     this._onChange(updatedItems);
   }
 
-  public get inputValue(): IItem[] | null {
+  public get _inputValue(): IItem[] | null {
     return this._inputValue;
   }
 
@@ -146,8 +146,15 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
       [...structuredClone(this.inputValue), ...items] : 
       items;
 
+    if (combinedItems === null) {
+      this._onChange(combinedItems);
+      this.inputValue = combinedItems;
+
+      return;
+    }
+
     this._onChange(combinedItems);
-    this.inputValue = combinedItems;
+    // this.inputValue = combinedItems;
     this.uploadControl.setValue(null);
 
     console.log(this.inputValue);
