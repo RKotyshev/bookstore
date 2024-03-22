@@ -22,23 +22,21 @@
 
   <section class="preview">
     <div *ngFor="let item of inputValue">
-      <div class="preview-content">
-        <img
-        width="200px"
-        height="200px"
-        alt="Uploaded image preview"
-        [src]="item.blobLink"
-        [class.pending]="item.uploadStatus === 'waiting' || item.uploadStatus === 'pending'"
-        >
-        <mat-spinner *ngIf="item.uploadStatus === 'waiting' || item.uploadStatus === 'pending'" diameter="50"></mat-spinner>
-        <button
-          *ngIf="item.uploadStatus === 'uploaded'"
-          mat-raised-button type="button"
-          (click)="onDelete(item)"
-          >Delete</button>
-      </div>
+      <img
+      width="200px"
+      height="200px"
+      alt="Uploaded image preview"
+      [src]="item.blobLink"
+      [class.pending]="item.uploadStatus === 'waiting' || item.uploadStatus === 'pending'"
+      >
+      <mat-spinner *ngIf="item.uploadStatus === 'waiting' || item.uploadStatus === 'pending'" diameter="50"></mat-spinner>
+      <button
+        *ngIf="item.uploadStatus === 'uploaded'"
+        mat-raised-button type="button"
+        (click)="onDelete(item)"
+        >Delete</button>
     </div>
   </section>
 </div>
 
-<button type="button" (click)="onConsole()">onConsole</button>
+<!-- <button type="button" (click)="onConsole()">onConsole</button> -->

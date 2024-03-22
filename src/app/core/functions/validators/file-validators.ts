@@ -2,8 +2,15 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { IItem } from '../../interfaces/item';
 
 
-export function maxFileSize(maxSize: number): ValidatorFn {
+export interface IFileSize {
+  size: number,
+  unit: 'Byte' | 'KB' | 'MB',
+}
+
+export function maxFileSize(maxSize: IFileSize): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
+    const kbPerByte = 1e3;
+    const mbPerByte = 1e6;
     const items: IItem[] | null = control.value;
 
     if (!items) {
@@ -11,7 +18,16 @@ export function maxFileSize(maxSize: number): ValidatorFn {
     }
 
     const invalidSizeFiles = Array.from(items).filter((item: IItem) => {
-      return item.size > maxSize;
+      switch (maxSize.unit) {
+        case 'Byte':
+          return item.size > maxSize.size;
+        case 'KB':
+          return item.size / kbPerByte > maxSize.size;
+        case 'MB':
+          return item.size / mbPerByte > maxSize.size;
+      }
+      
+      return false; // ESLINT: expects a value to be returned. Incorrect eslint rule?
     });
 
     return invalidSizeFiles.length ? { maxFileSize: invalidSizeFiles } : null;

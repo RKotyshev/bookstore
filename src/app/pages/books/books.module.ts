@@ -26,8 +26,9 @@ import { BookDetailComponent } from './book-detail/book-detail.component';
 import { DisplayTimerComponent } from '../../core/components/display-timer/display-timer.component';
 import { BookCreateComponent } from './book-create/book-create.component';
 import { BooksFilterComponent } from './books-filter/books-filter.component';
-import { FullnamePipe } from '../../core/pipes/fullname.pipe';
 import { InputFileComponent } from '../../core/components/input-file/input-file.component';
+import { FullnamePipe } from '../../core/pipes/fullname.pipe';
+import { FileTypesPipe } from '../../core/pipes/file-types.pipe';
 
 
 @NgModule({
@@ -58,6 +59,7 @@ import { InputFileComponent } from '../../core/components/input-file/input-file.
     DisplayTimerComponent,
     InputFileComponent,
     FullnamePipe,
+    FileTypesPipe,
   ],
   providers: [
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },

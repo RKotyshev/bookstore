@@ -1,6 +1,6 @@
 import { IItem } from '../interfaces/item';
 
-export function transformFiles(
+export function transformNewFiles(
   inputFiles: FileList, existFilesNames: string[] | undefined): IItem[] | null {
   const newFiles = Array.from(inputFiles).filter((file: File) => {
     return !existFilesNames?.includes(file.name);

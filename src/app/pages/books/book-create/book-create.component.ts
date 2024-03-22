@@ -11,7 +11,6 @@ import {
   filter,
   map,
   takeUntil,
-  tap,
 } from 'rxjs';
 
 import { BooksService } from '../../../core/services/books.service';
@@ -24,6 +23,7 @@ import { datesCompareValidator } from '../../../core/functions/validators/dates-
 import { formatDate } from '../utils/format-date';
 import { handleError } from '../../../core/functions/handle-error';
 import {
+  IFileSize,
   acceptFileType,
   maxFileSize,
 } from '../../../core/functions/validators/file-validators';
@@ -47,7 +47,13 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   public bookForm!: FormGroup<ICreateBookForm>;
   public genres$: Observable<IGenre[]> = this._genresService.getPaginatedGenres(0, 100);
   public authors$: Observable<IAuthor[]> = this._authorsService.getPaginatedAuthors(0, 100);
-  public imageTypes: string[] = ['image/jpeg'];
+  // public fileTypes: string[] = ['image/jpeg', 'image/png'];
+  public fileTypes: string[] = ['image/jpeg'];
+  public maxFileSize: IFileSize = {
+    size: 2000,
+    unit: 'MB',
+  };
+  public coverErrorDisplay: boolean = false;
   private _destroyed = new Subject<void>;
   
   constructor(
@@ -99,16 +105,6 @@ export class BookCreateComponent implements OnInit, OnDestroy {
     this._initForm();
 
     this.coverControl.valueChanges.pipe(
-      // filter(isNotNull),
-      // distinctUntilChanged((prevItems: IItem[], currItems: IItem[]) => {
-      //   const prevNames = prevItems.map((item: IItem) => item.name).join('');
-      //   const currNames = currItems.map((item: IItem) => item.name).join('');
-
-      //   console.log(`prev names: ${prevNames}`);
-      //   console.log(`current names: ${currNames}`);
-        
-      //   return prevNames === currNames;
-      // }),
       map((items: IItem[] | null) => {
         if (!items) {
           this.coverControl.setValue(items, { emitEvent: false });
@@ -120,10 +116,12 @@ export class BookCreateComponent implements OnInit, OnDestroy {
 
         if (!blockedItems) {
           this.coverControl.setValue(items, { emitEvent: false });
+          this.coverErrorDisplay = false;
 
           return items;
         }
 
+        this.coverErrorDisplay = true;
         const blockedNames = blockedItems.map((currentItem: IItem) => {
           return currentItem.name;
         });
@@ -150,7 +148,7 @@ export class BookCreateComponent implements OnInit, OnDestroy {
         return prevNames === currNames;
       }),
       filter(isNotNull),
-      filter((items: IItem[]) => this.coverControl.valid && !!items.length),
+      // filter((items: IItem[]) => this.coverControl.valid && !!items.length),
       concatMap((items: IItem[]) => {
         console.log(`input items: ${JSON.stringify(items)}`);
 
@@ -158,7 +156,6 @@ export class BookCreateComponent implements OnInit, OnDestroy {
       }),
     ).subscribe((items: IItem[]) => {
       console.log(`output items: ${JSON.stringify(items)}`);
-      // console.log(this.coverControl.status);
 
       this.coverControl.setValue(items, { emitEvent: false });
     });
@@ -282,7 +279,7 @@ export class BookCreateComponent implements OnInit, OnDestroy {
         value: null,
         disabled: false,
       }, {
-        validators: [maxFileSize(52000), acceptFileType(this.imageTypes)],
+        validators: [maxFileSize(this.maxFileSize), acceptFileType(this.fileTypes)],
       }),
     }, { validators: datesCompareValidator('writing_date', 'release_date') });
   }

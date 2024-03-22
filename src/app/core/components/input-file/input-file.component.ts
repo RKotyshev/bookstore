@@ -1,17 +1,17 @@
 import {
   Component,
   EventEmitter,
-  Host,
+  // Host,
   Input,
   OnInit,
-  Optional,
+  // Optional,
   Output,
-  SkipSelf,
+  // SkipSelf,
 } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
 import { 
-  AbstractControl,
-  ControlContainer,
+  // AbstractControl,
+  // ControlContainer,
   ControlValueAccessor,
   ReactiveFormsModule,
   FormControl,
@@ -22,7 +22,7 @@ import { MatButton } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { IItem } from '../../interfaces/item';
-import { transformFiles } from '../../functions/file-transform';
+import { transformNewFiles } from '../../functions/file-transform';
 
 @Component({
   selector: 'app-input-file',
@@ -50,63 +50,25 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
   public disabled: boolean = false;
   public inputValue: IItem[] | null = null;
   public uploadControl!: FormControl<FileList | null>;
-  public outerControl!: AbstractControl | undefined | null;
+  // public outerControl!: AbstractControl | undefined | null;
   private _onChange!: (value: IItem[] | null)=> void;
 
   constructor(
-    @Optional() @Host() @SkipSelf() private _controlContainer: ControlContainer,
+    // @Optional() @Host() @SkipSelf() private _controlContainer: ControlContainer,
   ) {}
-
-  public set _inputValue(value: IItem[] | null) {
-    if (value === null) {
-      this._inputValue = value;
-
-      return;
-    }
-
-    const blockedItems = this.outerControl?.getError('maxFileSize');
-    console.log('Blocked items:');
-    console.log(blockedItems);
-
-    if (!blockedItems) {
-      this._inputValue = value;
-
-      return;
-    }
-
-    const blockedNames = blockedItems.map((currentItem: IItem) => {
-      return currentItem.name;
-    });
-
-    const copyValue = structuredClone(value);
-    let updatedItems: IItem[] | null | undefined = copyValue?.filter((currentItem: IItem) => {
-      return !blockedNames.includes(currentItem.name);
-    });
-
-    if (!updatedItems) {
-      updatedItems = null;
-    }
-
-    this._inputValue = updatedItems;
-    this._onChange(updatedItems);
-  }
-
-  public get _inputValue(): IItem[] | null {
-    return this._inputValue;
-  }
 
   public ngOnInit(): void {
     this.uploadControl = new FormControl<FileList | null>(null);
 
-    if (this._controlContainer) {
-      if (this.formControlName) {
-        this.outerControl = this._controlContainer.control?.get(this.formControlName);
-      } else {
-        console.warn('Missing fomControlName directive');
-      } 
-    } else {
-      console.warn('Can`t find parent FormGroup directive');
-    }
+    // if (this._controlContainer) {
+    //   if (this.formControlName) {
+    //     this.outerControl = this._controlContainer.control?.get(this.formControlName);
+    //   } else {
+    //     console.warn('Missing fomControlName directive');
+    //   } 
+    // } else {
+    //   console.warn('Can`t find parent FormGroup directive');
+    // }
   }
 
   public writeValue(obj: IItem[] | null): void {
@@ -134,27 +96,17 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
     const existNames = this.inputValue?.map((item: IItem) => {
       return item.name;
     });
-    const items = transformFiles(files, existNames);
+    const items = transformNewFiles(files, existNames);
 
     if (!items) {
       return;
     }
     
-    // console.log('test');
-
     const combinedItems = this.inputValue ? 
       [...structuredClone(this.inputValue), ...items] : 
       items;
 
-    if (combinedItems === null) {
-      this._onChange(combinedItems);
-      this.inputValue = combinedItems;
-
-      return;
-    }
-
     this._onChange(combinedItems);
-    // this.inputValue = combinedItems;
     this.uploadControl.setValue(null);
 
     console.log(this.inputValue);
@@ -166,43 +118,8 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
     this.delete.emit(item);
   }
 
-  // public checkDisplay(item: IItem): boolean {
-  //   const blockedItems = this.outerControl?.getError('maxFileSize');
-    
-  //   if (!blockedItems) {
-  //     return true;
-  //   }
-
-  //   const invalidItem = blockedItems.find((currentItem: IItem) => {
-  //     return currentItem.name === item.name;
-  //   });
-    
-  //   if (!invalidItem) {
-  //     return true;
-  //   }
-    
-  //   let updatedItems: IItem[] | null | undefined = this.inputValue?.filter((currentItem: IItem) => {
-  //     return currentItem.name !== invalidItem.name;
-  //   });
-
-  //   if (!updatedItems) {
-  //     updatedItems = null;
-  //   }
-
-  //   this.inputValue = updatedItems;
-  //   this._onChange(updatedItems);
-
-  //   // const blockedItemsNames = blockedItems.map((currentItem: IItem) => {
-  //   //   return currentItem.name;
-  //   // });
-
-  //   // return !blockedItemsNames.includes(item.name);
-
-  //   return !invalidItem;
+  // public onConsole(): void {
+  //   console.log(this.outerControl?.getError('maxFileSize'));
   // }
-
-  public onConsole(): void {
-    console.log(this.outerControl?.getError('maxFileSize'));
-  }
 
 }
