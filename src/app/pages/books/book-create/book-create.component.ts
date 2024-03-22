@@ -98,7 +98,6 @@ export class BookCreateComponent implements OnInit, OnDestroy {
 
     this.coverControl.valueChanges.pipe(
       filter(isNotNull),
-      filter(() => this.coverControl.valid),
       distinctUntilChanged((prevItems: IItem[], currItems: IItem[]) => {
         const prevNames = prevItems.map((item: IItem) => item.name).join('');
         const currNames = currItems.map((item: IItem) => item.name).join('');
@@ -108,6 +107,7 @@ export class BookCreateComponent implements OnInit, OnDestroy {
         
         return prevNames === currNames;
       }),
+      filter((items: IItem[]) => this.coverControl.valid && !!items.length),
       concatMap((items: IItem[]) => {
         console.log(`input items: ${JSON.stringify(items)}`);
 
@@ -238,7 +238,7 @@ export class BookCreateComponent implements OnInit, OnDestroy {
         value: null,
         disabled: false,
       }, {
-        validators: [maxFileSize(5100000), acceptFileType(this.imageTypes)],
+        validators: [maxFileSize(52000), acceptFileType(this.imageTypes)],
       }),
     }, { validators: datesCompareValidator('writing_date', 'release_date') });
   }

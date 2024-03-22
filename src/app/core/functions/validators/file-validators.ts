@@ -14,7 +14,7 @@ export function maxFileSize(maxSize: number): ValidatorFn {
       return item.size > maxSize;
     });
 
-    return invalidSizeFiles.length ? { fileMaxSize: invalidSizeFiles } : null;
+    return invalidSizeFiles.length ? { maxFileSize: invalidSizeFiles } : null;
 
   };
 }
