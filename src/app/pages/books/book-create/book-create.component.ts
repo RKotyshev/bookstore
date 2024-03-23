@@ -50,8 +50,8 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   // public fileTypes: string[] = ['image/jpeg', 'image/png'];
   public fileTypes: string[] = ['image/jpeg'];
   public maxFileSize: IFileSize = {
-    size: 2000,
-    unit: 'MB',
+    size: 52,
+    unit: 'KB',
   };
   public coverErrorDisplay: boolean = false;
   private _destroyed = new Subject<void>;
@@ -112,19 +112,30 @@ export class BookCreateComponent implements OnInit, OnDestroy {
           return items;
         }
 
-        const blockedItems = this.coverControl?.getError('maxFileSize');
+        const coverErrors = this.coverControl?.errors;
 
-        if (!blockedItems) {
+        if (!coverErrors) {
           this.coverControl.setValue(items, { emitEvent: false });
           this.coverErrorDisplay = false;
 
           return items;
         }
 
+        const blockedItems = Object.values(coverErrors);
+
         this.coverErrorDisplay = true;
-        const blockedNames = blockedItems.map((currentItem: IItem) => {
-          return currentItem.name;
-        });
+
+        const blockedNames = blockedItems.reduce(
+          (namesArray: string[], currentValidatorItems: IItem[]) => {
+            currentValidatorItems.forEach((currentItem: IItem) => {
+              namesArray.push(currentItem.name);
+            });
+
+            return namesArray;
+          }, []);
+
+        console.log(blockedNames);
+
         let updatedItems: IItem[] | null | undefined = items.filter((currentItem: IItem) => {
           return !blockedNames.includes(currentItem.name);
         });
