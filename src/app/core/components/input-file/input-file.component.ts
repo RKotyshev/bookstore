@@ -72,7 +72,6 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
   }
 
   public addFiles(files: FileList | null): void {
-    console.log('test');
     if (!files) {
       return;
     }
@@ -92,9 +91,6 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
       items;
 
     this._onChange(combinedItems);
-
-    console.log(this.inputValue);
-    console.log(combinedItems);
   }
 
   public onDelete(item: IItem): void {

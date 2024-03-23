@@ -45,9 +45,7 @@ export function acceptFileType(acceptTypes: string[]): ValidatorFn {
       return null;
     }
 
-    const invalidTypeFiles = Array.from(items).filter((item: IItem) => {
-      console.log(item.type);
-      
+    const invalidTypeFiles = Array.from(items).filter((item: IItem) => {      
       return !acceptTypes.includes(item.type);
     });
 

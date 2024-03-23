@@ -50,7 +50,7 @@ export class FirebaseStorageService {
   
         const storageRef = ref(this._storage, item.name);
         const uploadTask: UploadTask = uploadBytesResumable(storageRef, item.file);
-        
+
         item.uploadStatus = 'pending';
   
         uploadTask.then(
@@ -67,8 +67,6 @@ export class FirebaseStorageService {
 
               const copyItems = structuredClone(items);
               itemsCount--;
-
-              console.log(`items from service ${JSON.stringify(copyItems)}`);
 
               subscriber.next(copyItems); 
             },
@@ -95,7 +93,6 @@ export class FirebaseStorageService {
         if (itemsCount === 0) {
           subscriber.complete();
           clearInterval(completeTimer);
-          console.log('completed');
         }
       }, 700);
 

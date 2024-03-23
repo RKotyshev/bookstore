@@ -115,22 +115,15 @@ export class BookCreateComponent implements OnInit, OnDestroy {
       distinctUntilChanged((prevItems: IItem[] | null, currItems: IItem[] | null) => {
         const prevNames = prevItems ? prevItems.map((item: IItem) => item.name).join('') : '';
         const currNames = currItems ? currItems.map((item: IItem) => item.name).join('') : '';
-
-        console.log(`prev names: ${prevNames}`);
-        console.log(`current names: ${currNames}`);
         
         return prevNames === currNames;
       }),
       filter(isNotNull),
       concatMap((items: IItem[]) => {
-        console.log(`input items: ${JSON.stringify(items)}`);
-
         return this._storage.uploadItems(items);
       }),
       takeUntil(this._destroyed),
     ).subscribe((items: IItem[]) => {
-      console.log(`output items: ${JSON.stringify(items)}`);
-
       this.coverControl.setValue(items, { emitEvent: false });
     });
   }
