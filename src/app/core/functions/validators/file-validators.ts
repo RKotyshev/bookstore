@@ -9,8 +9,8 @@ export interface IFileSize {
 
 export function maxFileSize(maxSize: IFileSize): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
-    const kbPerByte = 1e3;
-    const mbPerByte = 1e6;
+    const bytesPerKb = 1e3;
+    const bytesPerMb = 1e6;
     const items: IItem[] | null = control.value;
 
     if (!items) {
@@ -22,12 +22,14 @@ export function maxFileSize(maxSize: IFileSize): ValidatorFn {
         case 'Byte':
           return item.size > maxSize.size;
         case 'KB':
-          return item.size / kbPerByte > maxSize.size;
+          return item.size / bytesPerKb > maxSize.size;
         case 'MB':
-          return item.size / mbPerByte > maxSize.size;
+          return item.size / bytesPerMb > maxSize.size;
       }
       
-      return false; // ESLINT: expects a value to be returned. Incorrect eslint rule?
+      // FIXME:
+      // ESLINT: still expects a value to be returned. Incompatible with 'switch' eslint rule?
+      return false; 
     });
 
     return invalidSizeFiles.length ? { maxFileSize: invalidSizeFiles } : null;

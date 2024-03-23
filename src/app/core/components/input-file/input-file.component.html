@@ -15,7 +15,7 @@
   type="button"
   [disabled]="disabled"
   (click)="uploadInput.click(); onTouched()"
-  >Select image</button>
+  >Select file</button>
 
 <div *ngIf="inputValue?.length">
   <h3>Preview:</h3>
@@ -26,9 +26,11 @@
       width="200px"
       height="200px"
       alt="Uploaded image preview"
-      [src]="item.blobLink"
+      [src]="item.blobLink ? item.blobLink : '../../../../assets/document-icon.svg'"
       [class.pending]="item.uploadStatus === 'waiting' || item.uploadStatus === 'pending'"
       >
+      <p>{{ item.name | sliceSentence: 30}}</p>
+
       <mat-spinner *ngIf="item.uploadStatus === 'waiting' || item.uploadStatus === 'pending'" diameter="50"></mat-spinner>
       <button
         *ngIf="item.uploadStatus === 'uploaded'"
@@ -38,5 +40,3 @@
     </div>
   </section>
 </div>
-
-<!-- <button type="button" (click)="onConsole()">onConsole</button> -->

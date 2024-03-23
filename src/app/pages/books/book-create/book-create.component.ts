@@ -48,11 +48,10 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   public bookForm!: FormGroup<ICreateBookForm>;
   public genres$: Observable<IGenre[]> = this._genresService.getPaginatedGenres(0, 100);
   public authors$: Observable<IAuthor[]> = this._authorsService.getPaginatedAuthors(0, 100);
-  // public fileTypes: string[] = ['image/jpeg', 'image/png'];
-  public fileTypes: string[] = ['image/jpeg'];
+  public fileTypes: string[] = ['image/jpeg', 'image/png'];
   public maxFileSize: IFileSize = {
-    size: 52,
-    unit: 'KB',
+    size: 5,
+    unit: 'MB',
   };
   public coverErrorDisplay: boolean = false;
   private _destroyed = new Subject<void>;

@@ -1,17 +1,12 @@
 import {
   Component,
   EventEmitter,
-  // Host,
   Input,
   OnInit,
-  // Optional,
   Output,
-  // SkipSelf,
 } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
 import { 
-  // AbstractControl,
-  // ControlContainer,
   ControlValueAccessor,
   ReactiveFormsModule,
   FormControl,
@@ -23,6 +18,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { IItem } from '../../interfaces/item';
 import { transformNewFiles } from '../../functions/file-transform';
+import { SliceSentencePipe } from '../../pipes/slice-sentence.pipe';
 
 @Component({
   selector: 'app-input-file',
@@ -33,6 +29,7 @@ import { transformNewFiles } from '../../functions/file-transform';
     ReactiveFormsModule,
     MatButton,
     MatProgressSpinnerModule,
+    SliceSentencePipe,
   ],
   templateUrl: './input-file.component.html',
   styleUrl: './input-file.component.scss',
@@ -50,25 +47,12 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
   public disabled: boolean = false;
   public inputValue: IItem[] | null = null;
   public uploadControl!: FormControl<FileList | null>;
-  // public outerControl!: AbstractControl | undefined | null;
   private _onChange!: (value: IItem[] | null)=> void;
 
-  constructor(
-    // @Optional() @Host() @SkipSelf() private _controlContainer: ControlContainer,
-  ) {}
+  constructor() {}
 
   public ngOnInit(): void {
     this.uploadControl = new FormControl<FileList | null>(null);
-
-    // if (this._controlContainer) {
-    //   if (this.formControlName) {
-    //     this.outerControl = this._controlContainer.control?.get(this.formControlName);
-    //   } else {
-    //     console.warn('Missing fomControlName directive');
-    //   } 
-    // } else {
-    //   console.warn('Can`t find parent FormGroup directive');
-    // }
   }
 
   public writeValue(obj: IItem[] | null): void {
@@ -117,9 +101,4 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
     item.uploadStatus = 'waiting';
     this.delete.emit(item);
   }
-
-  // public onConsole(): void {
-  //   console.log(this.outerControl?.getError('maxFileSize'));
-  // }
-
 }

@@ -50,6 +50,7 @@ export class FirebaseStorageService {
   
         const storageRef = ref(this._storage, item.name);
         const uploadTask: UploadTask = uploadBytesResumable(storageRef, item.file);
+        
         item.uploadStatus = 'pending';
   
         uploadTask.then(

@@ -3,7 +3,7 @@ export interface IItem {
   name: string,
   size: number,
   type: string,
-  blobLink: string,
+  blobLink: string | null,
   storageLink: string | null,
-  uploadStatus: 'pending' | 'uploaded' | 'canceled' | 'waiting',
+  uploadStatus: 'waiting' | 'pending' | 'uploaded' | 'canceled',
 }
