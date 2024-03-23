@@ -97,6 +97,7 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
       return item.name;
     });
     const items = transformNewFiles(files, existNames);
+    this.uploadControl.setValue(null);
 
     if (!items) {
       return;
@@ -107,7 +108,6 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
       items;
 
     this._onChange(combinedItems);
-    this.uploadControl.setValue(null);
 
     console.log(this.inputValue);
     console.log(combinedItems);

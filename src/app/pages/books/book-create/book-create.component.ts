@@ -29,6 +29,7 @@ import {
 } from '../../../core/functions/validators/file-validators';
 import { IItem } from '../../../core/interfaces/item';
 import { FirebaseStorageService } from '../../../core/services/firebase-storage.service';
+import { filterInvalidItems } from '../../../core/functions/filter-invalid-items';
 
 function isNotNull(value: IItem[] | null): value is IItem[] {
   return value !== null;
@@ -106,48 +107,11 @@ export class BookCreateComponent implements OnInit, OnDestroy {
 
     this.coverControl.valueChanges.pipe(
       map((items: IItem[] | null) => {
-        if (!items) {
-          this.coverControl.setValue(items, { emitEvent: false });
+        const { filteredItems, errorState } = filterInvalidItems(items, this.coverControl.errors);
+        this.coverErrorDisplay = errorState;
+        this.coverControl.setValue(filteredItems, { emitEvent: false });
 
-          return items;
-        }
-
-        const coverErrors = this.coverControl?.errors;
-
-        if (!coverErrors) {
-          this.coverControl.setValue(items, { emitEvent: false });
-          this.coverErrorDisplay = false;
-
-          return items;
-        }
-
-        const blockedItems = Object.values(coverErrors);
-
-        this.coverErrorDisplay = true;
-
-        const blockedNames = blockedItems.reduce(
-          (namesArray: string[], currentValidatorItems: IItem[]) => {
-            currentValidatorItems.forEach((currentItem: IItem) => {
-              namesArray.push(currentItem.name);
-            });
-
-            return namesArray;
-          }, []);
-
-        console.log(blockedNames);
-
-        let updatedItems: IItem[] | null | undefined = items.filter((currentItem: IItem) => {
-          return !blockedNames.includes(currentItem.name);
-        });
-
-        if (updatedItems === undefined) {
-          updatedItems = null;
-        }
-
-        console.log('Before map setValue');
-        this.coverControl.setValue(updatedItems, { emitEvent: false });
-
-        return updatedItems;
+        return filteredItems;
       }),
       distinctUntilChanged((prevItems: IItem[] | null, currItems: IItem[] | null) => {
         const prevNames = prevItems ? prevItems.map((item: IItem) => item.name).join('') : '';
@@ -159,12 +123,12 @@ export class BookCreateComponent implements OnInit, OnDestroy {
         return prevNames === currNames;
       }),
       filter(isNotNull),
-      // filter((items: IItem[]) => this.coverControl.valid && !!items.length),
       concatMap((items: IItem[]) => {
         console.log(`input items: ${JSON.stringify(items)}`);
 
         return this._storage.uploadItems(items);
       }),
+      takeUntil(this._destroyed),
     ).subscribe((items: IItem[]) => {
       console.log(`output items: ${JSON.stringify(items)}`);
 
