@@ -13,6 +13,10 @@ export interface IBook {
   writing_date: string,
 }
 
+export interface IBookWithCover extends IBook {
+  cover?: string[];
+}
+
 export interface ICreateBookForm {
   in_stock: FormControl<number>,
   title: FormControl<string>,

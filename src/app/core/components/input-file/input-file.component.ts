@@ -40,13 +40,19 @@ import { SliceSentencePipe } from '../../pipes/slice-sentence.pipe';
   }],
 })
 export class InputFileComponent implements ControlValueAccessor, OnInit {
-  @Input() public formControlName!: string;
-  @Input() public acceptTypes!: string[];
-  @Output() public delete: EventEmitter<IItem> = new EventEmitter();
-  public onTouched!: ()=> void;
+  @Input() 
+  public formControlName!: string;
+
+  @Input() 
+  public acceptTypes!: string[];
+
+  @Output() 
+  public delete: EventEmitter<IItem> = new EventEmitter();
+
   public disabled: boolean = false;
   public inputValue: IItem[] | null = null;
   public uploadControl!: FormControl<FileList | null>;
+  public onTouched!: ()=> void;
   private _onChange!: (value: IItem[] | null)=> void;
 
   constructor() {}
@@ -71,6 +77,28 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
     this.disabled = isDisabled;
   }
 
+  // public addFiles(files: FileList | null): void {
+  //   if (!files) {
+  //     return;
+  //   }
+
+  //   const existNames = this.inputValue?.map((item: IItem) => {
+  //     return item.name;
+  //   });
+  //   const items = transformNewFiles(files, existNames);
+  //   this.uploadControl.setValue(null);
+
+  //   if (!items) {
+  //     return;
+  //   }
+    
+  //   const combinedItems = this.inputValue ? 
+  //     [...structuredClone(this.inputValue), ...items] : 
+  //     items;
+
+  //   this._onChange(combinedItems);
+  // }
+
   public addFiles(files: FileList | null): void {
     if (!files) {
       return;
@@ -79,22 +107,33 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
     const existNames = this.inputValue?.map((item: IItem) => {
       return item.name;
     });
-    const items = transformNewFiles(files, existNames);
+    const addedInputItems = transformNewFiles(files, existNames);
     this.uploadControl.setValue(null);
 
-    if (!items) {
+    if (!addedInputItems) {
       return;
     }
     
-    const combinedItems = this.inputValue ? 
-      [...structuredClone(this.inputValue), ...items] : 
-      items;
+    const updatedInputItems = this.inputValue ? 
+      [...structuredClone(this.inputValue), ...addedInputItems] : 
+      addedInputItems;
 
-    this._onChange(combinedItems);
+    console.log(updatedInputItems);
+    this.inputValue = updatedInputItems;
+    this._onChange(updatedInputItems);
   }
 
-  public onDelete(item: IItem): void {
-    item.uploadStatus = 'waiting';
-    this.delete.emit(item);
+  // public onDelete(item: IItem): void {
+  //   item.uploadStatus = 'waiting';
+  //   this.delete.emit(item);
+  // }
+
+  public onDelete(deleteItem: IItem): void {
+    const updatedInputItems = this.inputValue?.filter((current: IItem) => {
+      return deleteItem.name !== current.name;
+    });
+
+    this.inputValue = updatedInputItems ?? null;
+    this._onChange(updatedInputItems ?? null);
   }
 }

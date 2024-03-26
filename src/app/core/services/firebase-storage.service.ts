@@ -5,6 +5,7 @@ import {
   Subscriber,
   Unsubscribable,
   from,
+  of,
 } from 'rxjs';
 
 import {
@@ -34,67 +35,148 @@ export class FirebaseStorageService {
     return from(deleteObject(storageRef));
   }
 
-  public uploadItems(inputItems: IItem[]): Observable<IItem[]> {
-    const items = structuredClone(inputItems);
-    let itemsCount = items.length;
+  // public uploadItems(inputItems: IItem[]): Observable<IItem[]> {
+  //   const items = structuredClone(inputItems);
+  //   let itemsCount = items.length;
 
-    const subscribeOnUpdates = (subscriber: Subscriber<IItem[]>): Unsubscribable => {
+  //   const subscribeOnUpdates = (subscriber: Subscriber<IItem[]>): Unsubscribable => {
 
-      for (let i = 0; i < items.length; i++) {
-        const item = items[i];
+  //     for (let i = 0; i < items.length; i++) {
+  //       const item = items[i];
   
-        if (!item || item.uploadStatus !== 'waiting') {
-          itemsCount--;
-          continue;
-        }
+  //       if (!item || item.uploadStatus !== 'waiting') {
+  //         itemsCount--;
+  //         continue;
+  //       }
   
-        const storageRef = ref(this._storage, item.name);
-        const uploadTask: UploadTask = uploadBytesResumable(storageRef, item.file);
+  //       const storageRef = ref(this._storage, item.name);
+  //       const uploadTask: UploadTask = uploadBytesResumable(storageRef, item.file);
 
-        item.uploadStatus = 'pending';
+  //       item.uploadStatus = 'pending';
   
-        uploadTask.then(
-          () => {
-            const storageLink: Promise<string> = getDownloadURL(storageRef);
+  //       uploadTask.then(
+  //         () => {
+  //           const storageLink: Promise<string> = getDownloadURL(storageRef);
   
-            from(storageLink).subscribe((url: string) => {
-              const currentItem = items?.find((current: IItem) => {
-                return item.name === current.name;
-              });
+  //           from(storageLink).subscribe((url: string) => {
+  //             const currentItem = items?.find((current: IItem) => {
+  //               return item.name === current.name;
+  //             });
               
-              currentItem!.storageLink = url;
-              currentItem!.uploadStatus = 'uploaded';
+  //             currentItem!.storageLink = url;
+  //             currentItem!.uploadStatus = 'uploaded';
 
-              const copyItems = structuredClone(items);
-              itemsCount--;
+  //             const copyItems = structuredClone(items);
+  //             itemsCount--;
 
-              subscriber.next(copyItems); 
-            },
-            );
-          },
-          () => {
-            const currentItem = items.find((current: IItem) => {
-              return item.name === current.name;
-            });
+  //             subscriber.next(copyItems); 
+  //           },
+  //           );
+  //         },
+  //         () => {
+  //           const currentItem = items.find((current: IItem) => {
+  //             return item.name === current.name;
+  //           });
     
-            currentItem!.storageLink = null;
-            currentItem!.uploadStatus = 'canceled';
+  //           currentItem!.storageLink = null;
+  //           currentItem!.uploadStatus = 'canceled';
 
-            const copyItems = structuredClone(items);
-            itemsCount--;
+  //           const copyItems = structuredClone(items);
+  //           itemsCount--;
             
-            subscriber.next(copyItems);
-          },
-        );
+  //           subscriber.next(copyItems);
+  //         },
+  //       );
 
-      }
+  //     }
+
+  //     const completeTimer = setInterval(() => {
+  //       if (itemsCount === 0) {
+  //         subscriber.complete();
+  //         clearInterval(completeTimer);
+  //       }
+  //     }, 700);
+
+  //     return {
+  //       unsubscribe: (): void => {
+  //         clearInterval(completeTimer);
+  //         subscriber.complete();
+  //       },
+  //     };
+
+  //   };
+
+  //   const updatedItems: Observable<IItem[]> = new Observable(subscribeOnUpdates);
+
+  //   return updatedItems;
+  // }
+
+  public uploadItems(inputItem: IItem | null): Observable<string> {
+    if (!inputItem) {
+      return of('');
+    }
+    
+    // const items = structuredClone(inputItems);
+    // let itemsCount = items.length;
+    let uploadCompleted = false;
+
+    const subscribeOnUpload = (subscriber: Subscriber<string>): Unsubscribable => {
+
+      // for (let i = 0; i < items.length; i++) {
+      //   const item = items[i];
+  
+      //   if (!item || item.uploadStatus !== 'waiting') {
+      //     itemsCount--;
+      //     continue;
+      //   }
+  
+      const storageRef = ref(this._storage, inputItem.name);
+      const uploadTask: UploadTask = uploadBytesResumable(storageRef, inputItem.file);
+
+      // item.uploadStatus = 'pending';
+
+      uploadTask.then(
+        () => {
+          const storageLink: Promise<string> = getDownloadURL(storageRef);
+
+          from(storageLink).subscribe((url: string) => {
+
+            // currentItem!.storageLink = url;
+            // currentItem!.uploadStatus = 'uploaded';
+
+            // const copyItems = structuredClone(items);
+            // itemsCount--;
+
+            subscriber.next(url); 
+            uploadCompleted = true;
+            
+          },
+          );
+        },
+        () => {
+          // const currentItem = items.find((current: IItem) => {
+          //   return item.name === current.name;
+          // });
+  
+          // currentItem!.storageLink = null;
+          // currentItem!.uploadStatus = 'canceled';
+
+          // const copyItems = structuredClone(items);
+          // itemsCount--;
+          
+          subscriber.error();
+          uploadCompleted = true;
+        },
+      );
+
+      // }
 
       const completeTimer = setInterval(() => {
-        if (itemsCount === 0) {
+        if (uploadCompleted) {
           subscriber.complete();
           clearInterval(completeTimer);
         }
-      }, 700);
+      }, 300);
 
       return {
         unsubscribe: (): void => {
@@ -105,8 +187,8 @@ export class FirebaseStorageService {
 
     };
 
-    const updatedItems: Observable<IItem[]> = new Observable(subscribeOnUpdates);
+    const inputItemLink: Observable<string> = new Observable(subscribeOnUpload);
 
-    return updatedItems;
+    return inputItemLink;
   }
 }

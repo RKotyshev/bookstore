@@ -20,7 +20,7 @@
 <div *ngIf="inputValue?.length">
   <h3>Preview:</h3>
 
-  <section class="preview">
+  <!-- <section class="preview">
     <div *ngFor="let item of inputValue">
       <img
       width="200px"
@@ -34,6 +34,23 @@
       <mat-spinner *ngIf="item.uploadStatus === 'waiting' || item.uploadStatus === 'pending'" diameter="50"></mat-spinner>
       <button
         *ngIf="item.uploadStatus === 'uploaded'"
+        mat-raised-button type="button"
+        (click)="onDelete(item)"
+        >Delete</button>
+    </div>
+  </section> -->
+
+  <section class="preview">
+    <div *ngFor="let item of inputValue">
+      <img
+        width="200px"
+        height="200px"
+        alt="Uploaded image preview"
+        [src]="item.blobLink ? item.blobLink : '../../../../assets/document-icon.svg'"
+      >
+      <p>{{ item.name | sliceSentence: 30}}</p>
+
+      <button
         mat-raised-button type="button"
         (click)="onDelete(item)"
         >Delete</button>

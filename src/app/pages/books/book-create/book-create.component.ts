@@ -10,7 +10,11 @@ import {
   distinctUntilChanged,
   filter,
   map,
+  of,
+  shareReplay,
+  switchMap,
   takeUntil,
+  zip,
 } from 'rxjs';
 
 import { BooksService } from '../../../core/services/books.service';
@@ -18,7 +22,7 @@ import { AuthorsService } from '../../../core/services/authors.service';
 import { GenresService } from '../../../core/services/genres.service';
 import { IAuthor } from '../../../core/interfaces/author';
 import { IGenre } from '../../../core/interfaces/genre';
-import { IBook, ICreateBookForm } from '../../../core/interfaces/book';
+import { IBook, IBookWithCover, ICreateBookForm } from '../../../core/interfaces/book';
 import { datesCompareValidator } from '../../../core/functions/validators/dates-compare-validators';
 import { formatDate } from '../utils/format-date';
 import { handleError } from '../../../core/functions/handle-error';
@@ -29,7 +33,8 @@ import {
 } from '../../../core/functions/validators/file-validators';
 import { IItem } from '../../../core/interfaces/item';
 import { FirebaseStorageService } from '../../../core/services/firebase-storage.service';
-import { filterInvalidItems } from '../../../core/functions/filter-invalid-items';
+import { getInvalidNamesList } from '../../../core/functions/filter-invalid-items';
+// import { filterInvalidItems } from '../../../core/functions/filter-invalid-items';
 
 function isNotNull(value: IItem[] | null): value is IItem[] {
   return value !== null;
@@ -48,12 +53,14 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   public bookForm!: FormGroup<ICreateBookForm>;
   public genres$: Observable<IGenre[]> = this._genresService.getPaginatedGenres(0, 100);
   public authors$: Observable<IAuthor[]> = this._authorsService.getPaginatedAuthors(0, 100);
-  public fileTypes: string[] = ['image/jpeg', 'image/png'];
+  // public fileTypes: string[] = ['image/jpeg', 'image/png'];
+  public fileTypes: string[] = ['image/jpeg'];
   public maxFileSize: IFileSize = {
     size: 5,
     unit: 'MB',
   };
   public coverErrorDisplay: boolean = false;
+  public invalidInputItems$!: Observable<string[] | null>;
   private _destroyed = new Subject<void>;
   
   constructor(
@@ -104,28 +111,39 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this._initForm();
 
-    this.coverControl.valueChanges.pipe(
-      map((items: IItem[] | null) => {
-        const { filteredItems, errorState } = filterInvalidItems(items, this.coverControl.errors);
-        this.coverErrorDisplay = errorState;
-        this.coverControl.setValue(filteredItems, { emitEvent: false });
+    // this.coverControl.valueChanges.pipe(
+    //   map((items: IItem[] | null) => {
+    //     const { filteredItems, errorState } = filterInvalidItems(items, this.coverControl.errors);
+    //     this.coverErrorDisplay = errorState;
+    //     this.coverControl.setValue(filteredItems, { emitEvent: false });
 
-        return filteredItems;
-      }),
-      distinctUntilChanged((prevItems: IItem[] | null, currItems: IItem[] | null) => {
-        const prevNames = prevItems ? prevItems.map((item: IItem) => item.name).join('') : '';
-        const currNames = currItems ? currItems.map((item: IItem) => item.name).join('') : '';
+    //     return filteredItems;
+    //   }),
+    //   distinctUntilChanged((prevItems: IItem[] | null, currItems: IItem[] | null) => {
+    //     const prevNames = prevItems ? prevItems.map((item: IItem) => item.name).join('') : '';
+    //     const currNames = currItems ? currItems.map((item: IItem) => item.name).join('') : '';
         
-        return prevNames === currNames;
+    //     return prevNames === currNames;
+    //   }),
+    //   filter(isNotNull),
+    //   concatMap((items: IItem[]) => {
+    //     return this._storage.uploadItems(items);
+    //   }),
+    //   takeUntil(this._destroyed),
+    // ).subscribe((items: IItem[]) => {
+    //   this.coverControl.setValue(items, { emitEvent: false });
+    // });
+
+    this.invalidInputItems$ = this.coverControl.valueChanges.pipe(
+      map(() => {
+        const errors = this.coverControl.errors;
+
+        const blockedNames = getInvalidNamesList(errors);
+      
+        return blockedNames;
       }),
-      filter(isNotNull),
-      concatMap((items: IItem[]) => {
-        return this._storage.uploadItems(items);
-      }),
-      takeUntil(this._destroyed),
-    ).subscribe((items: IItem[]) => {
-      this.coverControl.setValue(items, { emitEvent: false });
-    });
+      shareReplay(1),
+    );
   }
   
   public ngOnDestroy(): void {
@@ -153,13 +171,35 @@ export class BookCreateComponent implements OnInit, OnDestroy {
     const correctReleaseDate = formatDate(this.releaseDateControl.value);
     const correctWritingDate = formatDate(this.writingDateControl.value);
 
-    const newBook: IBook = {
-      ...this.bookForm.getRawValue(),
-      release_date: correctReleaseDate,
-      writing_date: correctWritingDate,
-    };
+    // const newBook: IBook = {
+    //   ...this.bookForm.getRawValue(),
+    //   release_date: correctReleaseDate,
+    //   writing_date: correctWritingDate,
+    // };
 
-    this._booksService.postBook(newBook).pipe(
+    let uploadCoverArray = this.coverControl.value?.map((current: IItem) => {
+      return this._storage.uploadItems(current);
+    });
+
+    if (!uploadCoverArray) {
+      uploadCoverArray = [of('')];
+    }
+
+
+    zip(...uploadCoverArray).pipe(
+      switchMap((value: string[]) => {
+        const coversLinks = value;
+        const newBook: IBookWithCover = {
+          ...this.bookForm.getRawValue(),
+          release_date: correctReleaseDate,
+          writing_date: correctWritingDate,
+          cover: coversLinks,
+        };
+
+        delete newBook.cover;
+
+        return this._booksService.postBook(newBook as IBook);
+      }),
       catchError(handleError),
       takeUntil(this._destroyed),
     ).subscribe({
@@ -171,6 +211,43 @@ export class BookCreateComponent implements OnInit, OnDestroy {
         this.submitError = true;
       },
     });
+    // this._storage.uploadItems(this.coverControl.value).pipe(
+    //   switchMap(() => {
+    // const newBook: IBookWithCover = {
+    //   ...this.bookForm.getRawValue(),
+    //   release_date: correctReleaseDate,
+    //   writing_date: correctWritingDate,
+    // };
+
+    // delete newBook.cover;
+
+    // return this._booksService.postBook(newBook as IBook);
+    //   }),
+    //   catchError(handleError),
+    //   takeUntil(this._destroyed),
+    // ).subscribe({
+    //   next: () => {
+    //     this.submitted = true;
+    //     this.submitError = false;
+    //   },
+    //   error: () => {
+    //     this.submitError = true;
+    //   },
+    // });
+
+
+    // this._booksService.postBook(newBook).pipe(
+    //   catchError(handleError),
+    //   takeUntil(this._destroyed),
+    // ).subscribe({
+    //   next: () => {
+    //     this.submitted = true;
+    //     this.submitError = false;
+    //   },
+    //   error: () => {
+    //     this.submitError = true;
+    //   },
+    // });
   }
 
   public onRedirect(): void {
