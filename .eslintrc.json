@@ -95,7 +95,7 @@
           },
           {
             "selector": ["variable", "function"],
-            "format": ["camelCase"],
+            "format": ["camelCase", "UPPER_CASE"],
             "leadingUnderscore": "allow"
           },
           {

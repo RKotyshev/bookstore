@@ -9,7 +9,6 @@ import {
   debounceTime,
   distinctUntilChanged,
   filter,
-  map,
   startWith,
   switchMap,
 } from 'rxjs';
@@ -18,7 +17,9 @@ import { BooksService } from '../../core/services/books.service';
 import { IBook, IRequestBook } from '../../core/interfaces/book';
 import { IResponse } from '../../core/interfaces/response';
 import { PageSizeOptions } from '../../utils/constants/paginator';
-import { SortDirection } from '../../utils/constants/sorting';
+import { SortDirection } from '../../core/interfaces/sorting';
+import { DEFAULT_FILTER_TYPE } from './constants/default-filter-type';
+import * as lodash from 'lodash';
 
 
 @Component({
@@ -28,23 +29,26 @@ import { SortDirection } from '../../utils/constants/sorting';
 })
 export class BooksComponent implements OnInit, OnDestroy {
   @ViewChild('paginator') public paginator!: MatPaginator;
-  public pageSizes = PageSizeOptions;
-  public totalBooks!: number;
-  public currentBooksList$!: Observable<IBook[]>;
+  public booksResponse$!: Observable<IResponse<IBook>>;
   public paramsState: IRequestBook = {
-    filterType: 'id',
+    filterType: DEFAULT_FILTER_TYPE,
     direction: SortDirection.Ascending,
     page: 0,
     page_size: 5,
   };
   public params$ = this._route.queryParams.pipe(
-    filter((params: IRequestBook) => !(params.page === undefined)),
+    filter((params: IRequestBook) => {
+      return params.page !== undefined && params.page !== null &&
+      params.page_size !== undefined && params.page_size !== null;
+    }),
     startWith(this.paramsState),
     debounceTime(300),
-    distinctUntilChanged((prev: IRequestBook, curr: IRequestBook) => {
-      return JSON.stringify(prev) === JSON.stringify(curr);
+    distinctUntilChanged((previous: IRequestBook, current: IRequestBook) => {
+      // return JSON.stringify(prev) === JSON.stringify(curr);
+      return lodash.isEqual(previous, current);
     }),
   );
+  public readonly pageSizes = PageSizeOptions;
   private _destroyed = new Subject<void>();
 
   constructor(
@@ -54,14 +58,9 @@ export class BooksComponent implements OnInit, OnDestroy {
   ) { }
 
   public ngOnInit(): void {
-    this.currentBooksList$ = this.params$.pipe(
+    this.booksResponse$ = this.params$.pipe(
       switchMap((params: IRequestBook) => {
         return this._bookService.getFilteredBooks(params);
-      }),
-      map((response: IResponse<IBook>) => {
-        this.totalBooks = response.total_items;
-
-        return response.result;
       }),
     );
   }
@@ -80,7 +79,7 @@ export class BooksComponent implements OnInit, OnDestroy {
 
     this._router.navigate(['/books'], {
       queryParams: this.paramsState,
-      onSameUrlNavigation: undefined,
+      replaceUrl: true,
     });
   }
 
@@ -90,12 +89,10 @@ export class BooksComponent implements OnInit, OnDestroy {
       ...value,
     };
 
-    if (this.paramsState.page === 0) {
-      this._router.navigate(['/books'], {
-        queryParams: this.paramsState,
-        onSameUrlNavigation: undefined,
-      });
-    } 
+    this._router.navigate(['/books'], {
+      queryParams: this.paramsState,
+      replaceUrl: true,
+    });
 
     this.paginator.firstPage();
   }

@@ -5,7 +5,7 @@ import { Observable, map } from 'rxjs';
 
 import { IBook, IRequestBook } from '../interfaces/book';
 import { IResponse } from '../interfaces/response';
-import { SortDirection } from '../../utils/constants/sorting';
+import { SortDirection } from '../interfaces/sorting';
 import { formatDate } from '../../pages/books/utils/format-date';
 
 

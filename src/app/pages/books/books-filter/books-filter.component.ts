@@ -1,19 +1,27 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
 
-import { Observable, Subject, debounceTime, filter, switchMap, takeUntil } from 'rxjs';
+import { Observable, Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 
 import { AuthorsService } from '../../../core/services/authors.service';
 import { GenresService } from '../../../core/services/genres.service';
 import { IAuthor } from '../../../core/interfaces/author';
 import { IGenre } from '../../../core/interfaces/genre';
 import { IFilterBookForm, IRequestBook } from '../../../core/interfaces/book';
-import { BooksSortList, IFilterType, SortDirection } from '../../../utils/constants/sorting';
+import {
+  IFilterSortType,
+  SortDirection,
+} from '../../../core/interfaces/sorting';
 import { formatDate } from '../utils/format-date';
-
-function isNotNull(value: string | null): value is string {
-  return value !== null;
-}
+import { DEFAULT_FILTER_TYPE, FilterSortTypeList } from '../constants/default-filter-type';
 
 
 @Component({
@@ -21,17 +29,18 @@ function isNotNull(value: string | null): value is string {
   templateUrl: './books-filter.component.html',
   styleUrl: './books-filter.component.scss',
 })
-export class BooksFilterComponent implements OnInit, OnDestroy {
-  @Input('inputFilterValues') public inputFilterValues$!: Observable<IRequestBook>;
-  @Output() public filterValueChange = new EventEmitter<IRequestBook>();
-  public sortList: IFilterType[] = BooksSortList;
-  public sortDirection = {
-    ascending: SortDirection.Ascending,
-    descending: SortDirection.Descending,
-  };
+export class BooksFilterComponent implements OnInit, OnDestroy, OnChanges {
+  @Input()
+  public inputFilterValues!: IRequestBook | null;
+
+  @Output() 
+  public filterValueChange = new EventEmitter<IRequestBook>();
+  
   public filterForm!: FormGroup<IFilterBookForm>;
   public authors$!: Observable<IAuthor[]>;
   public genres$!: Observable<IGenre[]>;
+  public sortList: IFilterSortType[] = FilterSortTypeList;
+  public readonly sortDirection = SortDirection;
   private _destroyed = new Subject<void>;
 
 
@@ -45,20 +54,8 @@ export class BooksFilterComponent implements OnInit, OnDestroy {
     return this.filterForm.get('author') as FormControl<string | null>;
   }
 
-  public get writingDateLteControl(): FormControl<string | null> {
-    return this.filterForm.get('writing_date_lte') as FormControl<string | null>;
-  }
-
-  public get writingDateGteControl(): FormControl<string | null> {
-    return this.filterForm.get('writing_date_gte') as FormControl<string | null>;
-  }
-
-  public get releaseDateGteControl(): FormControl<string | null> {
-    return this.filterForm.get('release_date_gte') as FormControl<string | null>;
-  }
-
-  public get releaseDateLteControl(): FormControl<string | null> {
-    return this.filterForm.get('release_date_lte') as FormControl<string | null>;
+  public ngOnChanges(): void {
+    this._setFormDefaultValue();
   }
 
   public ngOnInit(): void {
@@ -66,9 +63,10 @@ export class BooksFilterComponent implements OnInit, OnDestroy {
 
     this.authors$ = this.authorControl.valueChanges.pipe(
       debounceTime(200),
-      filter(isNotNull),
-      switchMap((term: string) => this._authorsService.getSuggestedAuthors(term)),
+      distinctUntilChanged(),
+      switchMap((term: string | null) => this._authorsService.getSuggestedAuthors(term)),
     );
+
     this.genres$ = this._genresService.getPaginatedGenres(0, 100);
   }
 
@@ -128,39 +126,37 @@ export class BooksFilterComponent implements OnInit, OnDestroy {
         disabled: false,
       }),
       filterType: this._formBuilder.control({
-        value: 'id',
+        value: DEFAULT_FILTER_TYPE,
         disabled: false,
       }),
       direction: this._formBuilder.control({
-        value: this.sortDirection.ascending,
+        value: this.sortDirection.Ascending,
         disabled: false,
       }),
     });
+  }
 
-    this.inputFilterValues$.pipe(
-      takeUntil(this._destroyed),
-    ).subscribe((inputValues: IRequestBook) => {
-      this.filterForm.setValue({
-        title: inputValues.title ?? null,
-        author: inputValues.author ?? null,
-        genre: inputValues.genre ?? null,
-        price_lte: inputValues.price_lte ?? null,
-        price_gte: inputValues.price_gte ?? null,
-        writing_date_lte: inputValues.writing_date_lte ?
-          formatDate(inputValues.writing_date_lte) : 
-          null,
-        writing_date_gte: inputValues.writing_date_gte ?
-          formatDate(inputValues.writing_date_gte) : 
-          null,
-        release_date_lte: inputValues.release_date_lte ?
-          formatDate(inputValues.release_date_lte) :
-          null,
-        release_date_gte: inputValues.release_date_gte ?
-          formatDate(inputValues.release_date_gte) :
-          null,
-        filterType: inputValues.filterType ?? 'id',
-        direction: inputValues.direction ?? this.sortDirection.ascending,
-      });
+  private _setFormDefaultValue(): void {
+    this.filterForm?.setValue({
+      title: this.inputFilterValues?.title ?? null,
+      author: this.inputFilterValues?.author ?? null,
+      genre: this.inputFilterValues?.genre ?? null,
+      price_lte: this.inputFilterValues?.price_lte ?? null,
+      price_gte: this.inputFilterValues?.price_gte ?? null,
+      writing_date_lte: this.inputFilterValues?.writing_date_lte ?
+        formatDate(this.inputFilterValues?.writing_date_lte) : 
+        null,
+      writing_date_gte: this.inputFilterValues?.writing_date_gte ?
+        formatDate(this.inputFilterValues?.writing_date_gte) : 
+        null,
+      release_date_lte: this.inputFilterValues?.release_date_lte ?
+        formatDate(this.inputFilterValues?.release_date_lte) :
+        null,
+      release_date_gte: this.inputFilterValues?.release_date_gte ?
+        formatDate(this.inputFilterValues?.release_date_gte) :
+        null,
+      filterType: this.inputFilterValues?.filterType ?? DEFAULT_FILTER_TYPE,
+      direction: this.inputFilterValues?.direction ?? this.sortDirection.Ascending,
     });
   }
 }

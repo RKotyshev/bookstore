@@ -1,6 +1,5 @@
 <form [formGroup]="filterForm" (ngSubmit)="onSubmit()">
   <mat-accordion>
-
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
@@ -101,8 +100,8 @@
         <mat-form-field>
           <mat-label>Sort order</mat-label>
           <mat-select formControlName="direction">
-            <mat-option [value]="sortDirection.descending">Descending</mat-option>
-            <mat-option [value]="sortDirection.ascending">Ascending</mat-option>
+            <mat-option [value]="sortDirection.Descending">Descending</mat-option>
+            <mat-option [value]="sortDirection.Ascending">Ascending</mat-option>
           </mat-select>
         </mat-form-field>
       </section>

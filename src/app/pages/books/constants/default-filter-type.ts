@@ -1,9 +1,9 @@
-export interface IFilterType {
-  label: string,
-  value: string,
-}
+import { IFilterSortType } from '../../../core/interfaces/sorting';
 
-export const BooksSortList: IFilterType[] = [
+
+export const DEFAULT_FILTER_TYPE = 'id';
+
+export const FilterSortTypeList: IFilterSortType[] = [
   {
     label: 'ID',
     value: 'id',
@@ -21,8 +21,3 @@ export const BooksSortList: IFilterType[] = [
     value: 'writing_date',
   },
 ];
-
-export const enum SortDirection {
-  Ascending = 'asc',
-  Descending = 'desc',
-}
