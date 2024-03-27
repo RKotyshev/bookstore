@@ -1,6 +1,9 @@
 import { IFileSize, IInputFileItem } from '../interfaces/input-file-item';
 
 
+const DEFAULT_BLOB_MAX_BYTES_SIZE = 4E6;
+const DEFAULT_BLOB_ACCEPT_TYPES = ['image/jpeg', 'image/png'];
+
 interface IBlobDisplayOptions {
   acceptTypes?: string[],
   maxSize?: IFileSize,
@@ -36,8 +39,10 @@ export function transformFiles(
 ): IInputFileItem[] {
 
   return Array.from(inputFiles).map((file: File) => {
-    const acceptBlobTypes = blobDisplayOptions?.acceptTypes ?? ['image/jpeg', 'image/png'];
-    const acceptBlobSizeBytes = transformSize(blobDisplayOptions?.maxSize) ?? 4e6;
+    const acceptBlobTypes = blobDisplayOptions?.acceptTypes ?? DEFAULT_BLOB_ACCEPT_TYPES;
+    const acceptBlobSizeBytes = transformSize(blobDisplayOptions?.maxSize) ??
+    DEFAULT_BLOB_MAX_BYTES_SIZE;
+
     let blobLink: string | null = null;
 
     if (acceptBlobTypes.includes(file.type) && file.size <= acceptBlobSizeBytes) {

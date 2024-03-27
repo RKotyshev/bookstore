@@ -8,7 +8,6 @@ import {
   catchError,
   map,
   of,
-  shareReplay,
   switchMap,
   takeUntil,
   zip,
@@ -29,7 +28,7 @@ import {
 } from '../../../core/components/input-file/functions/validators/file-validators';
 import { IInputFileItem } from '../../../core/components/input-file/interfaces/input-file-item';
 import { FirebaseStorageService } from '../../../core/services/firebase-storage.service';
-import { getInvalidNamesList } from '../../../core/components/input-file/functions/filter-invalid-items';
+import { getInvalidItems } from '../../../core/components/input-file/functions/get-invalid-items';
 
 
 @Component({
@@ -50,7 +49,7 @@ export class BookCreateComponent implements OnInit, OnDestroy {
     size: 52,
     unit: 'KB',
   };
-  public invalidInputItems$!: Observable<string[] | null>;
+  public invalidInputItems: IInputFileItem[] = [];
   private _destroyed = new Subject<void>;
   
   constructor(
@@ -101,16 +100,18 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this._initForm();
 
-    this.invalidInputItems$ = this.coverControl.valueChanges.pipe(
+    this.coverControl.valueChanges.pipe(
       map(() => {
         const errors = this.coverControl.errors;
 
-        const blockedNames = getInvalidNamesList(errors);
+        const invalidItems = getInvalidItems(errors);
       
-        return blockedNames;
+        return invalidItems;
       }),
-      shareReplay(1),
-    );
+      takeUntil(this._destroyed),
+    ).subscribe((invalidItems: IInputFileItem[] | null) => {
+      this.invalidInputItems = invalidItems ?? [];
+    });
   }
   
   public ngOnDestroy(): void {

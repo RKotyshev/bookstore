@@ -95,20 +95,24 @@
       <p>Invalid files. Please make sure that the attached files meet the requirements: <br>
         - The file extension must be one of: {{ fileTypes | fileTypes }}</p>
 
-      <p>To continue, exclude the following files: {{ invalidInputItems$ | async }}</p>
+        <ul *ngIf="invalidInputItems.length">
+          To continue, exclude the following files:
+          <li *ngFor="let invalidItem of invalidInputItems">{{ invalidItem.name }}</li>
+        </ul>
     </mat-error>
     <mat-error *ngIf="coverControl.hasError('maxFileSize')">
       <p>Invalid file. Please make sure that the attached files meet the requirements: <br>
       - The file size must be less then {{ maxFileSize.size }}{{ maxFileSize.unit }}.</p>
 
-      <p>To continue, exclude the following files: {{ invalidInputItems$ | async }}</p>
+      <ul *ngIf="invalidInputItems.length">
+        To continue, exclude the following files:
+        <li *ngFor="let invalidItem of invalidInputItems">{{ invalidItem.name }}</li>
+      </ul>
 
     </mat-error>
     <mat-error *ngIf="submitError">
       Some error was occurred. Try again later
     </mat-error>
-
-    <!-- <p>To continue, exclude the following files: {{ invalidInputItems$ | async }}</p> -->
 
     <button mat-raised-button type="submit" [disabled]="bookForm.untouched">Create</button>
   </form>

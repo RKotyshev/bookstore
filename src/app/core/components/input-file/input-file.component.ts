@@ -19,6 +19,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { IInputFileItem } from './interfaces/input-file-item';
 import { transformFiles } from './functions/transform-files';
 import { SliceSentencePipe } from '../../pipes/slice-sentence.pipe';
+import { filterByHash, getHash } from './functions/filter-by-hash';
 
 @Component({
   selector: 'app-input-file',
@@ -85,17 +86,16 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
 
     this.existedFiles = [];
 
-    const existedNames = this.inputValue?.map((item: IInputFileItem) => {
-      return item.name;
+    const existedHashes = this.inputValue?.map((item: IInputFileItem) => {
+      return getHash(item);
     }) ?? [];
 
-    this.existedFiles = Array.from(files).filter((file: File) => {
-      return existedNames.includes(file.name);
-    });
 
-    const newFiles = Array.from(files).filter((file: File) => {
-      return !existedNames.includes(file.name);
-    });
+    const filesArray = Array.from(files);
+
+    this.existedFiles = filterByHash(filesArray, existedHashes, 'pick');
+
+    const newFiles = filterByHash(filesArray, existedHashes, 'omit');
 
     if (!newFiles.length) {
       return;
@@ -108,7 +108,7 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
         unit: 'MB',
       },
     });
-    
+
     this.uploadControl.setValue(null);
     
     const updatedInputItems = this.inputValue ? 
