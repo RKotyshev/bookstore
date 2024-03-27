@@ -1,9 +1,7 @@
 import {
   Component,
-  EventEmitter,
   Input,
   OnInit,
-  Output,
 } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
 import { 
@@ -45,8 +43,8 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
   @Input() 
   public acceptTypes!: string[];
 
-  @Output() 
-  public delete: EventEmitter<IInputItem> = new EventEmitter();
+  // @Output() 
+  // public delete: EventEmitter<IInputItem> = new EventEmitter();
 
   public inputValue: IInputItem[] | null = null;
   public disabled: boolean = false;
@@ -109,9 +107,11 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
 
     this.uploadControl.setValue(null);
     
-    const updatedInputItems = this.inputValue ? 
-      [...this.inputValue, ...transformedFiles] : 
-      transformedFiles;
+    // const updatedInputItems = this.inputValue ? 
+    //   [...this.inputValue, ...transformedFiles] : 
+    //   transformedFiles;
+
+    const updatedInputItems = [...this.inputValue ?? [], ...transformedFiles];
 
     this.inputValue = updatedInputItems;
     this._onChange(updatedInputItems);

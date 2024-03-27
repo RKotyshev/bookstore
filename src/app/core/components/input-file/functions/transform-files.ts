@@ -40,8 +40,8 @@ export function transformFiles(
 
   return Array.from(inputFiles).map((file: File) => {
     const acceptBlobTypes = blobDisplayOptions?.acceptTypes ?? DEFAULT_BLOB_ACCEPT_TYPES;
-    const acceptBlobSizeBytes = transformSize(blobDisplayOptions?.maxSize) ??
-    DEFAULT_BLOB_MAX_BYTES_SIZE;
+    const acceptBlobSizeBytes = 
+      transformSize(blobDisplayOptions?.maxSize) ?? DEFAULT_BLOB_MAX_BYTES_SIZE;
 
     let blobLink: string | null = null;
 

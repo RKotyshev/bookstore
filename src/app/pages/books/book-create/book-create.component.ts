@@ -1,13 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  NonNullableFormBuilder,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 
 import {
+  EMPTY,
   Observable,
   Subject,
   catchError,
-  map,
-  of,
   switchMap,
   takeUntil,
   zip,
@@ -30,7 +35,6 @@ import {
   IInputItem,
 } from '../../../core/components/input-file/interfaces/input-item';
 import { FirebaseStorageService } from '../../../core/services/firebase-storage.service';
-import { getInvalidItems } from '../../../core/components/input-file/functions/get-invalid-items';
 
 
 @Component({
@@ -48,10 +52,9 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   public authors$: Observable<IAuthor[]> = this._authorsService.getPaginatedAuthors(0, 100);
   public fileTypes: string[] = ['image/jpeg', 'image/png'];
   public maxFileSize: IDetailedItemSize = {
-    size: 3,
+    size: 1,
     unit: 'MB',
   };
-  public invalidInputItems: IInputItem[] = [];
   private _destroyed = new Subject<void>;
   
   constructor(
@@ -101,19 +104,6 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   
   public ngOnInit(): void {
     this._initForm();
-
-    this.coverControl.valueChanges.pipe(
-      map(() => {
-        const errors = this.coverControl.errors;
-
-        const invalidItems = getInvalidItems(errors);
-      
-        return invalidItems;
-      }),
-      takeUntil(this._destroyed),
-    ).subscribe((invalidItems: IInputItem[] | null) => {
-      this.invalidInputItems = invalidItems ?? [];
-    });
   }
   
   public ngOnDestroy(): void {
@@ -140,11 +130,12 @@ export class BookCreateComponent implements OnInit, OnDestroy {
 
     this.submitting = true;
 
-    const coversToUpload = this.coverControl.value?.map((current: IInputItem) => {
-      return this._storage.uploadItems(current);
-    });
+    const coversUpload$ = this.coverControl.value?.length ? 
+      zip(this.coverControl.value.map((current: IInputItem) => {
+        return this._storage.uploadItems(current);
+      })) : EMPTY;
 
-    zip(...coversToUpload ?? [of('')]).pipe(
+    coversUpload$.pipe(
       switchMap((coversLinks: string[]) => {
         const newBook: IBookWithCover = {
           ...this.bookForm.getRawValue(),
@@ -170,6 +161,24 @@ export class BookCreateComponent implements OnInit, OnDestroy {
 
   public onRedirect(): void {
     this._router.navigate(['books']);
+  }
+
+  public getCoverControlInvalidItems(errors: ValidationErrors | null): IInputItem[] | null {
+    if(!errors) {
+      return null;
+    }
+  
+    const invalidItemsArrays = Object.values(errors);
+    const uniqueInvalidItems = invalidItemsArrays.reduce(
+      (itemsSet: Set<IInputItem>, currentValidatorItems: IInputItem[]) => {
+        currentValidatorItems.forEach((currentItem: IInputItem) => {
+          itemsSet.add(currentItem);
+        });
+  
+        return itemsSet;
+      }, new Set());
+  
+    return Array.from(uniqueInvalidItems.values());
   }
 
   private _initForm(): void {

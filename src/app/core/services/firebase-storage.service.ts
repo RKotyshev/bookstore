@@ -2,10 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { 
   Observable,
-  Subscriber,
-  Unsubscribable,
   from,
-  of,
 } from 'rxjs';
 
 import {
@@ -36,50 +33,13 @@ export class FirebaseStorageService {
   }
 
   public uploadItems(inputItem: IInputItem | null): Observable<string> {
-    if (!inputItem) {
-      return of('');
-    }
-    
-    let uploadCompleted = false;
+    const storageRef = ref(this._storage, inputItem?.name);
+    const uploadTask: UploadTask = uploadBytesResumable(storageRef, inputItem!.file);
 
-    const subscribeOnUpload = (subscriber: Subscriber<string>): Unsubscribable => {
-  
-      const storageRef = ref(this._storage, inputItem.name);
-      const uploadTask: UploadTask = uploadBytesResumable(storageRef, inputItem.file);
-
-      uploadTask.then(
-        () => {
-          const inputItemLink: Promise<string> = getDownloadURL(storageRef);
-
-          from(inputItemLink).subscribe((url: string) => {
-            subscriber.next(url); 
-            uploadCompleted = true;
-          });
-        },
-        () => {          
-          subscriber.error();
-          uploadCompleted = true;
-        },
-      );
-
-      const completeTimer = setInterval(() => {
-        if (uploadCompleted) {
-          subscriber.complete();
-          clearInterval(completeTimer);
-        }
-      }, 300);
-
-      return {
-        unsubscribe: (): void => {
-          clearInterval(completeTimer);
-          subscriber.complete();
-        },
-      };
-
-    };
-
-    const inputItemLink: Observable<string> = new Observable(subscribeOnUpload);
-
-    return inputItemLink;
+    return from(uploadTask.then(
+      () => {
+        return getDownloadURL(storageRef);
+      },
+    )) as Observable<string>;
   }
 }
