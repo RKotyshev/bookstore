@@ -47,8 +47,8 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   public fileTypes: string[] = ['image/jpeg', 'image/png'];
   // public fileTypes: string[] = ['image/jpeg'];
   public maxFileSize: IFileSize = {
-    size: 5,
-    unit: 'MB',
+    size: 52,
+    unit: 'KB',
   };
   public invalidInputItems$!: Observable<string[] | null>;
   private _destroyed = new Subject<void>;
@@ -140,8 +140,7 @@ export class BookCreateComponent implements OnInit, OnDestroy {
     });
 
     zip(...coversToUpload ?? [of('')]).pipe(
-      switchMap((value: string[]) => {
-        const coversLinks = value;
+      switchMap((coversLinks: string[]) => {
         const newBook: IBookWithCover = {
           ...this.bookForm.getRawValue(),
           cover: coversLinks,

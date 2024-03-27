@@ -6,3 +6,8 @@ export interface IInputFileItem {
   blobLink: string | null,
   storageLink: string | null,
 }
+
+export interface IFileSize {
+  size: number,
+  unit: 'Byte' | 'KB' | 'MB',
+}

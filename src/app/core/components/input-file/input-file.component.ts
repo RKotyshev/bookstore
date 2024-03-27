@@ -101,7 +101,14 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
       return;
     }
 
-    const transformedFiles = transformFiles(newFiles);
+    const transformedFiles = transformFiles(newFiles, {
+      acceptTypes:  ['image/jpeg', 'image/png'],
+      maxSize: {
+        size: 4,
+        unit: 'MB',
+      },
+    });
+    
     this.uploadControl.setValue(null);
     
     const updatedInputItems = this.inputValue ? 

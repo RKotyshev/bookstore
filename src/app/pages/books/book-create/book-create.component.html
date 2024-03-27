@@ -98,8 +98,11 @@
       <p>To continue, exclude the following files: {{ invalidInputItems$ | async }}</p>
     </mat-error>
     <mat-error *ngIf="coverControl.hasError('maxFileSize')">
-      Invalid file. Please make sure that the attached files meet the requirements: <br>
-      - The file size must be less then {{ maxFileSize.size }}{{ maxFileSize.unit }}. <br>
+      <p>Invalid file. Please make sure that the attached files meet the requirements: <br>
+      - The file size must be less then {{ maxFileSize.size }}{{ maxFileSize.unit }}.</p>
+
+      <p>To continue, exclude the following files: {{ invalidInputItems$ | async }}</p>
+
     </mat-error>
     <mat-error *ngIf="submitError">
       Some error was occurred. Try again later

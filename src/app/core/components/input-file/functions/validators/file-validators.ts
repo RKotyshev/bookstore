@@ -1,5 +1,7 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+
 import { IInputFileItem } from '../../interfaces/input-file-item';
+import { transformSize } from '../transform-files';
 
 
 export interface IFileSize {
@@ -9,27 +11,16 @@ export interface IFileSize {
 
 export function maxFileSize(maxSize: IFileSize): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
-    const bytesPerKb = 1e3;
-    const bytesPerMb = 1e6;
     const items: IInputFileItem[] | null = control.value;
 
     if (!items) {
       return null;
     }
+    
+    const maxBytesSize = transformSize(maxSize);
 
     const invalidSizeFiles = Array.from(items).filter((item: IInputFileItem) => {
-      switch (maxSize.unit) {
-        case 'Byte':
-          return item.size > maxSize.size;
-        case 'KB':
-          return item.size / bytesPerKb > maxSize.size;
-        case 'MB':
-          return item.size / bytesPerMb > maxSize.size;
-      }
-      
-      // FIXME:
-      // ESLINT: still expects a value to be returned. Incompatible with 'switch' eslint rule?
-      return false; 
+      return item.size > maxBytesSize!; 
     });
 
     return invalidSizeFiles.length ? { maxFileSize: invalidSizeFiles } : null;
