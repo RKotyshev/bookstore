@@ -14,9 +14,8 @@ import {
 } from '@angular/forms';
 
 import { MatButton } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-import { IInputFileItem } from './interfaces/input-file-item';
+import { IInputItem } from './interfaces/input-item';
 import { transformFiles } from './functions/transform-files';
 import { SliceSentencePipe } from '../../pipes/slice-sentence.pipe';
 import { filterByHash, getHash } from './functions/filter-by-hash';
@@ -29,7 +28,6 @@ import { filterByHash, getHash } from './functions/filter-by-hash';
     NgFor,
     ReactiveFormsModule,
     MatButton,
-    MatProgressSpinnerModule,
     SliceSentencePipe,
   ],
   templateUrl: './input-file.component.html',
@@ -48,14 +46,14 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
   public acceptTypes!: string[];
 
   @Output() 
-  public delete: EventEmitter<IInputFileItem> = new EventEmitter();
+  public delete: EventEmitter<IInputItem> = new EventEmitter();
 
-  public inputValue: IInputFileItem[] | null = null;
+  public inputValue: IInputItem[] | null = null;
   public disabled: boolean = false;
   public existedFiles: File[] = [];
   public uploadControl!: FormControl<FileList | null>;
   public onTouched!: ()=> void;
-  private _onChange!: (value: IInputFileItem[] | null)=> void;
+  private _onChange!: (value: IInputItem[] | null)=> void;
 
   constructor() {}
 
@@ -63,11 +61,11 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
     this.uploadControl = new FormControl<FileList | null>(null);
   }
 
-  public writeValue(obj: IInputFileItem[] | null): void {
+  public writeValue(obj: IInputItem[] | null): void {
     this.inputValue = obj;
   }
 
-  public registerOnChange(fn: ((value: IInputFileItem[] | null)=> void)): void {
+  public registerOnChange(fn: ((value: IInputItem[] | null)=> void)): void {
     this._onChange = fn;
   }
 
@@ -86,7 +84,7 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
 
     this.existedFiles = [];
 
-    const existedHashes = this.inputValue?.map((item: IInputFileItem) => {
+    const existedHashes = this.inputValue?.map((item: IInputItem) => {
       return getHash(item);
     }) ?? [];
 
@@ -115,13 +113,12 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
       [...this.inputValue, ...transformedFiles] : 
       transformedFiles;
 
-    console.log(updatedInputItems);
     this.inputValue = updatedInputItems;
     this._onChange(updatedInputItems);
   }
 
-  public onDelete(deleteItem: IInputFileItem): void {
-    const updatedInputItems = this.inputValue?.filter((current: IInputFileItem) => {
+  public onDelete(deleteItem: IInputItem): void {
+    const updatedInputItems = this.inputValue?.filter((current: IInputItem) => {
       return deleteItem.name !== current.name;
     });
 

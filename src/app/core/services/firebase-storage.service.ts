@@ -17,7 +17,7 @@ import {
   uploadBytesResumable,
 } from '@angular/fire/storage';
 
-import { IInputFileItem } from '../components/input-file/interfaces/input-file-item';
+import { IInputItem } from '../components/input-file/interfaces/input-item';
 
 
 @Injectable({
@@ -29,13 +29,13 @@ export class FirebaseStorageService {
     private _storage: Storage,
   ) { }
 
-  public deleteItem(item: IInputFileItem): Observable<void> {
+  public deleteItem(item: IInputItem): Observable<void> {
     const storageRef = ref(this._storage, item.name);
 
     return from(deleteObject(storageRef));
   }
 
-  public uploadItems(inputItem: IInputFileItem | null): Observable<string> {
+  public uploadItems(inputItem: IInputItem | null): Observable<string> {
     if (!inputItem) {
       return of('');
     }

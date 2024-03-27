@@ -9,5 +9,6 @@ import { IAuthor } from '../../../core/interfaces/author';
   styleUrl: './authors-list.component.scss',
 })
 export class AuthorsListComponent {
-  @Input() public authorsList!: IAuthor[];
+  @Input()
+  public authorsList!: IAuthor[];
 }

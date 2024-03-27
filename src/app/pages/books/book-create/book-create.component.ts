@@ -22,11 +22,13 @@ import { IBook, IBookWithCover, ICreateBookForm } from '../../../core/interfaces
 import { datesCompareValidator } from '../../../core/functions/validators/dates-compare-validators';
 import { handleError } from '../../../core/functions/handle-error';
 import {
-  IFileSize,
   acceptFileType,
   maxFileSize,
 } from '../../../core/components/input-file/functions/validators/file-validators';
-import { IInputFileItem } from '../../../core/components/input-file/interfaces/input-file-item';
+import {
+  IDetailedItemSize,
+  IInputItem,
+} from '../../../core/components/input-file/interfaces/input-item';
 import { FirebaseStorageService } from '../../../core/services/firebase-storage.service';
 import { getInvalidItems } from '../../../core/components/input-file/functions/get-invalid-items';
 
@@ -39,17 +41,17 @@ import { getInvalidItems } from '../../../core/components/input-file/functions/g
 export class BookCreateComponent implements OnInit, OnDestroy {
   public submitted: boolean = false;
   public submitError: boolean = false;
+  public submitting: boolean = false;
   public redirectDelaySeconds: number = 9;
   public bookForm!: FormGroup<ICreateBookForm>;
   public genres$: Observable<IGenre[]> = this._genresService.getPaginatedGenres(0, 100);
   public authors$: Observable<IAuthor[]> = this._authorsService.getPaginatedAuthors(0, 100);
   public fileTypes: string[] = ['image/jpeg', 'image/png'];
-  // public fileTypes: string[] = ['image/jpeg'];
-  public maxFileSize: IFileSize = {
-    size: 52,
-    unit: 'KB',
+  public maxFileSize: IDetailedItemSize = {
+    size: 3,
+    unit: 'MB',
   };
-  public invalidInputItems: IInputFileItem[] = [];
+  public invalidInputItems: IInputItem[] = [];
   private _destroyed = new Subject<void>;
   
   constructor(
@@ -93,7 +95,7 @@ export class BookCreateComponent implements OnInit, OnDestroy {
     return this.bookForm.get('writing_date') as FormControl;
   }
 
-  public get coverControl(): FormControl<IInputFileItem[] | null> {
+  public get coverControl(): FormControl<IInputItem[] | null> {
     return this.bookForm.get('cover') as FormControl;
   }
   
@@ -109,7 +111,7 @@ export class BookCreateComponent implements OnInit, OnDestroy {
         return invalidItems;
       }),
       takeUntil(this._destroyed),
-    ).subscribe((invalidItems: IInputFileItem[] | null) => {
+    ).subscribe((invalidItems: IInputItem[] | null) => {
       this.invalidInputItems = invalidItems ?? [];
     });
   }
@@ -136,7 +138,9 @@ export class BookCreateComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const coversToUpload = this.coverControl.value?.map((current: IInputFileItem) => {
+    this.submitting = true;
+
+    const coversToUpload = this.coverControl.value?.map((current: IInputItem) => {
       return this._storage.uploadItems(current);
     });
 

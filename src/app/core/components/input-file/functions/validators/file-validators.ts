@@ -1,17 +1,12 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
-import { IInputFileItem } from '../../interfaces/input-file-item';
+import { IDetailedItemSize, IInputItem } from '../../interfaces/input-item';
 import { transformSize } from '../transform-files';
 
 
-export interface IFileSize {
-  size: number,
-  unit: 'Byte' | 'KB' | 'MB',
-}
-
-export function maxFileSize(maxSize: IFileSize): ValidatorFn {
+export function maxFileSize(maxSize: IDetailedItemSize): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
-    const items: IInputFileItem[] | null = control.value;
+    const items: IInputItem[] | null = control.value;
 
     if (!items) {
       return null;
@@ -19,7 +14,7 @@ export function maxFileSize(maxSize: IFileSize): ValidatorFn {
     
     const maxBytesSize = transformSize(maxSize);
 
-    const invalidSizeFiles = Array.from(items).filter((item: IInputFileItem) => {
+    const invalidSizeFiles = Array.from(items).filter((item: IInputItem) => {
       return item.size > maxBytesSize!; 
     });
 
@@ -30,13 +25,13 @@ export function maxFileSize(maxSize: IFileSize): ValidatorFn {
 
 export function acceptFileType(acceptTypes: string[]): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
-    const items: IInputFileItem[] | null = control.value;
+    const items: IInputItem[] | null = control.value;
 
     if (!items) {
       return null;
     }
 
-    const invalidTypeFiles = Array.from(items).filter((item: IInputFileItem) => {      
+    const invalidTypeFiles = Array.from(items).filter((item: IInputItem) => {      
       return !acceptTypes.includes(item.type);
     });
 

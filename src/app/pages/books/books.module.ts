@@ -19,6 +19,7 @@ import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { BooksComponent } from './books.component';
 import { BooksListComponent } from './books-list/books-list.component';
@@ -56,6 +57,7 @@ import { FileTypesPipe } from '../../core/pipes/file-types.pipe';
     MatAutocompleteModule,
     CdkAccordionModule,
     MatExpansionModule,
+    MatProgressSpinnerModule,
     DisplayTimerComponent,
     InputFileComponent,
     FullnamePipe,

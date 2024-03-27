@@ -48,7 +48,7 @@
           formControlName="writing_date"
           [matDatepicker]="writingPicker"
           [max]="releaseDateControl.value"
-          >
+        >
         <mat-datepicker-toggle matIconSuffix [for]="writingPicker"></mat-datepicker-toggle>
         <mat-datepicker #writingPicker></mat-datepicker>
         <mat-hint>YYYY-MM-DD</mat-hint>
@@ -62,7 +62,7 @@
           formControlName="release_date"
           [matDatepicker]="releasePicker"
           [min]="writingDateControl.value"
-          >
+        >
         <mat-datepicker-toggle matIconSuffix [for]="releasePicker"></mat-datepicker-toggle>
         <mat-datepicker #releasePicker></mat-datepicker>
         <mat-hint>YYYY-MM-DD</mat-hint>
@@ -85,34 +85,31 @@
     </div>
 
     <p>Attach the cover to your book:</p>
-    <app-input-file formControlName="cover"></app-input-file>
+    <app-input-file formControlName="cover" [acceptTypes]="fileTypes"></app-input-file>
 
     <mat-error *ngIf="bookForm.hasError('datesCompare')">
       Writing date must be less than the release date
     </mat-error>
 
-    <mat-error *ngIf="coverControl.hasError('acceptFileType')">
+    <mat-error *ngIf="coverControl.hasError('acceptFileType') || coverControl.hasError('maxFileSize')">
       <p>Invalid files. Please make sure that the attached files meet the requirements: <br>
-        - The file extension must be one of: {{ fileTypes | fileTypes }}</p>
+        - The file extension must be one of: {{ fileTypes | fileTypes }} <br>
+        - The file size must be less then {{ maxFileSize.size }}{{ maxFileSize.unit }}.</p>
 
         <ul *ngIf="invalidInputItems.length">
           To continue, exclude the following files:
           <li *ngFor="let invalidItem of invalidInputItems">{{ invalidItem.name }}</li>
         </ul>
     </mat-error>
-    <mat-error *ngIf="coverControl.hasError('maxFileSize')">
-      <p>Invalid file. Please make sure that the attached files meet the requirements: <br>
-      - The file size must be less then {{ maxFileSize.size }}{{ maxFileSize.unit }}.</p>
-
-      <ul *ngIf="invalidInputItems.length">
-        To continue, exclude the following files:
-        <li *ngFor="let invalidItem of invalidInputItems">{{ invalidItem.name }}</li>
-      </ul>
-
-    </mat-error>
     <mat-error *ngIf="submitError">
       Some error was occurred. Try again later
     </mat-error>
+
+    <section *ngIf="submitting">
+    <h4>Please wait, book creating..</h4>
+    <mat-spinner  diameter="50"></mat-spinner>
+    </section>
+    
 
     <button mat-raised-button type="submit" [disabled]="bookForm.untouched">Create</button>
   </form>

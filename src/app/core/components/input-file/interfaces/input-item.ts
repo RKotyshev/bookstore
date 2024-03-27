@@ -1,4 +1,4 @@
-export interface IInputFileItem {
+export interface IInputItem {
   file: File,
   name: string,
   size: number,
@@ -7,7 +7,7 @@ export interface IInputFileItem {
   storageLink: string | null,
 }
 
-export interface IFileSize {
+export interface IDetailedItemSize {
   size: number,
   unit: 'Byte' | 'KB' | 'MB',
 }

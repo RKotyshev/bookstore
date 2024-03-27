@@ -21,7 +21,7 @@ import {
   SortDirection,
 } from '../../../core/interfaces/sorting';
 import { formatDate } from '../utils/format-date';
-import { DEFAULT_FILTER_TYPE, FilterSortTypeList } from '../constants/default-filter-type';
+import { DEFAULT_FILTER_TYPE, FilterSortTypeList } from '../constants/filter';
 
 
 @Component({

@@ -1,5 +1,5 @@
 import { FormControl } from '@angular/forms';
-import { IInputFileItem } from '../components/input-file/interfaces/input-file-item';
+import { IInputItem } from '../components/input-file/interfaces/input-item';
 
 export interface IBook {
   id?: number,
@@ -26,7 +26,7 @@ export interface ICreateBookForm {
   author: FormControl<number[]>,
   release_date: FormControl<string>,
   writing_date: FormControl<string>,
-  cover?: FormControl<IInputFileItem[] | null>,
+  cover?: FormControl<IInputItem[] | null>,
 } 
 
 export interface IFilterBookForm {

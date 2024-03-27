@@ -18,8 +18,11 @@ import { IBook, IRequestBook } from '../../core/interfaces/book';
 import { IResponse } from '../../core/interfaces/response';
 import { PageSizeOptions } from '../../utils/constants/paginator';
 import { SortDirection } from '../../core/interfaces/sorting';
-import { DEFAULT_FILTER_TYPE } from './constants/default-filter-type';
+import { DEFAULT_FILTER_TYPE } from './constants/filter';
 import * as lodash from 'lodash';
+
+const DEFAULT_PAGE_INDEX = 0;
+const DEFAULT_PAGE_SIZE = 5;
 
 
 @Component({
@@ -28,13 +31,15 @@ import * as lodash from 'lodash';
   styleUrl: './books.component.scss',
 })
 export class BooksComponent implements OnInit, OnDestroy {
-  @ViewChild('paginator') public paginator!: MatPaginator;
+  @ViewChild('paginator')
+  public paginator!: MatPaginator;
+
   public booksResponse$!: Observable<IResponse<IBook>>;
   public paramsState: IRequestBook = {
     filterType: DEFAULT_FILTER_TYPE,
     direction: SortDirection.Ascending,
-    page: 0,
-    page_size: 5,
+    page: DEFAULT_PAGE_INDEX,
+    page_size: DEFAULT_PAGE_SIZE,
   };
   public params$ = this._route.queryParams.pipe(
     filter((params: IRequestBook) => {
@@ -44,7 +49,6 @@ export class BooksComponent implements OnInit, OnDestroy {
     startWith(this.paramsState),
     debounceTime(300),
     distinctUntilChanged((previous: IRequestBook, current: IRequestBook) => {
-      // return JSON.stringify(prev) === JSON.stringify(curr);
       return lodash.isEqual(previous, current);
     }),
   );

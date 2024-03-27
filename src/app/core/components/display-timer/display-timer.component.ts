@@ -12,8 +12,12 @@ import { Subject, interval, last, take, takeUntil, tap } from 'rxjs';
   standalone: true,
 })
 export class DisplayTimerComponent implements OnInit, OnDestroy {
-  @Input() public timerDelay: number = 0;
-  @Output() public timerFinished: EventEmitter<void> = new EventEmitter();
+  @Input()
+  public timerDelay: number = 0;
+
+  @Output()
+  public timerFinished: EventEmitter<void> = new EventEmitter();
+  
   private _destroyed = new Subject<void>;
 
   public ngOnInit(): void {

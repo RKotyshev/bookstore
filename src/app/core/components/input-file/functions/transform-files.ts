@@ -1,4 +1,4 @@
-import { IFileSize, IInputFileItem } from '../interfaces/input-file-item';
+import { IDetailedItemSize, IInputItem } from '../interfaces/input-item';
 
 
 const DEFAULT_BLOB_MAX_BYTES_SIZE = 4E6;
@@ -6,10 +6,10 @@ const DEFAULT_BLOB_ACCEPT_TYPES = ['image/jpeg', 'image/png'];
 
 interface IBlobDisplayOptions {
   acceptTypes?: string[],
-  maxSize?: IFileSize,
+  maxSize?: IDetailedItemSize,
 }
 
-export function transformSize(sizeOptions: IFileSize | undefined): number | null{
+export function transformSize(sizeOptions: IDetailedItemSize | undefined): number | null{
   if (!sizeOptions) {
     return null;
   }
@@ -36,7 +36,7 @@ export function transformSize(sizeOptions: IFileSize | undefined): number | null
 export function transformFiles(
   inputFiles: File[],
   blobDisplayOptions?: IBlobDisplayOptions,
-): IInputFileItem[] {
+): IInputItem[] {
 
   return Array.from(inputFiles).map((file: File) => {
     const acceptBlobTypes = blobDisplayOptions?.acceptTypes ?? DEFAULT_BLOB_ACCEPT_TYPES;

@@ -25,7 +25,7 @@
               placeholder="Start typing author name"
               type="text"
               [matAutocomplete]="authorComplete"
-              >
+            >
             <mat-autocomplete #authorComplete="matAutocomplete">
               <mat-option *ngFor="let author of authors$ | async" [value]="author | fullname">
                 {{ author | fullname }}
@@ -106,6 +106,5 @@
         </mat-form-field>
       </section>
     </mat-expansion-panel>
-
   </mat-accordion>
 </form>
