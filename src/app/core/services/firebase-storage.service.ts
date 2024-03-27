@@ -17,7 +17,7 @@ import {
   uploadBytesResumable,
 } from '@angular/fire/storage';
 
-import { IItem } from '../interfaces/item';
+import { IInputFileItem } from '../components/input-file/interfaces/input-file-item';
 
 
 @Injectable({
@@ -29,147 +29,38 @@ export class FirebaseStorageService {
     private _storage: Storage,
   ) { }
 
-  public deleteItem(item: IItem): Observable<void> {
+  public deleteItem(item: IInputFileItem): Observable<void> {
     const storageRef = ref(this._storage, item.name);
 
     return from(deleteObject(storageRef));
   }
 
-  // public uploadItems(inputItems: IItem[]): Observable<IItem[]> {
-  //   const items = structuredClone(inputItems);
-  //   let itemsCount = items.length;
-
-  //   const subscribeOnUpdates = (subscriber: Subscriber<IItem[]>): Unsubscribable => {
-
-  //     for (let i = 0; i < items.length; i++) {
-  //       const item = items[i];
-  
-  //       if (!item || item.uploadStatus !== 'waiting') {
-  //         itemsCount--;
-  //         continue;
-  //       }
-  
-  //       const storageRef = ref(this._storage, item.name);
-  //       const uploadTask: UploadTask = uploadBytesResumable(storageRef, item.file);
-
-  //       item.uploadStatus = 'pending';
-  
-  //       uploadTask.then(
-  //         () => {
-  //           const storageLink: Promise<string> = getDownloadURL(storageRef);
-  
-  //           from(storageLink).subscribe((url: string) => {
-  //             const currentItem = items?.find((current: IItem) => {
-  //               return item.name === current.name;
-  //             });
-              
-  //             currentItem!.storageLink = url;
-  //             currentItem!.uploadStatus = 'uploaded';
-
-  //             const copyItems = structuredClone(items);
-  //             itemsCount--;
-
-  //             subscriber.next(copyItems); 
-  //           },
-  //           );
-  //         },
-  //         () => {
-  //           const currentItem = items.find((current: IItem) => {
-  //             return item.name === current.name;
-  //           });
-    
-  //           currentItem!.storageLink = null;
-  //           currentItem!.uploadStatus = 'canceled';
-
-  //           const copyItems = structuredClone(items);
-  //           itemsCount--;
-            
-  //           subscriber.next(copyItems);
-  //         },
-  //       );
-
-  //     }
-
-  //     const completeTimer = setInterval(() => {
-  //       if (itemsCount === 0) {
-  //         subscriber.complete();
-  //         clearInterval(completeTimer);
-  //       }
-  //     }, 700);
-
-  //     return {
-  //       unsubscribe: (): void => {
-  //         clearInterval(completeTimer);
-  //         subscriber.complete();
-  //       },
-  //     };
-
-  //   };
-
-  //   const updatedItems: Observable<IItem[]> = new Observable(subscribeOnUpdates);
-
-  //   return updatedItems;
-  // }
-
-  public uploadItems(inputItem: IItem | null): Observable<string> {
+  public uploadItems(inputItem: IInputFileItem | null): Observable<string> {
     if (!inputItem) {
       return of('');
     }
     
-    // const items = structuredClone(inputItems);
-    // let itemsCount = items.length;
     let uploadCompleted = false;
 
     const subscribeOnUpload = (subscriber: Subscriber<string>): Unsubscribable => {
-
-      // for (let i = 0; i < items.length; i++) {
-      //   const item = items[i];
-  
-      //   if (!item || item.uploadStatus !== 'waiting') {
-      //     itemsCount--;
-      //     continue;
-      //   }
   
       const storageRef = ref(this._storage, inputItem.name);
       const uploadTask: UploadTask = uploadBytesResumable(storageRef, inputItem.file);
 
-      // item.uploadStatus = 'pending';
-
       uploadTask.then(
         () => {
-          const storageLink: Promise<string> = getDownloadURL(storageRef);
+          const inputItemLink: Promise<string> = getDownloadURL(storageRef);
 
-          from(storageLink).subscribe((url: string) => {
-
-            // currentItem!.storageLink = url;
-            // currentItem!.uploadStatus = 'uploaded';
-
-            // const copyItems = structuredClone(items);
-            // itemsCount--;
-
+          from(inputItemLink).subscribe((url: string) => {
             subscriber.next(url); 
             uploadCompleted = true;
-            
-          },
-          );
+          });
         },
-        () => {
-          // const currentItem = items.find((current: IItem) => {
-          //   return item.name === current.name;
-          // });
-  
-          // currentItem!.storageLink = null;
-          // currentItem!.uploadStatus = 'canceled';
-
-          // const copyItems = structuredClone(items);
-          // itemsCount--;
-          
+        () => {          
           subscriber.error();
           uploadCompleted = true;
         },
       );
-
-      // }
 
       const completeTimer = setInterval(() => {
         if (uploadCompleted) {

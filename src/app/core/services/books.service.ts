@@ -77,7 +77,16 @@ export class BooksService {
   }
 
   public postBook(book: IBook): Observable<IBook> {
-    return this._http.post<IBook>(`${this._booksUrl}/`, book);
+    const correctReleaseDate = formatDate(book.release_date);
+    const correctWritingDate = formatDate(book.writing_date);
+
+    const correctBook = {
+      ...book,
+      release_date: correctReleaseDate,
+      writing_date: correctWritingDate,
+    };
+
+    return this._http.post<IBook>(`${this._booksUrl}/`, correctBook);
   }
 
   public getFilteredBooks(inputParams: IRequestBook): Observable<IResponse<IBook>> {

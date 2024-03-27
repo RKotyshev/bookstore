@@ -1,16 +1,7 @@
-import { IItem } from '../interfaces/item';
+import { IInputFileItem } from '../interfaces/input-file-item';
 
 
-export function transformNewFiles(
-  inputFiles: FileList, existFilesNames: string[] | undefined,
-): IItem[] | null {
-  const newFiles = Array.from(inputFiles).filter((file: File) => {
-    return !existFilesNames?.includes(file.name);
-  });
-
-  if (!newFiles.length) {
-    return null;
-  }
+export function transformFiles(inputFiles: File[]): IInputFileItem[] {
 
   return Array.from(inputFiles).map((file: File) => {
     const acceptBlobTypes = ['image/jpeg', 'image/png'];
@@ -28,7 +19,6 @@ export function transformNewFiles(
       type: file.type,
       blobLink: blobLink,
       storageLink: null,
-      uploadStatus: 'waiting',
     };
   });
 }

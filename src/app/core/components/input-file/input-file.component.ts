@@ -16,8 +16,8 @@ import {
 import { MatButton } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-import { IItem } from '../../interfaces/item';
-import { transformNewFiles } from '../../functions/file-transform';
+import { IInputFileItem } from './interfaces/input-file-item';
+import { transformFiles } from './functions/transform-files';
 import { SliceSentencePipe } from '../../pipes/slice-sentence.pipe';
 
 @Component({
@@ -47,13 +47,14 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
   public acceptTypes!: string[];
 
   @Output() 
-  public delete: EventEmitter<IItem> = new EventEmitter();
+  public delete: EventEmitter<IInputFileItem> = new EventEmitter();
 
+  public inputValue: IInputFileItem[] | null = null;
   public disabled: boolean = false;
-  public inputValue: IItem[] | null = null;
+  public existedFiles: File[] = [];
   public uploadControl!: FormControl<FileList | null>;
   public onTouched!: ()=> void;
-  private _onChange!: (value: IItem[] | null)=> void;
+  private _onChange!: (value: IInputFileItem[] | null)=> void;
 
   constructor() {}
 
@@ -61,11 +62,11 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
     this.uploadControl = new FormControl<FileList | null>(null);
   }
 
-  public writeValue(obj: IItem[] | null): void {
+  public writeValue(obj: IInputFileItem[] | null): void {
     this.inputValue = obj;
   }
 
-  public registerOnChange(fn: ((value: IItem[] | null)=> void)): void {
+  public registerOnChange(fn: ((value: IInputFileItem[] | null)=> void)): void {
     this._onChange = fn;
   }
 
@@ -77,59 +78,43 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
     this.disabled = isDisabled;
   }
 
-  // public addFiles(files: FileList | null): void {
-  //   if (!files) {
-  //     return;
-  //   }
-
-  //   const existNames = this.inputValue?.map((item: IItem) => {
-  //     return item.name;
-  //   });
-  //   const items = transformNewFiles(files, existNames);
-  //   this.uploadControl.setValue(null);
-
-  //   if (!items) {
-  //     return;
-  //   }
-    
-  //   const combinedItems = this.inputValue ? 
-  //     [...structuredClone(this.inputValue), ...items] : 
-  //     items;
-
-  //   this._onChange(combinedItems);
-  // }
-
   public addFiles(files: FileList | null): void {
     if (!files) {
       return;
     }
 
-    const existNames = this.inputValue?.map((item: IItem) => {
-      return item.name;
-    });
-    const addedInputItems = transformNewFiles(files, existNames);
-    this.uploadControl.setValue(null);
+    this.existedFiles = [];
 
-    if (!addedInputItems) {
+    const existedNames = this.inputValue?.map((item: IInputFileItem) => {
+      return item.name;
+    }) ?? [];
+
+    this.existedFiles = Array.from(files).filter((file: File) => {
+      return existedNames.includes(file.name);
+    });
+
+    const newFiles = Array.from(files).filter((file: File) => {
+      return !existedNames.includes(file.name);
+    });
+
+    if (!newFiles.length) {
       return;
     }
+
+    const transformedFiles = transformFiles(newFiles);
+    this.uploadControl.setValue(null);
     
     const updatedInputItems = this.inputValue ? 
-      [...structuredClone(this.inputValue), ...addedInputItems] : 
-      addedInputItems;
+      [...this.inputValue, ...transformedFiles] : 
+      transformedFiles;
 
     console.log(updatedInputItems);
     this.inputValue = updatedInputItems;
     this._onChange(updatedInputItems);
   }
 
-  // public onDelete(item: IItem): void {
-  //   item.uploadStatus = 'waiting';
-  //   this.delete.emit(item);
-  // }
-
-  public onDelete(deleteItem: IItem): void {
-    const updatedInputItems = this.inputValue?.filter((current: IItem) => {
+  public onDelete(deleteItem: IInputFileItem): void {
+    const updatedInputItems = this.inputValue?.filter((current: IInputFileItem) => {
       return deleteItem.name !== current.name;
     });
 

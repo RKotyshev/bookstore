@@ -9,10 +9,6 @@ button {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-
-  @media(min-width: $tablet-width) {
-    justify-content: flex-start;
-  }
 }
 
 h3 {
@@ -33,9 +29,10 @@ h3 {
   img {
     margin-bottom: 20px;
     object-fit: cover;
-
-    &.pending {
-      opacity: 0.5;
-    }
   }
+}
+
+li {
+  list-style: none;
+  color: orange;
 }

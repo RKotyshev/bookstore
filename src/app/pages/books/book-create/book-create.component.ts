@@ -6,9 +6,6 @@ import {
   Observable,
   Subject,
   catchError,
-  concatMap,
-  distinctUntilChanged,
-  filter,
   map,
   of,
   shareReplay,
@@ -24,21 +21,15 @@ import { IAuthor } from '../../../core/interfaces/author';
 import { IGenre } from '../../../core/interfaces/genre';
 import { IBook, IBookWithCover, ICreateBookForm } from '../../../core/interfaces/book';
 import { datesCompareValidator } from '../../../core/functions/validators/dates-compare-validators';
-import { formatDate } from '../utils/format-date';
 import { handleError } from '../../../core/functions/handle-error';
 import {
   IFileSize,
   acceptFileType,
   maxFileSize,
-} from '../../../core/functions/validators/file-validators';
-import { IItem } from '../../../core/interfaces/item';
+} from '../../../core/components/input-file/functions/validators/file-validators';
+import { IInputFileItem } from '../../../core/components/input-file/interfaces/input-file-item';
 import { FirebaseStorageService } from '../../../core/services/firebase-storage.service';
-import { getInvalidNamesList } from '../../../core/functions/filter-invalid-items';
-// import { filterInvalidItems } from '../../../core/functions/filter-invalid-items';
-
-function isNotNull(value: IItem[] | null): value is IItem[] {
-  return value !== null;
-}
+import { getInvalidNamesList } from '../../../core/components/input-file/functions/filter-invalid-items';
 
 
 @Component({
@@ -53,13 +44,12 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   public bookForm!: FormGroup<ICreateBookForm>;
   public genres$: Observable<IGenre[]> = this._genresService.getPaginatedGenres(0, 100);
   public authors$: Observable<IAuthor[]> = this._authorsService.getPaginatedAuthors(0, 100);
-  // public fileTypes: string[] = ['image/jpeg', 'image/png'];
-  public fileTypes: string[] = ['image/jpeg'];
+  public fileTypes: string[] = ['image/jpeg', 'image/png'];
+  // public fileTypes: string[] = ['image/jpeg'];
   public maxFileSize: IFileSize = {
     size: 5,
     unit: 'MB',
   };
-  public coverErrorDisplay: boolean = false;
   public invalidInputItems$!: Observable<string[] | null>;
   private _destroyed = new Subject<void>;
   
@@ -104,35 +94,12 @@ export class BookCreateComponent implements OnInit, OnDestroy {
     return this.bookForm.get('writing_date') as FormControl;
   }
 
-  public get coverControl(): FormControl<IItem[] | null> {
+  public get coverControl(): FormControl<IInputFileItem[] | null> {
     return this.bookForm.get('cover') as FormControl;
   }
   
   public ngOnInit(): void {
     this._initForm();
-
-    // this.coverControl.valueChanges.pipe(
-    //   map((items: IItem[] | null) => {
-    //     const { filteredItems, errorState } = filterInvalidItems(items, this.coverControl.errors);
-    //     this.coverErrorDisplay = errorState;
-    //     this.coverControl.setValue(filteredItems, { emitEvent: false });
-
-    //     return filteredItems;
-    //   }),
-    //   distinctUntilChanged((prevItems: IItem[] | null, currItems: IItem[] | null) => {
-    //     const prevNames = prevItems ? prevItems.map((item: IItem) => item.name).join('') : '';
-    //     const currNames = currItems ? currItems.map((item: IItem) => item.name).join('') : '';
-        
-    //     return prevNames === currNames;
-    //   }),
-    //   filter(isNotNull),
-    //   concatMap((items: IItem[]) => {
-    //     return this._storage.uploadItems(items);
-    //   }),
-    //   takeUntil(this._destroyed),
-    // ).subscribe((items: IItem[]) => {
-    //   this.coverControl.setValue(items, { emitEvent: false });
-    // });
 
     this.invalidInputItems$ = this.coverControl.valueChanges.pipe(
       map(() => {
@@ -168,31 +135,15 @@ export class BookCreateComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const correctReleaseDate = formatDate(this.releaseDateControl.value);
-    const correctWritingDate = formatDate(this.writingDateControl.value);
-
-    // const newBook: IBook = {
-    //   ...this.bookForm.getRawValue(),
-    //   release_date: correctReleaseDate,
-    //   writing_date: correctWritingDate,
-    // };
-
-    let uploadCoverArray = this.coverControl.value?.map((current: IItem) => {
+    const coversToUpload = this.coverControl.value?.map((current: IInputFileItem) => {
       return this._storage.uploadItems(current);
     });
 
-    if (!uploadCoverArray) {
-      uploadCoverArray = [of('')];
-    }
-
-
-    zip(...uploadCoverArray).pipe(
+    zip(...coversToUpload ?? [of('')]).pipe(
       switchMap((value: string[]) => {
         const coversLinks = value;
         const newBook: IBookWithCover = {
           ...this.bookForm.getRawValue(),
-          release_date: correctReleaseDate,
-          writing_date: correctWritingDate,
           cover: coversLinks,
         };
 
@@ -211,62 +162,10 @@ export class BookCreateComponent implements OnInit, OnDestroy {
         this.submitError = true;
       },
     });
-    // this._storage.uploadItems(this.coverControl.value).pipe(
-    //   switchMap(() => {
-    // const newBook: IBookWithCover = {
-    //   ...this.bookForm.getRawValue(),
-    //   release_date: correctReleaseDate,
-    //   writing_date: correctWritingDate,
-    // };
-
-    // delete newBook.cover;
-
-    // return this._booksService.postBook(newBook as IBook);
-    //   }),
-    //   catchError(handleError),
-    //   takeUntil(this._destroyed),
-    // ).subscribe({
-    //   next: () => {
-    //     this.submitted = true;
-    //     this.submitError = false;
-    //   },
-    //   error: () => {
-    //     this.submitError = true;
-    //   },
-    // });
-
-
-    // this._booksService.postBook(newBook).pipe(
-    //   catchError(handleError),
-    //   takeUntil(this._destroyed),
-    // ).subscribe({
-    //   next: () => {
-    //     this.submitted = true;
-    //     this.submitError = false;
-    //   },
-    //   error: () => {
-    //     this.submitError = true;
-    //   },
-    // });
   }
 
   public onRedirect(): void {
     this._router.navigate(['books']);
-  }
-
-  public onDeleteItem(item: IItem): void {
-    this._storage.deleteItem(item).subscribe(() => {
-      let updatedItems: IItem[] | undefined | null = this.coverControl.value?.filter(
-        (currentItem: IItem) => {
-          return item.name !== currentItem.name;
-        });
-
-      if(!updatedItems?.length || !updatedItems) {
-        updatedItems = null;
-      }
-
-      this.coverControl.setValue(updatedItems);
-    });
   }
 
   private _initForm(): void {

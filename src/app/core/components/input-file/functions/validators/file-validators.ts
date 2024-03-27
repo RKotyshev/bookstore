@@ -1,5 +1,5 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { IItem } from '../../interfaces/item';
+import { IInputFileItem } from '../../interfaces/input-file-item';
 
 
 export interface IFileSize {
@@ -11,13 +11,13 @@ export function maxFileSize(maxSize: IFileSize): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const bytesPerKb = 1e3;
     const bytesPerMb = 1e6;
-    const items: IItem[] | null = control.value;
+    const items: IInputFileItem[] | null = control.value;
 
     if (!items) {
       return null;
     }
 
-    const invalidSizeFiles = Array.from(items).filter((item: IItem) => {
+    const invalidSizeFiles = Array.from(items).filter((item: IInputFileItem) => {
       switch (maxSize.unit) {
         case 'Byte':
           return item.size > maxSize.size;
@@ -39,13 +39,13 @@ export function maxFileSize(maxSize: IFileSize): ValidatorFn {
 
 export function acceptFileType(acceptTypes: string[]): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
-    const items: IItem[] | null = control.value;
+    const items: IInputFileItem[] | null = control.value;
 
     if (!items) {
       return null;
     }
 
-    const invalidTypeFiles = Array.from(items).filter((item: IItem) => {      
+    const invalidTypeFiles = Array.from(items).filter((item: IInputFileItem) => {      
       return !acceptTypes.includes(item.type);
     });
 
