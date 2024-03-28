@@ -96,10 +96,8 @@
         - The file extension must be one of: {{ fileTypes | fileTypes }} <br>
         - The file size must be less then {{ maxFileSize.size }}{{ maxFileSize.unit }}.</p>
 
-        <!-- <ul *ngIf="invalidInputItems.length"> -->
           To continue, exclude the following files:
           <li *ngFor="let invalidItem of getCoverControlInvalidItems(coverControl.errors)">{{ invalidItem.name }}</li>
-        <!-- </ul> -->
     </mat-error>
     <mat-error *ngIf="submitError">
       Some error was occurred. Try again later

@@ -1,7 +1,7 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
-import { IDetailedItemSize, IInputItem } from '../../interfaces/input-item';
-import { transformSize } from '../transform-files';
+import { IDetailedItemSize, IInputItem } from '../interfaces/input-item';
+import { transformSize } from '../functions/transform-files';
 
 
 export function maxFileSize(maxSize: IDetailedItemSize): ValidatorFn {

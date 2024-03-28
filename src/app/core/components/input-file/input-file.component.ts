@@ -18,6 +18,7 @@ import { transformFiles } from './functions/transform-files';
 import { SliceSentencePipe } from '../../pipes/slice-sentence.pipe';
 import { filterByHash, getHash } from './functions/filter-by-hash';
 
+
 @Component({
   selector: 'app-input-file',
   standalone: true,
@@ -43,14 +44,11 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
   @Input() 
   public acceptTypes!: string[];
 
-  // @Output() 
-  // public delete: EventEmitter<IInputItem> = new EventEmitter();
-
   public inputValue: IInputItem[] | null = null;
   public disabled: boolean = false;
   public existedFiles: File[] = [];
   public uploadControl!: FormControl<FileList | null>;
-  public onTouched!: ()=> void;
+  private _onTouched!: ()=> void;
   private _onChange!: (value: IInputItem[] | null)=> void;
 
   constructor() {}
@@ -68,7 +66,7 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
   }
 
   public registerOnTouched(fn: ()=> void): void {
-    this.onTouched = fn;
+    this._onTouched = fn;
   }
 
   public setDisabledState(isDisabled: boolean): void {
@@ -76,6 +74,8 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
   }
 
   public addFiles(files: FileList | null): void {
+    this._onTouched();
+
     if (!files) {
       return;
     }
@@ -85,7 +85,6 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
     const existedHashes = this.inputValue?.map((item: IInputItem) => {
       return getHash(item);
     }) ?? [];
-
 
     const filesArray = Array.from(files);
 
@@ -106,10 +105,6 @@ export class InputFileComponent implements ControlValueAccessor, OnInit {
     });
 
     this.uploadControl.setValue(null);
-    
-    // const updatedInputItems = this.inputValue ? 
-    //   [...this.inputValue, ...transformedFiles] : 
-    //   transformedFiles;
 
     const updatedInputItems = [...this.inputValue ?? [], ...transformedFiles];
 

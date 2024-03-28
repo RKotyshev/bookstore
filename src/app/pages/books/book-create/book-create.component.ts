@@ -29,7 +29,7 @@ import { handleError } from '../../../core/functions/handle-error';
 import {
   acceptFileType,
   maxFileSize,
-} from '../../../core/components/input-file/functions/validators/file-validators';
+} from '../../../core/components/input-file/validators/file-validators';
 import {
   IDetailedItemSize,
   IInputItem,
