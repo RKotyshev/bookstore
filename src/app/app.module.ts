@@ -9,6 +9,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { getStorage, provideStorage } from '@angular/fire/storage';
+
 import { MainPageModule } from './pages/main/main.module';
 import { BooksModule } from './pages/books/books.module';
 import { AuthModule } from './pages/auth/auth.module';
@@ -18,6 +21,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
+import { environment } from '../environments/environment.development';
 
 
 @NgModule({
@@ -41,6 +45,8 @@ import { HeaderComponent } from './header/header.component';
     AuthModule,
     CartModule,
     AppRoutingModule,
+    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+    provideStorage(() => getStorage()),
   ],
   bootstrap: [AppComponent],
 })

@@ -1,0 +1,44 @@
+<label for="uploadImage"></label>
+<input 
+  #uploadInput
+  hidden
+  multiple
+  id="uploadImage"
+  type="file"
+  [formControl]="uploadControl"
+  [accept]="acceptTypes"
+  (change)="addFiles(uploadInput.files)"
+  >
+
+<button 
+  mat-raised-button
+  type="button"
+  [disabled]="disabled"
+  (click)="uploadInput.click()"
+  >Select file</button>
+
+<div *ngIf="inputValue?.length">
+  <ul *ngIf="existedFiles.length">
+    <li *ngFor="let file of existedFiles">{{ file.name }} already attached</li>
+  </ul>
+
+  <h3>Preview:</h3>
+
+  <section class="preview">
+    <div *ngFor="let item of inputValue">
+      <img
+        width="200px"
+        height="200px"
+        alt="Uploaded image preview"
+        [src]="item.blobLink ? item.blobLink : '../../../../assets/document-icon.svg'"
+      >
+      
+      <p>{{ item.name | sliceSentence: 30}}</p>
+
+      <button
+        mat-raised-button type="button"
+        (click)="onDelete(item)"
+        >Delete</button>
+    </div>
+  </section>
+</div>

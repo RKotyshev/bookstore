@@ -1,0 +1,110 @@
+<form [formGroup]="filterForm" (ngSubmit)="onSubmit()">
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon fontIcon="filter_list"></mat-icon>
+        </mat-panel-title>
+        <mat-panel-description>Set filter parameters here</mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="fields-wrapper">
+
+        <section>
+          <h4>General filters</h4>
+
+          <mat-form-field>
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title" type="text">
+          </mat-form-field>
+          
+          <mat-form-field>
+            <mat-label>Author</mat-label>
+            <input
+              matInput
+              formControlName="author"
+              placeholder="Start typing author name"
+              type="text"
+              [matAutocomplete]="authorComplete"
+            >
+            <mat-autocomplete #authorComplete="matAutocomplete">
+              <mat-option *ngFor="let author of authors$ | async" [value]="author | fullname">
+                {{ author | fullname }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          
+          <mat-form-field>
+            <mat-label>Genre</mat-label>
+            <mat-select formControlName="genre">
+              <mat-option *ngFor="let genre of genres$ | async" [value]="genre.title">
+                {{ genre.title }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </section>
+
+        <section>
+          <h4>Price filters</h4>
+          
+          <mat-form-field>
+            <mat-label>Price from</mat-label>
+            <input matInput formControlName="price_gte" type="number">
+          </mat-form-field>
+      
+          <mat-form-field>
+            <mat-label>Price to</mat-label>
+            <input matInput formControlName="price_lte" type="number">
+          </mat-form-field>
+        </section>
+
+        <section>
+          <h4>Date filters</h4>
+
+          <mat-form-field>
+            <mat-label>Writing dates range</mat-label>
+            <mat-date-range-input [rangePicker]="writingRangePicker">
+              <input matStartDate formControlName="writing_date_gte" placeholder="From">
+              <input matEndDate formControlName="writing_date_lte" placeholder="Till">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matIconSuffix [for]="writingRangePicker"></mat-datepicker-toggle>
+            <mat-date-range-picker #writingRangePicker></mat-date-range-picker>
+            <mat-hint>YYYY-MM-DD - YYYY-MM-DD</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Release dates range</mat-label>
+            <mat-date-range-input [rangePicker]="releaseRangePicker">
+              <input matStartDate formControlName="release_date_gte" placeholder="From">
+              <input matEndDate formControlName="release_date_lte" placeholder="Till">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matIconSuffix [for]="releaseRangePicker"></mat-datepicker-toggle>
+            <mat-date-range-picker #releaseRangePicker></mat-date-range-picker>
+            <mat-hint>YYYY-MM-DD - YYYY-MM-DD</mat-hint>
+          </mat-form-field>
+        </section>
+      </div>
+
+      <section class="actions">
+        <button mat-stroked-button color="primary" type="submit">Apply filters</button>
+        <button mat-stroked-button color="warn" type="button" (click)="onReset()">Reset filters</button>
+
+        <mat-form-field>
+          <mat-label>Sort by</mat-label>
+          <mat-select formControlName="filterType">
+            <mat-option *ngFor="let sortType of sortList" [value]="sortType.value">
+              {{ sortType.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Sort order</mat-label>
+          <mat-select formControlName="direction">
+            <mat-option [value]="sortDirection.Descending">Descending</mat-option>
+            <mat-option [value]="sortDirection.Ascending">Ascending</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </section>
+    </mat-expansion-panel>
+  </mat-accordion>
+</form>

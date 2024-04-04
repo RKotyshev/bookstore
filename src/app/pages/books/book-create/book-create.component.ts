@@ -1,18 +1,40 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  NonNullableFormBuilder,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { Observable, Subject, catchError, takeUntil } from 'rxjs';
+import {
+  EMPTY,
+  Observable,
+  Subject,
+  catchError,
+  switchMap,
+  takeUntil,
+  zip,
+} from 'rxjs';
 
 import { BooksService } from '../../../core/services/books.service';
 import { AuthorsService } from '../../../core/services/authors.service';
 import { GenresService } from '../../../core/services/genres.service';
 import { IAuthor } from '../../../core/interfaces/author';
 import { IGenre } from '../../../core/interfaces/genre';
-import { IBook, ICreateBookForm } from '../../../core/interfaces/book';
-import { datesCompareValidator } from '../../../core/functions/validators/dates-compare-validator';
-import { formatDate } from '../utils/format-date';
+import { IBook, IBookWithCover, ICreateBookForm } from '../../../core/interfaces/book';
+import { datesCompareValidator } from '../../../core/functions/validators/dates-compare-validators';
 import { handleError } from '../../../core/functions/handle-error';
+import {
+  acceptFileType,
+  maxFileSize,
+} from '../../../core/components/input-file/validators/file-validators';
+import {
+  IDetailedItemSize,
+  IInputItem,
+} from '../../../core/components/input-file/interfaces/input-item';
+import { FirebaseStorageService } from '../../../core/services/firebase-storage.service';
 
 
 @Component({
@@ -23,10 +45,16 @@ import { handleError } from '../../../core/functions/handle-error';
 export class BookCreateComponent implements OnInit, OnDestroy {
   public submitted: boolean = false;
   public submitError: boolean = false;
+  public submitting: boolean = false;
   public redirectDelaySeconds: number = 9;
   public bookForm!: FormGroup<ICreateBookForm>;
   public genres$: Observable<IGenre[]> = this._genresService.getPaginatedGenres(0, 100);
   public authors$: Observable<IAuthor[]> = this._authorsService.getPaginatedAuthors(0, 100);
+  public fileTypes: string[] = ['image/jpeg', 'image/png'];
+  public maxFileSize: IDetailedItemSize = {
+    size: 1,
+    unit: 'MB',
+  };
   private _destroyed = new Subject<void>;
   
   constructor(
@@ -35,6 +63,7 @@ export class BookCreateComponent implements OnInit, OnDestroy {
     private _authorsService: AuthorsService,
     private _booksService: BooksService,
     private _router: Router,
+    private _storage: FirebaseStorageService,
   ) { }
 
   public get inStockControl(): FormControl<number> {
@@ -68,6 +97,10 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   public get writingDateControl(): FormControl<string> {
     return this.bookForm.get('writing_date') as FormControl;
   }
+
+  public get coverControl(): FormControl<IInputItem[] | null> {
+    return this.bookForm.get('cover') as FormControl;
+  }
   
   public ngOnInit(): void {
     this._initForm();
@@ -95,16 +128,24 @@ export class BookCreateComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const correctReleaseDate = formatDate(this.releaseDateControl.value);
-    const correctWritingDate = formatDate(this.writingDateControl.value);
+    this.submitting = true;
 
-    const newBook: IBook = {
-      ...this.bookForm.getRawValue(),
-      release_date: correctReleaseDate,
-      writing_date: correctWritingDate,
-    };
+    const coversUpload$ = this.coverControl.value?.length ? 
+      zip(this.coverControl.value.map((current: IInputItem) => {
+        return this._storage.uploadItems(current);
+      })) : EMPTY;
 
-    this._booksService.postBook(newBook).pipe(
+    coversUpload$.pipe(
+      switchMap((coversLinks: string[]) => {
+        const newBook: IBookWithCover = {
+          ...this.bookForm.getRawValue(),
+          cover: coversLinks,
+        };
+
+        delete newBook.cover;
+
+        return this._booksService.postBook(newBook as IBook);
+      }),
       catchError(handleError),
       takeUntil(this._destroyed),
     ).subscribe({
@@ -122,16 +163,80 @@ export class BookCreateComponent implements OnInit, OnDestroy {
     this._router.navigate(['books']);
   }
 
+  public getCoverControlInvalidItems(errors: ValidationErrors | null): IInputItem[] | null {
+    if(!errors) {
+      return null;
+    }
+  
+    const invalidItemsArrays = Object.values(errors);
+    const uniqueInvalidItems = invalidItemsArrays.reduce(
+      (itemsSet: Set<IInputItem>, currentValidatorItems: IInputItem[]) => {
+        currentValidatorItems.forEach((currentItem: IInputItem) => {
+          itemsSet.add(currentItem);
+        });
+  
+        return itemsSet;
+      }, new Set());
+  
+    return Array.from(uniqueInvalidItems.values());
+  }
+
   private _initForm(): void {
-    this.bookForm = this._formBuilder.group({
-      in_stock: [0, [Validators.required, Validators.min(0)]],
-      title: ['', [Validators.required, Validators.maxLength(25)]],
-      description: ['', [Validators.required]],
-      price: [0, [Validators.required, Validators.min(0)]],
-      genres: [<number[]>[], [Validators.required]],
-      author: [<number[]>[], [Validators.required]],
-      release_date: ['', [Validators.required]],
-      writing_date: ['', [Validators.required]],
+    this.bookForm = this._formBuilder.group<ICreateBookForm>({
+      in_stock: this._formBuilder.control({
+        value: 0,
+        disabled: false,
+      }, {
+        validators: [Validators.required, Validators.min(0)],
+      }),
+      title: this._formBuilder.control({
+        value: '',
+        disabled: false,
+      }, {
+        validators: [Validators.required, Validators.maxLength(25)],
+      }),
+      description: this._formBuilder.control({
+        value: '',
+        disabled: false,
+      }, {
+        validators: [Validators.required],
+      }),
+      price: this._formBuilder.control({
+        value: 0,
+        disabled: false,
+      }, {
+        validators: [Validators.required, Validators.min(0)],
+      }),
+      genres: this._formBuilder.control({
+        value: [],
+        disabled: false,
+      }, {
+        validators: [Validators.required],
+      }),
+      author: this._formBuilder.control({
+        value: [],
+        disabled: false,
+      }, {
+        validators: [Validators.required],
+      }),
+      release_date: this._formBuilder.control({
+        value: '',
+        disabled: false,
+      }, {
+        validators: [Validators.required],
+      }),
+      writing_date: this._formBuilder.control({
+        value: '',
+        disabled: false,
+      }, {
+        validators: [Validators.required],
+      }),
+      cover: this._formBuilder.control({
+        value: null,
+        disabled: false,
+      }, {
+        validators: [maxFileSize(this.maxFileSize), acceptFileType(this.fileTypes)],
+      }),
     }, { validators: datesCompareValidator('writing_date', 'release_date') });
   }
 }

@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 
 import { BooksService } from '../../core/services/books.service';
-import { IBook } from '../../core/interfaces/book';
+import { IBook, IRequestBook } from '../../core/interfaces/book';
+import { IResponse } from '../../core/interfaces/response';
 
 
 @Component({
@@ -28,8 +29,14 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   private _getCartItems(pageIndex: number, pageSize: number): void {
-    this._bookService.getPaginatedBooks(pageIndex, pageSize)
-      .pipe(takeUntil(this._destroyed))
+    const params: IRequestBook = {
+      page: pageIndex + 1,
+      page_size: pageSize,
+    };
+    this._bookService.getFilteredBooks(params).pipe(
+      map((response: IResponse<IBook>) => response.result),
+      takeUntil(this._destroyed),
+    )
       .subscribe((books: IBook[]) => this.currentCartItems = books);
   }
 }

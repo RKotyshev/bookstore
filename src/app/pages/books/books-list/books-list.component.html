@@ -1,13 +1,6 @@
 <h2 class="title">Books</h2>
 
-<button 
-  mat-stroked-button
-  color="primary"
-  routerLink="/books/new"
-  class="create-book"
-  >Create book</button>
-
-<mat-card *ngFor="let book of booksList" class="book">
+<mat-card class="book" *ngFor="let book of booksList">
   <mat-card-header>
     <mat-card-title>
       <a [routerLink]="['/books', book.id]">{{ book.title }}</a>
@@ -21,7 +14,7 @@
     src="../../../assets/novelties-1.webp"
     [routerLink]="['/books', book.id]"
     [attr.alt]="book.title + ' cover image'"
-    >
+  >
   <mat-card-content>
     <a [routerLink]="['/books', book.id]">
       <p>{{ book.description }}</p>
@@ -32,3 +25,8 @@
     <button mat-stroked-button color="primary" class="buy-button">BUY</button>
   </section>
 </mat-card>
+
+<section *ngIf="!booksList?.length" class="no-list">
+  <h3>Nothing was found</h3>
+  <h3>Change filter parameters and try again</h3>
+</section>

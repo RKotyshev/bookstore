@@ -9,5 +9,6 @@ import { IBook } from '../../../core/interfaces/book';
   styleUrl: './cart-list.component.scss',
 })
 export class CartListComponent {
-  @Input() public cartList: IBook[] = [];
+  @Input()
+  public cartList: IBook[] = [];
 }

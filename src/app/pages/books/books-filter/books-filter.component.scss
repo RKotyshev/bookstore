@@ -1,0 +1,46 @@
+@import '../../../styles/variables.scss';
+
+
+.fields-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 20px;
+
+  section {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+}
+
+.actions {
+  display: flex;
+  flex-direction: column-reverse;
+  padding-top: 20px;
+
+  button:last-of-type {
+    margin-bottom: 10px;
+  }
+
+  @media(min-width: $tablet-width) {
+    flex-direction: row;
+    row-gap: 0;
+    padding-top: 0px;
+    align-items: center;
+    justify-content: flex-end;
+  
+    button:first-of-type {
+      margin-right: 20px;
+    }
+  
+    button:last-of-type {
+      margin-right: auto;
+      margin-bottom: 0;
+    }
+
+    mat-form-field:first-of-type {
+      margin-right: 20px;
+    }
+  }
+
+}

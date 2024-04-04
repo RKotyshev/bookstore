@@ -16,13 +16,20 @@ import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
 } from '@angular/material-moment-adapter';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { CdkAccordionModule } from '@angular/cdk/accordion';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { BooksComponent } from './books.component';
 import { BooksListComponent } from './books-list/books-list.component';
 import { BookDetailComponent } from './book-detail/book-detail.component';
-import { DisplayTimerComponent } from '../../core/components/display-with-timer/display-timer.component';
+import { DisplayTimerComponent } from '../../core/components/display-timer/display-timer.component';
 import { BookCreateComponent } from './book-create/book-create.component';
+import { BooksFilterComponent } from './books-filter/books-filter.component';
+import { InputFileComponent } from '../../core/components/input-file/input-file.component';
 import { FullnamePipe } from '../../core/pipes/fullname.pipe';
+import { FileTypesPipe } from '../../core/pipes/file-types.pipe';
 
 
 @NgModule({
@@ -31,6 +38,7 @@ import { FullnamePipe } from '../../core/pipes/fullname.pipe';
     BooksListComponent,
     BookDetailComponent,
     BookCreateComponent,
+    BooksFilterComponent,
   ],
   imports: [
     CommonModule,
@@ -46,8 +54,14 @@ import { FullnamePipe } from '../../core/pipes/fullname.pipe';
     MatIconModule,
     MatDatepickerModule,
     MatMomentDateModule,
-    FullnamePipe,
+    MatAutocompleteModule,
+    CdkAccordionModule,
+    MatExpansionModule,
+    MatProgressSpinnerModule,
     DisplayTimerComponent,
+    InputFileComponent,
+    FullnamePipe,
+    FileTypesPipe,
   ],
   providers: [
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
