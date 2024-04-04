@@ -30,6 +30,8 @@ import { BooksFilterComponent } from './books-filter/books-filter.component';
 import { InputFileComponent } from '../../core/components/input-file/input-file.component';
 import { FullnamePipe } from '../../core/pipes/fullname.pipe';
 import { FileTypesPipe } from '../../core/pipes/file-types.pipe';
+import { BooksRoutingModule } from './books-routing.module';
+import { BooksMainComponent } from './books-main/books-main.component';
 
 
 @NgModule({
@@ -39,6 +41,7 @@ import { FileTypesPipe } from '../../core/pipes/file-types.pipe';
     BookDetailComponent,
     BookCreateComponent,
     BooksFilterComponent,
+    BooksMainComponent,
   ],
   imports: [
     CommonModule,
@@ -58,6 +61,7 @@ import { FileTypesPipe } from '../../core/pipes/file-types.pipe';
     CdkAccordionModule,
     MatExpansionModule,
     MatProgressSpinnerModule,
+    BooksRoutingModule,
     DisplayTimerComponent,
     InputFileComponent,
     FullnamePipe,
@@ -80,6 +84,5 @@ import { FileTypesPipe } from '../../core/pipes/file-types.pipe';
       },
     },
   ],
-  exports: [BooksComponent],
 })
 export class BooksModule { }
