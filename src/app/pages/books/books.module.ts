@@ -31,7 +31,6 @@ import { InputFileComponent } from '../../core/components/input-file/input-file.
 import { FullnamePipe } from '../../core/pipes/fullname.pipe';
 import { FileTypesPipe } from '../../core/pipes/file-types.pipe';
 import { BooksRoutingModule } from './books-routing.module';
-import { BooksMainComponent } from './books-main/books-main.component';
 
 
 @NgModule({
@@ -41,7 +40,6 @@ import { BooksMainComponent } from './books-main/books-main.component';
     BookDetailComponent,
     BookCreateComponent,
     BooksFilterComponent,
-    BooksMainComponent,
   ],
   imports: [
     CommonModule,
