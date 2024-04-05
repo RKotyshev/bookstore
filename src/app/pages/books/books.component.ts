@@ -24,7 +24,6 @@ import isEqual from 'lodash.isequal';
 const DEFAULT_PAGE_INDEX = 0;
 const DEFAULT_PAGE_SIZE = 5;
 
-
 @Component({
   selector: 'app-books',
   templateUrl: './books.component.html',

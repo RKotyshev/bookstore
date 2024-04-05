@@ -7,7 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { LayoutModule } from '@angular/cdk/layout';
 
-import { MainPageComponent } from './main.component';
+import { MainComponent } from './main.component';
 import { EventsComponent } from './events/events.component';
 import { TopicsComponent } from './topics/topics.component';
 import { NoveltiesComponent } from './novelties/novelties.component';
@@ -16,7 +16,7 @@ import { SliceSentencePipe } from '../../core/pipes/slice-sentence.pipe';
 
 @NgModule({
   declarations: [
-    MainPageComponent,
+    MainComponent,
     EventsComponent,
     TopicsComponent,
     NoveltiesComponent,
@@ -30,8 +30,5 @@ import { SliceSentencePipe } from '../../core/pipes/slice-sentence.pipe';
     LayoutModule,
     SliceSentencePipe,
   ],
-  exports: [
-    MainPageComponent,
-  ],
 })
-export class MainPageModule { }
+export class MainModule { }

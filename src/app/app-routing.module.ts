@@ -1,24 +1,30 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { MainPageComponent } from './pages/main/main.component';
-import { BooksComponent } from './pages/books/books.component';
-import { AuthorsComponent } from './pages/authors/authors.component';
-import { AuthComponent } from './pages/auth/auth.component';
-import { CartComponent } from './pages/cart/cart.component';
-import { BookDetailComponent } from './pages/books/book-detail/book-detail.component';
-import { BookCreateComponent } from './pages/books/book-create/book-create.component';
+import { MainComponent } from './pages/main/main.component';
 
 
 const routes: Routes = [
-  { path: 'books', component: BooksComponent },
-  { path: 'books/new', component: BookCreateComponent },
-  { path: 'books/:id', component: BookDetailComponent },
-  { path: 'authors', component: AuthorsComponent },
-  { path: 'auth', component: AuthComponent },
-  { path: 'cart', component: CartComponent },
-  { path: '', component: MainPageComponent, pathMatch: 'full' },
-
+  { path: 'books',
+    loadChildren: () => import('./pages/books/books.module')
+      .then((m: typeof import('./pages/books/books.module')) => m.BooksModule),
+  },
+  { path: 'authors',
+    loadChildren: () => import('./pages/authors/authors.module')
+      .then((m: typeof import('./pages/authors/authors.module')) => m.AuthorsModule),
+  },
+  { path: 'auth', 
+    loadChildren: () => import('./pages/auth/auth.module')
+      .then((m: typeof import('./pages/auth/auth.module')) => m.AuthModule),
+  },
+  { path: 'cart',
+    loadChildren: () => import('./pages/cart/cart.module')
+      .then((m: typeof import('./pages/cart/cart.module')) => m.CartModule),
+  },
+  { path: '',
+    component: MainComponent,
+    pathMatch: 'full',
+  },
 ];
 
 @NgModule({

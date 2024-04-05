@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 
 import { CartComponent } from './cart.component';
 import { CartListComponent } from './cart-list/cart-list.component';
+import { CartRoutingModule } from './cart-routing.module';
 
 
 @NgModule({
@@ -19,9 +20,7 @@ import { CartListComponent } from './cart-list/cart-list.component';
     MatListModule,
     MatCardModule,
     MatButtonModule,
-  ],
-  exports: [
-    CartComponent,
+    CartRoutingModule,
   ],
 })
 export class CartModule { }

@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 
 import { AuthComponent } from './auth.component';
 import { AuthFormComponent } from './auth-form/auth-form.component';
+import { AuthRoutingModule } from './auth-routing.module';
 
 
 @NgModule({
@@ -24,9 +25,7 @@ import { AuthFormComponent } from './auth-form/auth-form.component';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-  ],
-  exports: [
-    AuthComponent,
+    AuthRoutingModule,
   ],
 })
 export class AuthModule { }

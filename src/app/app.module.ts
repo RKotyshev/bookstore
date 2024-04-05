@@ -12,11 +12,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { getStorage, provideStorage } from '@angular/fire/storage';
 
-import { MainPageModule } from './pages/main/main.module';
-import { BooksModule } from './pages/books/books.module';
-import { AuthModule } from './pages/auth/auth.module';
-import { CartModule } from './pages/cart/cart.module';
-import { AuthorsModule } from './pages/authors/authors.module';
+import { MainModule } from './pages/main/main.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FooterComponent } from './footer/footer.component';
@@ -38,12 +34,8 @@ import { environment } from '../environments/environment.development';
     MatIconModule,
     MatButtonModule,
     MatListModule,
-    MainPageModule,
     MatDividerModule,
-    BooksModule,
-    AuthorsModule,
-    AuthModule,
-    CartModule,
+    MainModule,
     AppRoutingModule,
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideStorage(() => getStorage()),
