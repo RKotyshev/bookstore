@@ -1,53 +1,51 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 import { PageEvent } from '@angular/material/paginator';
 
-import { Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Observable, debounceTime, switchMap } from 'rxjs';
 
 import { AuthorsService } from '../../core/services/authors.service';
-import { IAuthor } from '../../core/interfaces/author';
+import { IAuthor, IRequestAuthors } from '../../core/interfaces/author';
 import { IResponse } from '../../core/interfaces/response';
 import { PageSizeOptions } from '../../utils/constants/paginator';
+
+const DEFAULT_PAGE_INDEX = 0;
+const DEFAULT_PAGE_SIZE = 5;
 
 
 @Component({
   selector: 'app-authors',
   templateUrl: './authors.component.html',
   styleUrl: './authors.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AuthorsComponent implements OnInit, OnDestroy {
-  public currentAuthorsList: IAuthor[] = [];
-  public totalAuthors!: number;
-  public pageStartIndex = 0;
-  public pageStartSize = 5;
-  public pageSize = PageSizeOptions;
-  private _destroyed = new Subject<void>();
+export class AuthorsComponent implements OnInit {
+  public paramsState: IRequestAuthors = {
+    page: DEFAULT_PAGE_INDEX,
+    page_size: DEFAULT_PAGE_SIZE,
+  };
+  public authorsResponse$!: Observable<IResponse<IAuthor>>;
+  public paginatorInitialPageSize = DEFAULT_PAGE_SIZE;
+  public readonly pageSizes = PageSizeOptions;
+  private _paramsUpdated = new BehaviorSubject(this.paramsState);
 
   constructor(private _authorService: AuthorsService) { }
 
   public ngOnInit(): void {
-    this._getAuthorsCount();
-    this._getAuthors(this.pageStartIndex, this.pageStartSize);
+    this.authorsResponse$ = this._paramsUpdated.asObservable().pipe(
+      debounceTime(300),
+      switchMap((params: IRequestAuthors) => {
+        return this._authorService.getAuthors(params);
+      }),
+    );
   }
 
-  public ngOnDestroy(): void {
-    this._destroyed.next();
-    this._destroyed.complete();
-  }
+  public paginatorUpdate(event: PageEvent): void {
+    this.paramsState = {
+      page: event.pageIndex,
+      page_size: event.pageSize,
+    };
 
-  public getPaginatorData(event: PageEvent): void {
-    this._getAuthors(event.pageIndex, event.pageSize);
-  }
-
-  private _getAuthorsCount(): void {
-    this._authorService.getAuthorsData()
-      .pipe(takeUntil(this._destroyed))
-      .subscribe((response: IResponse<IAuthor>) => this.totalAuthors = response.total_items);
-  }
-
-  private _getAuthors(pageIndex: number, pageSize: number): void {
-    this._authorService.getPaginatedAuthors(pageIndex, pageSize)
-      .pipe(takeUntil(this._destroyed))
-      .subscribe((authors: IAuthor[]) => this.currentAuthorsList = authors);
+    this._paramsUpdated.next(this.paramsState);
   }
 }

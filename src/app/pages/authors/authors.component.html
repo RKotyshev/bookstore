@@ -1,7 +1,10 @@
-<app-authors-list [authorsList]="currentAuthorsList"></app-authors-list>
-<mat-paginator 
-  [length]="totalAuthors"
-  [pageSize]="pageStartSize"
-  [pageSizeOptions]="pageSize"
-  (page)="getPaginatorData($event)"
-></mat-paginator>
+<ng-container *ngIf="authorsResponse$ | async as response">
+  <app-authors-list [authorsList]="response.result"></app-authors-list>
+  
+  <mat-paginator 
+    [length]="response.total_items"
+    [pageSize]="paginatorInitialPageSize"
+    [pageSizeOptions]="pageSizes"
+    (page)="paginatorUpdate($event)"
+  ></mat-paginator>
+</ng-container>

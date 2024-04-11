@@ -40,6 +40,7 @@ export class BooksComponent implements OnInit, OnDestroy {
     page: DEFAULT_PAGE_INDEX,
     page_size: DEFAULT_PAGE_SIZE,
   };
+  public paginatorInitialPageSize = DEFAULT_PAGE_SIZE;
   public params$ = this._route.queryParams.pipe(
     filter((params: IRequestBook) => {
       return params.page !== undefined && params.page !== null &&

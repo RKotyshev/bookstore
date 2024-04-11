@@ -3,3 +3,8 @@ export interface IAuthor {
   first_name: string,
   second_name: string,
 }
+
+export interface IRequestAuthors {
+  page: number,
+  page_size: number,
+}

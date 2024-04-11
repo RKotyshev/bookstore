@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 import { MobileMenuService } from '../core/services/mobile-menu.service';
 
@@ -7,6 +7,7 @@ import { MobileMenuService } from '../core/services/mobile-menu.service';
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent implements OnInit {
   public isMenuOpen!: boolean;

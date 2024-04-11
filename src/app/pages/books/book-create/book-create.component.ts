@@ -13,6 +13,7 @@ import {
   Observable,
   Subject,
   catchError,
+  map,
   switchMap,
   takeUntil,
   zip,
@@ -21,7 +22,7 @@ import {
 import { BooksService } from '../../../core/services/books.service';
 import { AuthorsService } from '../../../core/services/authors.service';
 import { GenresService } from '../../../core/services/genres.service';
-import { IAuthor } from '../../../core/interfaces/author';
+import { IAuthor, IRequestAuthors } from '../../../core/interfaces/author';
 import { IGenre } from '../../../core/interfaces/genre';
 import { IBook, IBookWithCover, ICreateBookForm } from '../../../core/interfaces/book';
 import { datesCompareValidator } from '../../../core/functions/validators/dates-compare-validators';
@@ -35,6 +36,10 @@ import {
   IInputItem,
 } from '../../../core/components/input-file/interfaces/input-item';
 import { FirebaseStorageService } from '../../../core/services/firebase-storage.service';
+import { IResponse } from '../../../core/interfaces/response';
+
+const DEFAULT_AUTHORS_PAGE_INDEX = 0;
+const DEFAULT_AUTHORS_PAGE_SIZE = 100;
 
 
 @Component({
@@ -48,13 +53,21 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   public submitting: boolean = false;
   public redirectDelaySeconds: number = 9;
   public bookForm!: FormGroup<ICreateBookForm>;
+  public authorsParamsState: IRequestAuthors = {
+    page: DEFAULT_AUTHORS_PAGE_INDEX,
+    page_size: DEFAULT_AUTHORS_PAGE_SIZE,
+  };
   public genres$: Observable<IGenre[]> = this._genresService.getPaginatedGenres(0, 100);
-  public authors$: Observable<IAuthor[]> = this._authorsService.getPaginatedAuthors(0, 100);
+  public authors$: Observable<IAuthor[]> = this._authorsService.getAuthors(this.authorsParamsState)
+    .pipe(
+      map((response: IResponse<IAuthor>) => response.result),
+    );
   public fileTypes: string[] = ['image/jpeg', 'image/png'];
   public maxFileSize: IDetailedItemSize = {
     size: 1,
     unit: 'MB',
   };
+
   private _destroyed = new Subject<void>;
   
   constructor(

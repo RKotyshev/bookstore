@@ -23,7 +23,7 @@ export class BookDetailComponent {
     shareReplay({ bufferSize: 1, refCount: true }),
   );
   public authors$: Observable<IAuthor[]> = this.book$.pipe(
-    map((book: IBook) => book.author.map((id: number) => this._authorService.getAuthor(id))),
+    map((book: IBook) => book.author.map((id: number) => this._authorService.getCurrentAuthor(id))),
     filter((authorReqs: Observable<IAuthor>[]) => authorReqs.length > 0),
     switchMap((authorReqs: Observable<IAuthor>[]) => {
 

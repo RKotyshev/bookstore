@@ -13,6 +13,7 @@
     #paginator
     [length]="response.total_items"
     [pageSizeOptions]="pageSizes"
+    [pageSize]="paginatorInitialPageSize"
     (page)="paginatorUpdate($event)"
   ></mat-paginator>
 </ng-container>
