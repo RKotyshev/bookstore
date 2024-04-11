@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 
-import { IAuthForm } from '../../core/interfaces/auth';
+import { IAuthorizationForm } from '../../core/interfaces/authorization';
 
 
 @Component({
@@ -11,7 +11,7 @@ import { IAuthForm } from '../../core/interfaces/auth';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthorizationComponent implements OnInit {
-  public authForm!: FormGroup<IAuthForm>;
+  public authForm!: FormGroup<IAuthorizationForm>;
 
   constructor(
     private _formBuilder: NonNullableFormBuilder,
@@ -30,7 +30,7 @@ export class AuthorizationComponent implements OnInit {
   }
 
   private _initForm(): void {
-    this.authForm = this._formBuilder.group<IAuthForm>({
+    this.authForm = this._formBuilder.group<IAuthorizationForm>({
       email: this._formBuilder.control({
         value: '',
         disabled: false,

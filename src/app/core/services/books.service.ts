@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { IBook, IRequestBook } from '../interfaces/book';
 import { IResponse } from '../interfaces/response';
@@ -57,22 +57,21 @@ export class BooksService {
     return outputReq;
   }
 
-  public getBooksData(): Observable<IResponse<IBook>> {
-    return this._http.get<IResponse<IBook>>(`${this._booksUrl}/`);
+  public getBooks(inputParams?: IRequestBook): Observable<IResponse<IBook>> {
+    if (!inputParams) {
+      return this._http.get<IResponse<IBook>>(`${this._booksUrl}/`);
+    }
+
+    const correctParams = BooksService.convertRequest(inputParams);
+
+    const params: HttpParams = new HttpParams({
+      fromObject: correctParams as { [s: string]: string | number } },
+    );
+
+    return this._http.get<IResponse<IBook>>(`${this._booksUrl}/`, { params });
   }
 
-  public getPaginatedBooks(pageIndex: number, pageSize: number): Observable<IBook[]> {
-    const pageNumber: number = pageIndex + 1;
-    const params = {
-      page: pageNumber,
-      page_size: pageSize,
-    };
-
-    return this._http.get<IResponse<IBook>>(`${this._booksUrl}/`, { params })
-      .pipe(map((response: IResponse<IBook>) => response.result));
-  }
-
-  public getBook(id: string): Observable<IBook> {
+  public getCurrentBook(id: string): Observable<IBook> {
     return this._http.get<IBook>(`${this._booksUrl}/${id}/`);
   }
 
@@ -87,15 +86,5 @@ export class BooksService {
     };
 
     return this._http.post<IBook>(`${this._booksUrl}/`, correctBook);
-  }
-
-  public getFilteredBooks(inputParams: IRequestBook): Observable<IResponse<IBook>> {
-    const correctParams = BooksService.convertRequest(inputParams);
-
-    const params: HttpParams = new HttpParams({
-      fromObject: correctParams as { [s: string]: string | number } },
-    );
-
-    return this._http.get<IResponse<IBook>>(`${this._booksUrl}/`, { params });
   }
 }

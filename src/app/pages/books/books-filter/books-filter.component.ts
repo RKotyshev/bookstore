@@ -1,15 +1,15 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
   OnChanges,
-  OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
 
-import { Observable, Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+import { Observable, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 
 import { AuthorsService } from '../../../core/services/authors.service';
 import { GenresService } from '../../../core/services/genres.service';
@@ -28,8 +28,9 @@ import { DEFAULT_FILTER_TYPE, FilterSortTypeList } from '../constants/filter';
   selector: 'app-books-filter',
   templateUrl: './books-filter.component.html',
   styleUrl: './books-filter.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BooksFilterComponent implements OnInit, OnDestroy, OnChanges {
+export class BooksFilterComponent implements OnInit, OnChanges {
   @Input()
   public inputFilterValues!: IRequestBook | null;
 
@@ -41,8 +42,6 @@ export class BooksFilterComponent implements OnInit, OnDestroy, OnChanges {
   public genres$!: Observable<IGenre[]>;
   public sortList: IFilterSortType[] = FilterSortTypeList;
   public readonly sortDirection = SortDirection;
-  private _destroyed = new Subject<void>;
-
 
   constructor(
     private _formBuilder: NonNullableFormBuilder,
@@ -68,11 +67,6 @@ export class BooksFilterComponent implements OnInit, OnDestroy, OnChanges {
     );
 
     this.genres$ = this._genresService.getPaginatedGenres(0, 100);
-  }
-
-  public ngOnDestroy(): void {
-    this._destroyed.next();
-    this._destroyed.complete();
   }
 
   public onSubmit(): void {

@@ -33,7 +33,7 @@ export class CartComponent implements OnInit, OnDestroy {
       page: pageIndex + 1,
       page_size: pageSize,
     };
-    this._bookService.getFilteredBooks(params).pipe(
+    this._bookService.getBooks(params).pipe(
       map((response: IResponse<IBook>) => response.result),
       takeUntil(this._destroyed),
     )

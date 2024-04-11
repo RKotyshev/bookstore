@@ -42,7 +42,7 @@ export class NoveltiesComponent implements OnInit, OnDestroy {
   }
 
   private _getBooks(): void {
-    const books$ = this.booksService.getBooksData()
+    const books$ = this.booksService.getBooks()
       .pipe(map((response: IResponse<IBook>) => response.result));
 
     books$.pipe(

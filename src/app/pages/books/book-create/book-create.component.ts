@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -9,11 +15,11 @@ import {
 import { Router } from '@angular/router';
 
 import {
-  EMPTY,
   Observable,
   Subject,
   catchError,
   map,
+  of,
   switchMap,
   takeUntil,
   zip,
@@ -46,6 +52,7 @@ const DEFAULT_AUTHORS_PAGE_SIZE = 100;
   selector: 'app-book-create',
   templateUrl: './book-create.component.html',
   styleUrl: './book-create.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BookCreateComponent implements OnInit, OnDestroy {
   public submitted: boolean = false;
@@ -77,6 +84,7 @@ export class BookCreateComponent implements OnInit, OnDestroy {
     private _booksService: BooksService,
     private _router: Router,
     private _storage: FirebaseStorageService,
+    private _cdr: ChangeDetectorRef,
   ) { }
 
   public get inStockControl(): FormControl<number> {
@@ -143,10 +151,12 @@ export class BookCreateComponent implements OnInit, OnDestroy {
 
     this.submitting = true;
 
+    console.log(this.coverControl.value?.length);
+
     const coversUpload$ = this.coverControl.value?.length ? 
       zip(this.coverControl.value.map((current: IInputItem) => {
         return this._storage.uploadItems(current);
-      })) : EMPTY;
+      })) : of(['']);
 
     coversUpload$.pipe(
       switchMap((coversLinks: string[]) => {
@@ -154,22 +164,27 @@ export class BookCreateComponent implements OnInit, OnDestroy {
           ...this.bookForm.getRawValue(),
           cover: coversLinks,
         };
-
+        
         delete newBook.cover;
 
         return this._booksService.postBook(newBook as IBook);
       }),
       catchError(handleError),
       takeUntil(this._destroyed),
-    ).subscribe({
-      next: () => {
-        this.submitted = true;
-        this.submitError = false;
-      },
-      error: () => {
-        this.submitError = true;
-      },
-    });
+    )
+      .subscribe({
+        next: () => {
+          this.submitted = true;
+          this.submitError = false;
+
+          this._cdr.detectChanges();
+        },
+        error: () => {
+          this.submitError = true;
+
+          this._cdr.detectChanges();
+        },
+      });
   }
 
   public onRedirect(): void {
