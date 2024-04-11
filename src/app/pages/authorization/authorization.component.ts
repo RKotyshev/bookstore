@@ -6,11 +6,11 @@ import { IAuthForm } from '../../core/interfaces/auth';
 
 @Component({
   selector: 'app-auth',
-  templateUrl: './auth.component.html',
-  styleUrl: './auth.component.scss',
+  templateUrl: './authorization.component.html',
+  styleUrl: './authorization.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AuthComponent implements OnInit {
+export class AuthorizationComponent implements OnInit {
   public authForm!: FormGroup<IAuthForm>;
 
   constructor(

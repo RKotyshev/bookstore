@@ -6,13 +6,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 
-import { AuthComponent } from './auth.component';
-import { AuthRoutingModule } from './auth-routing.module';
+import { AuthorizationComponent } from './authorization.component';
+import { AuthorizationRoutingModule } from './authorization-routing.module';
 
 
 @NgModule({
   declarations: [
-    AuthComponent,
+    AuthorizationComponent,
   ],
   imports: [
     CommonModule,
@@ -20,7 +20,7 @@ import { AuthRoutingModule } from './auth-routing.module';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    AuthRoutingModule,
+    AuthorizationRoutingModule,
   ],
 })
-export class AuthModule { }
+export class AuthorizationModule { }
