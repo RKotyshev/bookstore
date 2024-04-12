@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 
 import { HeaderComponent } from './header/header.component';
 import { MobileMenuService } from './core/services/mobile-menu.service';
@@ -8,6 +8,7 @@ import { MobileMenuService } from './core/services/mobile-menu.service';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   @ViewChild(HeaderComponent)
@@ -23,5 +24,4 @@ export class AppComponent {
     this.isMenuOpen = this._menuService.getMenuStatus();
     this.headerComponent.closeMenu();
   }
-
 }

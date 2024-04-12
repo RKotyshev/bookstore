@@ -14,7 +14,7 @@ export class CartService {
   constructor() { }
 
   public getCart(): Observable<ICartResponse> {
-    return interval(500).pipe(
+    return interval(300).pipe(
       take(1),
       map(() => {
         const cartItemsCount = 5;
