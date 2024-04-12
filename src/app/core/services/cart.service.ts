@@ -19,6 +19,7 @@ export class CartService {
       map(() => {
         const cartItemsCount = 5;
         const mockCartItems: ICartItem[] = [];
+        
         for (let i = 0; i < cartItemsCount; i++) {
           const cartItemNumber = i + 1;
           const mockItem: ICartItem = {

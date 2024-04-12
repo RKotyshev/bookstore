@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { HeaderComponent } from './header/header.component';
 import { MobileMenuService } from './core/services/mobile-menu.service';
 
 
@@ -11,17 +10,11 @@ import { MobileMenuService } from './core/services/mobile-menu.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  @ViewChild(HeaderComponent)
-  public headerComponent!: HeaderComponent;
-  
   public title = 'bookstore-initial';
-  public isMenuOpen: boolean = false;
 
   constructor(private _menuService: MobileMenuService) { }
 
   public closeMenu(): void {
     this._menuService.closeMenu();
-    this.isMenuOpen = this._menuService.getMenuStatus();
-    this.headerComponent.closeMenu();
   }
 }

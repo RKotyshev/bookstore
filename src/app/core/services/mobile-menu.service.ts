@@ -1,21 +1,23 @@
 import { Injectable } from '@angular/core';
 
+import { BehaviorSubject, Observable } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class MobileMenuService {
-  private _isMenuOpen: boolean = false;
+  private _menuStatusChanged = new BehaviorSubject(false);
+
+  public get menuStatus$(): Observable<boolean> {
+    return this._menuStatusChanged.asObservable();
+  }
 
   public openMenu(): void {
-    this._isMenuOpen = true;
+    this._menuStatusChanged.next(true);
   }
 
   public closeMenu(): void {
-    this._isMenuOpen = false;
-  }
-
-  public getMenuStatus(): boolean {
-    return this._isMenuOpen;
+    this._menuStatusChanged.next(false);
   }
 }

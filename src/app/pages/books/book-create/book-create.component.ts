@@ -151,8 +151,6 @@ export class BookCreateComponent implements OnInit, OnDestroy {
 
     this.submitting = true;
 
-    console.log(this.coverControl.value?.length);
-
     const coversUpload$ = this.coverControl.value?.length ? 
       zip(this.coverControl.value.map((current: IInputItem) => {
         return this._storage.uploadItems(current);
