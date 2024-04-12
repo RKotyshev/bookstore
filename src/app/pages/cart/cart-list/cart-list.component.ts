@@ -1,14 +1,15 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
-import { IBook } from '../../../core/interfaces/book';
+import { ICartItem } from '../../../core/interfaces/cart';
 
 
 @Component({
   selector: 'app-cart-list',
   templateUrl: './cart-list.component.html',
   styleUrl: './cart-list.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CartListComponent {
   @Input()
-  public cartList: IBook[] = [];
+  public cartItemsList: ICartItem[] = [];
 }

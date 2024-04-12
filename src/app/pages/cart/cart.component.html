@@ -1,8 +1,11 @@
-<app-cart-list [cartList]="currentCartItems"></app-cart-list>
-<section class="purchase">
-  <h3>
-    Personal discount: {{ 24 | currency }}<br/>
-    Total price: {{ 1299 | currency }}
-  </h3>
-  <button mat-fab extended color="primary" class="pay-button">Pay</button>
-</section>
+<ng-container *ngIf="cartResponse$ | async as response">
+  <app-cart-list [cartItemsList]="response.products"></app-cart-list>
+
+  <section class="purchase">
+    <h3>
+      Personal discount: {{ response.persons_discounted_price| currency }}<br/>
+      Total price: {{ response.persons_discounted_price | currency }}
+    </h3>
+    <button mat-fab extended color="primary" class="pay-button">Pay</button>
+  </section>
+</ng-container>
