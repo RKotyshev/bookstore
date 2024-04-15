@@ -62,7 +62,7 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   public bookForm!: FormGroup<ICreateBookForm>;
   public authorsParamsState: IRequestAuthors = {
     page: DEFAULT_AUTHORS_PAGE_INDEX,
-    page_size: DEFAULT_AUTHORS_PAGE_SIZE,
+    pageSize: DEFAULT_AUTHORS_PAGE_SIZE,
   };
   public genres$: Observable<IGenre[]> = this._genresService.getPaginatedGenres(0, 100);
   public authors$: Observable<IAuthor[]> = this._authorsService.getAuthors(this.authorsParamsState)
@@ -88,7 +88,7 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   ) { }
 
   public get inStockControl(): FormControl<number> {
-    return this.bookForm.get('in_stock') as FormControl;
+    return this.bookForm.get('inStock') as FormControl;
   }
 
   public get titleControl(): FormControl<string> {
@@ -112,11 +112,11 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   }
   
   public get releaseDateControl(): FormControl<string> {
-    return this.bookForm.get('release_date') as FormControl;
+    return this.bookForm.get('releaseDate') as FormControl;
   }
   
   public get writingDateControl(): FormControl<string> {
-    return this.bookForm.get('writing_date') as FormControl;
+    return this.bookForm.get('writingDate') as FormControl;
   }
 
   public get coverControl(): FormControl<IInputItem[] | null> {
@@ -209,7 +209,7 @@ export class BookCreateComponent implements OnInit, OnDestroy {
 
   private _initForm(): void {
     this.bookForm = this._formBuilder.group<ICreateBookForm>({
-      in_stock: this._formBuilder.control({
+      inStock: this._formBuilder.control({
         value: 0,
         disabled: false,
       }, {
@@ -245,13 +245,13 @@ export class BookCreateComponent implements OnInit, OnDestroy {
       }, {
         validators: [Validators.required],
       }),
-      release_date: this._formBuilder.control({
+      releaseDate: this._formBuilder.control({
         value: '',
         disabled: false,
       }, {
         validators: [Validators.required],
       }),
-      writing_date: this._formBuilder.control({
+      writingDate: this._formBuilder.control({
         value: '',
         disabled: false,
       }, {
@@ -263,6 +263,6 @@ export class BookCreateComponent implements OnInit, OnDestroy {
       }, {
         validators: [maxFileSize(this.maxFileSize), acceptFileType(this.fileTypes)],
       }),
-    }, { validators: datesCompareValidator('writing_date', 'release_date') });
+    }, { validators: datesCompareValidator('writingDate', 'releaseDate') });
   }
 }

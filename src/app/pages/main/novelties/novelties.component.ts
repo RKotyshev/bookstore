@@ -49,7 +49,7 @@ export class NoveltiesComponent implements OnInit {
         
         const params: IRequestBook = {
           page: 0,
-          page_size: booksCount,
+          pageSize: booksCount,
           direction: SortDirection.Ascending,
           filterType: DEFAULT_FILTER_TYPE,
         };

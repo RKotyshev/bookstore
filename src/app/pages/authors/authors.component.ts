@@ -22,7 +22,7 @@ const DEFAULT_PAGE_SIZE = 5;
 export class AuthorsComponent implements OnInit {
   public paramsState: IRequestAuthors = {
     page: DEFAULT_PAGE_INDEX,
-    page_size: DEFAULT_PAGE_SIZE,
+    pageSize: DEFAULT_PAGE_SIZE,
   };
   public authorsResponse$!: Observable<IResponse<IAuthor>>;
   public paginatorInitialPageSize = DEFAULT_PAGE_SIZE;
@@ -43,7 +43,7 @@ export class AuthorsComponent implements OnInit {
   public paginatorUpdate(event: PageEvent): void {
     this.paramsState = {
       page: event.pageIndex,
-      page_size: event.pageSize,
+      pageSize: event.pageSize,
     };
 
     this._paramsUpdated.next(this.paramsState);

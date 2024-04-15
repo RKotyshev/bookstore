@@ -5,15 +5,15 @@ export interface IResponse<T> {
     next: string,
     previous: string | null,
   },
-  total_items: number,
-  total_pages: number,
+  totalItems: number,
+  totalPages: number,
   page: number,
-  page_size: number,
+  pageSize: number,
   result: T[],
 }
 
 export interface ICartResponse {
   total: number,
-  persons_discounted_price: number,
+  personsDiscountedPrice: number,
   products: ICartItem[],
 }

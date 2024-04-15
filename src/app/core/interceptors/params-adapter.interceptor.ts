@@ -22,28 +22,24 @@ export class ParamsAdapterInterceptor implements HttpInterceptor {
     }
 
     const transformedOutputParams = new HttpParams({
-      fromObject: this.transformParamsOrBody(newOutputParams, 'toClient') as { 
-        [s: string]: string | number 
+      fromObject: this.transformParamsOrBody(newOutputParams, 'toServer') as { 
+        [s: string]: string | number,
       },
     });
 
-    const newOutputBody: object | null = req.body ? { ...req.body } : null;
+    const newOutputBody: object | null = req.body ? structuredClone(req.body) : null;
     const transformedOutputBody: object | null = newOutputBody ? 
-      this.transformParamsOrBody(newOutputBody, 'toClient') : null;
+      this.transformParamsOrBody(newOutputBody, 'toServer') : null;
 
     const cloneReq = req.clone({
       params: transformedOutputParams,
       body: transformedOutputBody,
     });
 
-    console.log('Output: ---------');
-    console.log(cloneReq);
-    console.log('-----------------');
-
-    return next.handle(req).pipe(
+    return next.handle(cloneReq).pipe(
       map((event: HttpEvent<unknown>) => {
         if (event instanceof HttpResponse) {
-          const newInputBody: object | null = event.body ? { ...event.body } : null;
+          const newInputBody: object | null = event.body ? structuredClone(event.body) : null;
 
           const transformedInputBody: object | null = newInputBody ? 
             this.transformParamsOrBody(newInputBody, 'toClient') : null;
@@ -52,9 +48,7 @@ export class ParamsAdapterInterceptor implements HttpInterceptor {
             body: transformedInputBody,
           });
 
-          console.log('Input: ---------');
-          console.log(cloneEvent);
-          console.log('-----------------');
+          return cloneEvent;
         }
 
         return event;
@@ -115,8 +109,8 @@ export class ParamsAdapterInterceptor implements HttpInterceptor {
 
     while (/[A-Z]/.test(key)) {
       const match = key.match(/[A-Z]/);
-      key = `${key.slice(0, match?.index)} _  ${match![0]
-        .toLowerCase()} ${key.slice(match!.index! + 1)}`;
+      const lowerLetter = match![0].toLowerCase();
+      key = `${key.slice(0, match?.index)}_${lowerLetter}${key.slice(match!.index! + 1)}`;
     }
     
     return key;

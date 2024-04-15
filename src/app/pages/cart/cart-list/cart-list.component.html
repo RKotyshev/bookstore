@@ -4,13 +4,13 @@
   <mat-card *ngFor="let item of cartItemsList" class="cart-item">
     <mat-list class="item-info">
       <span matListItem>
-        Book number: {{ item.book_id }}<br>
-        {{ item.new_price | currency }}</span>
+        Book number: {{ item.bookId }}<br>
+        {{ item.newPrice | currency }}</span>
       <span matListItemLine>Amount: {{ item.amount }}</span>
     </mat-list>
     <mat-list>
-      <span matListItem>Order time: {{ item.orders_time | date }}</span>
-      <span matListItemLine>Warranty days: {{ item.warranty_days }}</span>
+      <span matListItem>Order time: {{ item.ordersTime | date }}</span>
+      <span matListItemLine>Warranty days: {{ item.warrantyDays }}</span>
     </mat-list>
     <mat-list>
       <span matListItem>City: {{ item.city }}</span>

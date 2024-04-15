@@ -48,12 +48,12 @@
           
           <mat-form-field>
             <mat-label>Price from</mat-label>
-            <input matInput formControlName="price_gte" type="number">
+            <input matInput formControlName="priceGte" type="number">
           </mat-form-field>
       
           <mat-form-field>
             <mat-label>Price to</mat-label>
-            <input matInput formControlName="price_lte" type="number">
+            <input matInput formControlName="priceLte" type="number">
           </mat-form-field>
         </section>
 
@@ -63,8 +63,8 @@
           <mat-form-field>
             <mat-label>Writing dates range</mat-label>
             <mat-date-range-input [rangePicker]="writingRangePicker">
-              <input matStartDate formControlName="writing_date_gte" placeholder="From">
-              <input matEndDate formControlName="writing_date_lte" placeholder="Till">
+              <input matStartDate formControlName="writingDateGte" placeholder="From">
+              <input matEndDate formControlName="writingDateLte" placeholder="Till">
             </mat-date-range-input>
             <mat-datepicker-toggle matIconSuffix [for]="writingRangePicker"></mat-datepicker-toggle>
             <mat-date-range-picker #writingRangePicker></mat-date-range-picker>
@@ -74,8 +74,8 @@
           <mat-form-field>
             <mat-label>Release dates range</mat-label>
             <mat-date-range-input [rangePicker]="releaseRangePicker">
-              <input matStartDate formControlName="release_date_gte" placeholder="From">
-              <input matEndDate formControlName="release_date_lte" placeholder="Till">
+              <input matStartDate formControlName="releaseDateGte" placeholder="From">
+              <input matEndDate formControlName="releaseDateLte" placeholder="Till">
             </mat-date-range-input>
             <mat-datepicker-toggle matIconSuffix [for]="releaseRangePicker"></mat-datepicker-toggle>
             <mat-date-range-picker #releaseRangePicker></mat-date-range-picker>

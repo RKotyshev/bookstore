@@ -9,6 +9,6 @@ import { IAuthor } from '../interfaces/author';
 })
 export class FullnamePipe implements PipeTransform {
   public transform(author: IAuthor): string {
-    return `${author.first_name} ${author.second_name}`;
+    return `${author.firstName} ${author.secondName}`;
   }
 }

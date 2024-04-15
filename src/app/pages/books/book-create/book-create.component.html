@@ -45,7 +45,7 @@
         <mat-label>Writing date</mat-label>
         <input 
           matInput
-          formControlName="writing_date"
+          formControlName="writingDate"
           [matDatepicker]="writingPicker"
           [max]="releaseDateControl.value"
         >
@@ -59,7 +59,7 @@
         <mat-label>Release date</mat-label>
         <input 
           matInput
-          formControlName="release_date"
+          formControlName="releaseDate"
           [matDatepicker]="releasePicker"
           [min]="writingDateControl.value"
         >
@@ -73,7 +73,7 @@
     <div>
       <mat-form-field>
         <mat-label>In stock</mat-label>
-        <input matInput formControlName="in_stock" type="number" min="0">
+        <input matInput formControlName="inStock" type="number" min="0">
         <mat-error *ngIf="inStockControl.invalid">{{ getErrorMessage(inStockControl) }}</mat-error>
       </mat-form-field>
 

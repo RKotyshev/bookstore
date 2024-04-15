@@ -2,7 +2,7 @@
   <app-authors-list [authorsList]="response.result"></app-authors-list>
   
   <mat-paginator 
-    [length]="response.total_items"
+    [length]="response.totalItems"
     [pageSize]="paginatorInitialPageSize"
     [pageSizeOptions]="pageSizes"
     (page)="paginatorUpdate($event)"

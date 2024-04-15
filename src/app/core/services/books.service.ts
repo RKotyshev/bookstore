@@ -22,26 +22,26 @@ export class BooksService {
       ...inputReq,
     };
     
-    const correctWritingDateGte = outputReq.writing_date_gte ? 
-      formatDate(outputReq.writing_date_gte) : 
+    const correctWritingDateGte = outputReq.writingDateGte ? 
+      formatDate(outputReq.writingDateGte) : 
       null;
-    const correctWritingDateLte = outputReq.writing_date_lte ? 
-      formatDate(outputReq.writing_date_lte) : 
+    const correctWritingDateLte = outputReq.writingDateLte ? 
+      formatDate(outputReq.writingDateLte) : 
       null;
-    const correctReleaseDateGte = outputReq.release_date_gte ? 
-      formatDate(outputReq.release_date_gte) : 
+    const correctReleaseDateGte = outputReq.releaseDateGte ? 
+      formatDate(outputReq.releaseDateGte) : 
       null;
-    const correctReleaseDateLte = outputReq.release_date_lte ? 
-      formatDate(outputReq.release_date_lte) : 
+    const correctReleaseDateLte = outputReq.releaseDateLte ? 
+      formatDate(outputReq.releaseDateLte) : 
       null;
     const correctPage = +outputReq.page! + 1;
     const direction = outputReq.direction === SortDirection.Ascending ? '' : '-';
     const ordering = direction + outputReq.filterType;
 
-    outputReq.writing_date_gte = correctWritingDateGte;
-    outputReq.writing_date_lte = correctWritingDateLte;
-    outputReq.release_date_gte = correctReleaseDateGte;
-    outputReq.release_date_lte = correctReleaseDateLte;
+    outputReq.writingDateGte = correctWritingDateGte;
+    outputReq.writingDateLte = correctWritingDateLte;
+    outputReq.releaseDateGte = correctReleaseDateGte;
+    outputReq.releaseDateLte = correctReleaseDateLte;
     outputReq.page = correctPage;
     outputReq.ordering = ordering;
 
@@ -76,13 +76,13 @@ export class BooksService {
   }
 
   public postBook(book: IBook): Observable<IBook> {
-    const correctReleaseDate = formatDate(book.release_date);
-    const correctWritingDate = formatDate(book.writing_date);
+    const correctReleaseDate = formatDate(book.releaseDate);
+    const correctWritingDate = formatDate(book.writingDate);
 
     const correctBook = {
       ...book,
-      release_date: correctReleaseDate,
-      writing_date: correctWritingDate,
+      releaseDate: correctReleaseDate,
+      writingDate: correctWritingDate,
     };
 
     return this._http.post<IBook>(`${this._booksUrl}/`, correctBook);
