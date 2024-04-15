@@ -14,7 +14,6 @@ import { Observable, map } from 'rxjs';
 @Injectable()
 export class ParamsAdapterInterceptor implements HttpInterceptor {
   public intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-
     const newOutputParams: { [x: string]: unknown } = {};
 
     for (const key of req.params.keys()) {
