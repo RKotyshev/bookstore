@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 
 import { Observable, filter, forkJoin, map, shareReplay, switchMap } from 'rxjs';
@@ -15,15 +15,15 @@ import { IGenre } from '../../../core/interfaces/genre';
   selector: 'app-book-detail',
   templateUrl: './book-detail.component.html',
   styleUrl: './book-detail.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BookDetailComponent {
-  public count = 5;
   public book$: Observable<IBook> = this._route.paramMap.pipe(
-    switchMap((paramMap: ParamMap) => this._booksService.getBook(paramMap.get('id')!)),
+    switchMap((paramMap: ParamMap) => this._booksService.getCurrentBook(paramMap.get('id')!)),
     shareReplay({ bufferSize: 1, refCount: true }),
   );
   public authors$: Observable<IAuthor[]> = this.book$.pipe(
-    map((book: IBook) => book.author.map((id: number) => this._authorService.getAuthor(id))),
+    map((book: IBook) => book.author.map((id: number) => this._authorService.getCurrentAuthor(id))),
     filter((authorReqs: Observable<IAuthor>[]) => authorReqs.length > 0),
     switchMap((authorReqs: Observable<IAuthor>[]) => {
 

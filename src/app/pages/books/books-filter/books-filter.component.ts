@@ -1,15 +1,15 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
   OnChanges,
-  OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
 
-import { Observable, Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+import { Observable, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 
 import { AuthorsService } from '../../../core/services/authors.service';
 import { GenresService } from '../../../core/services/genres.service';
@@ -28,8 +28,9 @@ import { DEFAULT_FILTER_TYPE, FilterSortTypeList } from '../constants/filter';
   selector: 'app-books-filter',
   templateUrl: './books-filter.component.html',
   styleUrl: './books-filter.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BooksFilterComponent implements OnInit, OnDestroy, OnChanges {
+export class BooksFilterComponent implements OnInit, OnChanges {
   @Input()
   public inputFilterValues!: IRequestBook | null;
 
@@ -41,8 +42,6 @@ export class BooksFilterComponent implements OnInit, OnDestroy, OnChanges {
   public genres$!: Observable<IGenre[]>;
   public sortList: IFilterSortType[] = FilterSortTypeList;
   public readonly sortDirection = SortDirection;
-  private _destroyed = new Subject<void>;
-
 
   constructor(
     private _formBuilder: NonNullableFormBuilder,
@@ -68,11 +67,6 @@ export class BooksFilterComponent implements OnInit, OnDestroy, OnChanges {
     );
 
     this.genres$ = this._genresService.getPaginatedGenres(0, 100);
-  }
-
-  public ngOnDestroy(): void {
-    this._destroyed.next();
-    this._destroyed.complete();
   }
 
   public onSubmit(): void {
@@ -101,27 +95,27 @@ export class BooksFilterComponent implements OnInit, OnDestroy, OnChanges {
         value: null,
         disabled: false,
       }),
-      price_lte: this._formBuilder.control({
+      priceLte: this._formBuilder.control({
         value: null,
         disabled: false,
       }),
-      price_gte: this._formBuilder.control({
+      priceGte: this._formBuilder.control({
         value: null,
         disabled: false,
       }),
-      writing_date_gte: this._formBuilder.control({
+      writingDateGte: this._formBuilder.control({
         value: null,
         disabled: false,
       }),
-      writing_date_lte: this._formBuilder.control({
+      writingDateLte: this._formBuilder.control({
         value: null,
         disabled: false,
       }),
-      release_date_gte: this._formBuilder.control({
+      releaseDateGte: this._formBuilder.control({
         value: null,
         disabled: false,
       }),
-      release_date_lte: this._formBuilder.control({
+      releaseDateLte: this._formBuilder.control({
         value: null,
         disabled: false,
       }),
@@ -141,19 +135,19 @@ export class BooksFilterComponent implements OnInit, OnDestroy, OnChanges {
       title: this.inputFilterValues?.title ?? null,
       author: this.inputFilterValues?.author ?? null,
       genre: this.inputFilterValues?.genre ?? null,
-      price_lte: this.inputFilterValues?.price_lte ?? null,
-      price_gte: this.inputFilterValues?.price_gte ?? null,
-      writing_date_lte: this.inputFilterValues?.writing_date_lte ?
-        formatDate(this.inputFilterValues?.writing_date_lte) : 
+      priceLte: this.inputFilterValues?.priceLte ?? null,
+      priceGte: this.inputFilterValues?.priceGte ?? null,
+      writingDateLte: this.inputFilterValues?.writingDateLte ?
+        formatDate(this.inputFilterValues?.writingDateLte) : 
         null,
-      writing_date_gte: this.inputFilterValues?.writing_date_gte ?
-        formatDate(this.inputFilterValues?.writing_date_gte) : 
+      writingDateGte: this.inputFilterValues?.writingDateGte ?
+        formatDate(this.inputFilterValues?.writingDateGte) : 
         null,
-      release_date_lte: this.inputFilterValues?.release_date_lte ?
-        formatDate(this.inputFilterValues?.release_date_lte) :
+      releaseDateLte: this.inputFilterValues?.releaseDateLte ?
+        formatDate(this.inputFilterValues?.releaseDateLte) :
         null,
-      release_date_gte: this.inputFilterValues?.release_date_gte ?
-        formatDate(this.inputFilterValues?.release_date_gte) :
+      releaseDateGte: this.inputFilterValues?.releaseDateGte ?
+        formatDate(this.inputFilterValues?.releaseDateGte) :
         null,
       filterType: this.inputFilterValues?.filterType ?? DEFAULT_FILTER_TYPE,
       direction: this.inputFilterValues?.direction ?? this.sortDirection.Ascending,

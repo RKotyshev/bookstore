@@ -1,20 +1,20 @@
 <h2>Cart</h2>
 
 <div class="cart-list">
-  <mat-card *ngFor="let item of cartList" class="cart-item">
+  <mat-card *ngFor="let item of cartItemsList" class="cart-item">
     <mat-list class="item-info">
       <span matListItem>
-        {{ item.title }}<br>
-        {{ item.price | currency }}</span>
-      <span matListItemLine>Amount: {{ item.in_stock }}</span>
+        Book number: {{ item.bookId }}<br>
+        {{ item.newPrice | currency }}</span>
+      <span matListItemLine>Amount: {{ item.amount }}</span>
     </mat-list>
-    <mat-list class="date-info">
-      <span matListItem>Order time: {{ item.writing_date | date }}</span>
-      <span matListItemLine>Warranty days: {{ item.release_date | date:'dd' }}</span>
+    <mat-list>
+      <span matListItem>Order time: {{ item.ordersTime | date }}</span>
+      <span matListItemLine>Warranty days: {{ item.warrantyDays }}</span>
     </mat-list>
-    <mat-list class="delivery-info">
-      <span matListItem>City: item.city</span>
-      <span matListItemLine>Address: item.address</span>
+    <mat-list>
+      <span matListItem>City: {{ item.city }}</span>
+      <span matListItemLine>Address: {{ item.address }}</span>
     </mat-list>
   </mat-card>
 </div>

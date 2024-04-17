@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   Input,
   OnInit,
@@ -36,6 +37,7 @@ import { filterByHash, getHash } from './functions/filter-by-hash';
     useExisting: InputFileComponent,
     multi: true,
   }],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputFileComponent implements ControlValueAccessor, OnInit {
   @Input() 

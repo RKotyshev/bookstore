@@ -1,5 +1,10 @@
 export interface IAuthor {
   id: number,
-  first_name: string,
-  second_name: string,
+  firstName: string,
+  secondName: string,
+}
+
+export interface IRequestAuthors {
+  page: number,
+  pageSize: number,
 }

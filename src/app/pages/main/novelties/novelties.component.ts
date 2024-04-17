@@ -1,73 +1,62 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 
-import { Subject, takeUntil, map, switchMap } from 'rxjs';
+import { map, switchMap, Observable } from 'rxjs';
 
-import { AppBreakpoints, DisplayNameMap } from '../../../utils/constants/layout';
+import { IBreakpointParams, layoutMatcher } from '../constants/layout';
 import { BooksService } from '../../../core/services/books.service';
-import { IBook } from '../../../core/interfaces/book';
+import { IBook, IRequestBook } from '../../../core/interfaces/book';
 import { IResponse } from '../../../core/interfaces/response';
+import { SortDirection } from '../../../core/interfaces/sorting';
+
+const DEFAULT_FILTER_TYPE = 'id';
 
 
 @Component({
   selector: 'app-novelties',
   templateUrl: './novelties.component.html',
   styleUrl: './novelties.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NoveltiesComponent implements OnInit, OnDestroy {
-  public noveltiesList!: IBook[];
-  public currentScreenSize: string = 'unknown';
-  private _booksList!: IBook[];
-  private _noveltiesCountMap = new Map([
-    ['isMVertical', 4],
-    ['isMHorizontal', 6],
-    ['isTablet', 8],
-    ['isDesktop', 10],
-  ]);
-  private _destroyed = new Subject<void>();
+export class NoveltiesComponent implements OnInit {
+  public books$!: Observable<IBook[]>;
 
   constructor(
-    public breakpointObserver: BreakpointObserver,
-    public booksService: BooksService,
+    private _breakpointObserver: BreakpointObserver,
+    private _booksService: BooksService,
   ) { }
 
   public ngOnInit(): void {
     this._getBooks();
   }
 
-  public ngOnDestroy(): void {
-    this._destroyed.next();
-    this._destroyed.complete();
-  }
-
   private _getBooks(): void {
-    const books$ = this.booksService.getBooksData()
-      .pipe(map((response: IResponse<IBook>) => response.result));
-
-    books$.pipe(
-      switchMap((books: IBook[]) => {
-        this._booksList = books;
-        this.noveltiesList = this._booksList
-          .slice(0, (this._noveltiesCountMap.get(this.currentScreenSize)));
-
-        return this.breakpointObserver.observe([
-          AppBreakpoints.MVertical,
-          AppBreakpoints.MHorizontal,
-          AppBreakpoints.Tablet,
-          AppBreakpoints.Desktop,
-        ]);
-      }),
-      takeUntil(this._destroyed),
-    ).subscribe((result: BreakpointState) => {
-      for (const query of Object.keys(result.breakpoints)) {
-        if (result.breakpoints[query]) {
-          this.currentScreenSize = DisplayNameMap.get(query) ?? 'unknown';
-          this.noveltiesList = this._booksList
-            .slice(0, (this._noveltiesCountMap.get(this.currentScreenSize)));
-        }
-      }
+    const observeOptions = layoutMatcher.map((breakpointParams: IBreakpointParams) => {
+      return breakpointParams.params;
     });
-  }
 
+    this.books$ = this._breakpointObserver.observe(observeOptions).pipe(
+      switchMap((result: BreakpointState) => {
+        const currentSize = Object.entries(result.breakpoints)
+          .find(([_, isMatched]: [string, boolean]) => {
+            return isMatched;
+          })![0];
+        
+        const booksCount = layoutMatcher.find((breakpointParams: IBreakpointParams) => {
+          return breakpointParams.params === currentSize;
+        })?.itemsCount;
+        
+        const params: IRequestBook = {
+          page: 0,
+          pageSize: booksCount,
+          direction: SortDirection.Ascending,
+          filterType: DEFAULT_FILTER_TYPE,
+        };
+
+        return this._booksService.getBooks(params);
+      }),
+      map((response: IResponse<IBook>) => response.result),
+    );
+  }
 }

@@ -13,9 +13,9 @@ const routes: Routes = [
     loadChildren: () => import('./pages/authors/authors.module')
       .then((m: typeof import('./pages/authors/authors.module')) => m.AuthorsModule),
   },
-  { path: 'auth', 
-    loadChildren: () => import('./pages/auth/auth.module')
-      .then((m: typeof import('./pages/auth/auth.module')) => m.AuthModule),
+  { path: 'authorization', 
+    loadChildren: () => import('./pages/authorization/authorization.module')
+      .then((m: typeof import('./pages/authorization/authorization.module')) => m.AuthorizationModule),
   },
   { path: 'cart',
     loadChildren: () => import('./pages/cart/cart.module')

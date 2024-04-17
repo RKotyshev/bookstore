@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -9,10 +15,12 @@ import {
 import { Router } from '@angular/router';
 
 import {
-  EMPTY,
   Observable,
   Subject,
   catchError,
+  finalize,
+  map,
+  of,
   switchMap,
   takeUntil,
   zip,
@@ -21,7 +29,7 @@ import {
 import { BooksService } from '../../../core/services/books.service';
 import { AuthorsService } from '../../../core/services/authors.service';
 import { GenresService } from '../../../core/services/genres.service';
-import { IAuthor } from '../../../core/interfaces/author';
+import { IAuthor, IRequestAuthors } from '../../../core/interfaces/author';
 import { IGenre } from '../../../core/interfaces/genre';
 import { IBook, IBookWithCover, ICreateBookForm } from '../../../core/interfaces/book';
 import { datesCompareValidator } from '../../../core/functions/validators/dates-compare-validators';
@@ -35,12 +43,17 @@ import {
   IInputItem,
 } from '../../../core/components/input-file/interfaces/input-item';
 import { FirebaseStorageService } from '../../../core/services/firebase-storage.service';
+import { IResponse } from '../../../core/interfaces/response';
+
+const DEFAULT_AUTHORS_PAGE_INDEX = 0;
+const DEFAULT_AUTHORS_PAGE_SIZE = 100;
 
 
 @Component({
   selector: 'app-book-create',
   templateUrl: './book-create.component.html',
   styleUrl: './book-create.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BookCreateComponent implements OnInit, OnDestroy {
   public submitted: boolean = false;
@@ -48,13 +61,21 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   public submitting: boolean = false;
   public redirectDelaySeconds: number = 9;
   public bookForm!: FormGroup<ICreateBookForm>;
+  public authorsParamsState: IRequestAuthors = {
+    page: DEFAULT_AUTHORS_PAGE_INDEX,
+    pageSize: DEFAULT_AUTHORS_PAGE_SIZE,
+  };
   public genres$: Observable<IGenre[]> = this._genresService.getPaginatedGenres(0, 100);
-  public authors$: Observable<IAuthor[]> = this._authorsService.getPaginatedAuthors(0, 100);
+  public authors$: Observable<IAuthor[]> = this._authorsService.getAuthors(this.authorsParamsState)
+    .pipe(
+      map((response: IResponse<IAuthor>) => response.result),
+    );
   public fileTypes: string[] = ['image/jpeg', 'image/png'];
   public maxFileSize: IDetailedItemSize = {
     size: 1,
     unit: 'MB',
   };
+
   private _destroyed = new Subject<void>;
   
   constructor(
@@ -64,10 +85,11 @@ export class BookCreateComponent implements OnInit, OnDestroy {
     private _booksService: BooksService,
     private _router: Router,
     private _storage: FirebaseStorageService,
+    private _cdr: ChangeDetectorRef,
   ) { }
 
   public get inStockControl(): FormControl<number> {
-    return this.bookForm.get('in_stock') as FormControl;
+    return this.bookForm.get('inStock') as FormControl;
   }
 
   public get titleControl(): FormControl<string> {
@@ -91,11 +113,11 @@ export class BookCreateComponent implements OnInit, OnDestroy {
   }
   
   public get releaseDateControl(): FormControl<string> {
-    return this.bookForm.get('release_date') as FormControl;
+    return this.bookForm.get('releaseDate') as FormControl;
   }
   
   public get writingDateControl(): FormControl<string> {
-    return this.bookForm.get('writing_date') as FormControl;
+    return this.bookForm.get('writingDate') as FormControl;
   }
 
   public get coverControl(): FormControl<IInputItem[] | null> {
@@ -133,7 +155,7 @@ export class BookCreateComponent implements OnInit, OnDestroy {
     const coversUpload$ = this.coverControl.value?.length ? 
       zip(this.coverControl.value.map((current: IInputItem) => {
         return this._storage.uploadItems(current);
-      })) : EMPTY;
+      })) : of(['']);
 
     coversUpload$.pipe(
       switchMap((coversLinks: string[]) => {
@@ -141,22 +163,26 @@ export class BookCreateComponent implements OnInit, OnDestroy {
           ...this.bookForm.getRawValue(),
           cover: coversLinks,
         };
-
+        
         delete newBook.cover;
 
         return this._booksService.postBook(newBook as IBook);
       }),
       catchError(handleError),
       takeUntil(this._destroyed),
-    ).subscribe({
-      next: () => {
-        this.submitted = true;
-        this.submitError = false;
-      },
-      error: () => {
-        this.submitError = true;
-      },
-    });
+      finalize(() => {
+        this._cdr.detectChanges();
+      }),
+    )
+      .subscribe({
+        next: () => {
+          this.submitted = true;
+          this.submitError = false;
+        },
+        error: () => {
+          this.submitError = true;
+        },
+      });
   }
 
   public onRedirect(): void {
@@ -183,7 +209,7 @@ export class BookCreateComponent implements OnInit, OnDestroy {
 
   private _initForm(): void {
     this.bookForm = this._formBuilder.group<ICreateBookForm>({
-      in_stock: this._formBuilder.control({
+      inStock: this._formBuilder.control({
         value: 0,
         disabled: false,
       }, {
@@ -219,13 +245,13 @@ export class BookCreateComponent implements OnInit, OnDestroy {
       }, {
         validators: [Validators.required],
       }),
-      release_date: this._formBuilder.control({
+      releaseDate: this._formBuilder.control({
         value: '',
         disabled: false,
       }, {
         validators: [Validators.required],
       }),
-      writing_date: this._formBuilder.control({
+      writingDate: this._formBuilder.control({
         value: '',
         disabled: false,
       }, {
@@ -237,6 +263,6 @@ export class BookCreateComponent implements OnInit, OnDestroy {
       }, {
         validators: [maxFileSize(this.maxFileSize), acceptFileType(this.fileTypes)],
       }),
-    }, { validators: datesCompareValidator('writing_date', 'release_date') });
+    }, { validators: datesCompareValidator('writingDate', 'releaseDate') });
   }
 }

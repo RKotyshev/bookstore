@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { IBook, IRequestBook } from '../interfaces/book';
 import { IResponse } from '../interfaces/response';
@@ -22,26 +22,26 @@ export class BooksService {
       ...inputReq,
     };
     
-    const correctWritingDateGte = outputReq.writing_date_gte ? 
-      formatDate(outputReq.writing_date_gte) : 
+    const correctWritingDateGte = outputReq.writingDateGte ? 
+      formatDate(outputReq.writingDateGte) : 
       null;
-    const correctWritingDateLte = outputReq.writing_date_lte ? 
-      formatDate(outputReq.writing_date_lte) : 
+    const correctWritingDateLte = outputReq.writingDateLte ? 
+      formatDate(outputReq.writingDateLte) : 
       null;
-    const correctReleaseDateGte = outputReq.release_date_gte ? 
-      formatDate(outputReq.release_date_gte) : 
+    const correctReleaseDateGte = outputReq.releaseDateGte ? 
+      formatDate(outputReq.releaseDateGte) : 
       null;
-    const correctReleaseDateLte = outputReq.release_date_lte ? 
-      formatDate(outputReq.release_date_lte) : 
+    const correctReleaseDateLte = outputReq.releaseDateLte ? 
+      formatDate(outputReq.releaseDateLte) : 
       null;
     const correctPage = +outputReq.page! + 1;
     const direction = outputReq.direction === SortDirection.Ascending ? '' : '-';
     const ordering = direction + outputReq.filterType;
 
-    outputReq.writing_date_gte = correctWritingDateGte;
-    outputReq.writing_date_lte = correctWritingDateLte;
-    outputReq.release_date_gte = correctReleaseDateGte;
-    outputReq.release_date_lte = correctReleaseDateLte;
+    outputReq.writingDateGte = correctWritingDateGte;
+    outputReq.writingDateLte = correctWritingDateLte;
+    outputReq.releaseDateGte = correctReleaseDateGte;
+    outputReq.releaseDateLte = correctReleaseDateLte;
     outputReq.page = correctPage;
     outputReq.ordering = ordering;
 
@@ -57,39 +57,11 @@ export class BooksService {
     return outputReq;
   }
 
-  public getBooksData(): Observable<IResponse<IBook>> {
-    return this._http.get<IResponse<IBook>>(`${this._booksUrl}/`);
-  }
+  public getBooks(inputParams?: IRequestBook): Observable<IResponse<IBook>> {
+    if (!inputParams) {
+      return this._http.get<IResponse<IBook>>(`${this._booksUrl}/`);
+    }
 
-  public getPaginatedBooks(pageIndex: number, pageSize: number): Observable<IBook[]> {
-    const pageNumber: number = pageIndex + 1;
-    const params = {
-      page: pageNumber,
-      page_size: pageSize,
-    };
-
-    return this._http.get<IResponse<IBook>>(`${this._booksUrl}/`, { params })
-      .pipe(map((response: IResponse<IBook>) => response.result));
-  }
-
-  public getBook(id: string): Observable<IBook> {
-    return this._http.get<IBook>(`${this._booksUrl}/${id}/`);
-  }
-
-  public postBook(book: IBook): Observable<IBook> {
-    const correctReleaseDate = formatDate(book.release_date);
-    const correctWritingDate = formatDate(book.writing_date);
-
-    const correctBook = {
-      ...book,
-      release_date: correctReleaseDate,
-      writing_date: correctWritingDate,
-    };
-
-    return this._http.post<IBook>(`${this._booksUrl}/`, correctBook);
-  }
-
-  public getFilteredBooks(inputParams: IRequestBook): Observable<IResponse<IBook>> {
     const correctParams = BooksService.convertRequest(inputParams);
 
     const params: HttpParams = new HttpParams({
@@ -97,5 +69,22 @@ export class BooksService {
     );
 
     return this._http.get<IResponse<IBook>>(`${this._booksUrl}/`, { params });
+  }
+
+  public getCurrentBook(id: string): Observable<IBook> {
+    return this._http.get<IBook>(`${this._booksUrl}/${id}/`);
+  }
+
+  public postBook(book: IBook): Observable<IBook> {
+    const correctReleaseDate = formatDate(book.releaseDate);
+    const correctWritingDate = formatDate(book.writingDate);
+
+    const correctBook = {
+      ...book,
+      releaseDate: correctReleaseDate,
+      writingDate: correctWritingDate,
+    };
+
+    return this._http.post<IBook>(`${this._booksUrl}/`, correctBook);
   }
 }

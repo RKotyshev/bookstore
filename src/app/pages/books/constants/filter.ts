@@ -14,10 +14,10 @@ export const FilterSortTypeList: IFilterSortType[] = [
   },
   {
     label: 'Release date',
-    value: 'release_date',
+    value: 'releaseDate',
   },
   {
     label: 'Writing date',
-    value: 'writing_date',
+    value: 'writingDate',
   },
 ];

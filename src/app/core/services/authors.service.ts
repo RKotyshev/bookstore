@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
 
-import { IAuthor } from '../interfaces/author';
+import { IAuthor, IRequestAuthors } from '../interfaces/author';
 import { IResponse } from '../interfaces/response';
 
 
@@ -15,22 +15,21 @@ export class AuthorsService {
 
   constructor(private _httpClient: HttpClient) { }
 
-  public getAuthorsData(): Observable<IResponse<IAuthor>> {
-    return this._httpClient.get<IResponse<IAuthor>>(`${this._authorsUrl}/`);
-  }
-
-  public getPaginatedAuthors(pageIndex: number, pageSize: number): Observable<IAuthor[]> {
-    const pageNumber: number = pageIndex + 1;
+  public getAuthors(inputParams?: IRequestAuthors): Observable<IResponse<IAuthor>> {
+    if (!inputParams) {
+      return this._httpClient.get<IResponse<IAuthor>>(`${this._authorsUrl}/`);
+    }
+    
+    const pageNumber: number = inputParams.page + 1;
     const params = {
+      ...inputParams,
       page: pageNumber,
-      page_size: pageSize,
     };
 
-    return this._httpClient.get<IResponse<IAuthor>>(`${this._authorsUrl}/`, { params })
-      .pipe(map((response: IResponse<IAuthor>) => response.result));
+    return this._httpClient.get<IResponse<IAuthor>>(`${this._authorsUrl}/`, { params });
   }
 
-  public getAuthor(id: number): Observable<IAuthor> {
+  public getCurrentAuthor(id: number): Observable<IAuthor> {
     return this._httpClient.get<IAuthor>(`${this._authorsUrl}/${id}/`);
   }
 

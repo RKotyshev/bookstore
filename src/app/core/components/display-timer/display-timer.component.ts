@@ -1,15 +1,33 @@
-import { NgIf } from '@angular/common';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-
-import { Subject, interval, last, take, takeUntil, tap } from 'rxjs';
+import { NgIf, AsyncPipe } from '@angular/common';
+import { 
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
+  
+import { 
+  Observable,
+  Subject,
+  last,
+  map,
+  share,
+  take,
+  takeUntil,
+  timer,
+} from 'rxjs';
 
 
 @Component({
   selector: 'app-display-timer',
   templateUrl: './display-timer.component.html',
   styleUrl: './display-timer.component.scss',
-  imports: [NgIf],
+  imports: [NgIf, AsyncPipe],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DisplayTimerComponent implements OnInit, OnDestroy {
   @Input()
@@ -18,19 +36,23 @@ export class DisplayTimerComponent implements OnInit, OnDestroy {
   @Output()
   public timerFinished: EventEmitter<void> = new EventEmitter();
   
+  public timeLeft$!: Observable<number>;
   private _destroyed = new Subject<void>;
 
   public ngOnInit(): void {
-    interval(1000).pipe(
+    this.timeLeft$ = timer(0, 1000).pipe(
       take(this.timerDelay),
-      tap(() => {
-        this.timerDelay--;
-      }),
+      map(() => --this.timerDelay),
+      share(),
+    );
+
+    this.timeLeft$.pipe(
       last(),
       takeUntil(this._destroyed),
     ).subscribe(() => {
       this.timerFinished.emit();
     });
+
   }
 
   public ngOnDestroy(): void {

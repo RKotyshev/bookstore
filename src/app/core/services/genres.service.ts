@@ -23,7 +23,7 @@ export class GenresService {
     const pageNumber = pageIndex + 1;
     const params = {
       page: pageNumber,
-      page_size: pageSize,
+      pageSize: pageSize,
     };
 
     return this._httpClient.get<IResponse<IGenre>>(`${this._genresUrl}/`, { params }).pipe(

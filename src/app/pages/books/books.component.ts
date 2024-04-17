@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import {  MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -24,10 +24,12 @@ import isEqual from 'lodash.isequal';
 const DEFAULT_PAGE_INDEX = 0;
 const DEFAULT_PAGE_SIZE = 5;
 
+
 @Component({
   selector: 'app-books',
   templateUrl: './books.component.html',
   styleUrl: './books.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BooksComponent implements OnInit, OnDestroy {
   @ViewChild('paginator')
@@ -38,12 +40,13 @@ export class BooksComponent implements OnInit, OnDestroy {
     filterType: DEFAULT_FILTER_TYPE,
     direction: SortDirection.Ascending,
     page: DEFAULT_PAGE_INDEX,
-    page_size: DEFAULT_PAGE_SIZE,
+    pageSize: DEFAULT_PAGE_SIZE,
   };
+  public paginatorInitialPageSize = DEFAULT_PAGE_SIZE;
   public params$ = this._route.queryParams.pipe(
     filter((params: IRequestBook) => {
       return params.page !== undefined && params.page !== null &&
-      params.page_size !== undefined && params.page_size !== null;
+      params.pageSize !== undefined && params.pageSize !== null;
     }),
     startWith(this.paramsState),
     debounceTime(300),
@@ -63,7 +66,7 @@ export class BooksComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.booksResponse$ = this.params$.pipe(
       switchMap((params: IRequestBook) => {
-        return this._bookService.getFilteredBooks(params);
+        return this._bookService.getBooks(params);
       }),
     );
   }
@@ -77,7 +80,7 @@ export class BooksComponent implements OnInit, OnDestroy {
     this.paramsState = {
       ...this.paramsState,
       page: event.pageIndex,
-      page_size: event.pageSize,
+      pageSize: event.pageSize,
     };
 
     this._router.navigate(['/books'], {
