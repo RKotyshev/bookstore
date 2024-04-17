@@ -1,5 +1,6 @@
 <div>
-  <h2>Authorization</h2>
+  <ng-container *ngIf="(authService.isLoggedIn$ | async) === false">
+    <h2>Authorization</h2>
 
   <form [formGroup]="authForm">
     <mat-form-field>
@@ -22,8 +23,13 @@
     </mat-form-field>
 
     <section class="actions">
-      <button mat-fab extended color="accent">Sign in</button>
-      <button mat-fab extended color="primary">Sign up</button>
+      <button mat-fab extended color="accent" (click)="onLogin()">Login</button>
+      <button mat-fab extended color="primary" (click)="onSignUp()">Sign up</button>
     </section>
   </form>
+</ng-container>
+
+<ng-container *ngIf="authService.isLoggedIn$ | async">
+  <h2>You have logged in successfully</h2>
+</ng-container>
 </div>
