@@ -21,14 +21,14 @@ export class ParamsAdapterInterceptor implements HttpInterceptor {
     }
 
     const transformedOutputParams = new HttpParams({
-      fromObject: this.transformParamsOrBody(newOutputParams, 'toServer') as { 
-        [s: string]: string | number,
+      fromObject: this._transformParamsOrBody(newOutputParams, 'toServer') as { 
+        [s: string]: string | number | boolean | readonly (string | number | boolean)[],
       },
     });
 
     const newOutputBody: object | null = req.body ? structuredClone(req.body) : null;
     const transformedOutputBody: object | null = newOutputBody ? 
-      this.transformParamsOrBody(newOutputBody, 'toServer') : null;
+      this._transformParamsOrBody(newOutputBody, 'toServer') : null;
 
     const cloneReq = req.clone({
       params: transformedOutputParams,
@@ -41,7 +41,7 @@ export class ParamsAdapterInterceptor implements HttpInterceptor {
           const newInputBody: object | null = event.body ? structuredClone(event.body) : null;
 
           const transformedInputBody: object | null = newInputBody ? 
-            this.transformParamsOrBody(newInputBody, 'toClient') : null;
+            this._transformParamsOrBody(newInputBody, 'toClient') : null;
 
           const cloneEvent = event.clone({
             body: transformedInputBody,
@@ -55,7 +55,7 @@ export class ParamsAdapterInterceptor implements HttpInterceptor {
     );
   }
 
-  public transformParamsOrBody(
+  private _transformParamsOrBody(
     inputObj: object | unknown[],
     direction: 'toClient' | 'toServer',
   ): object {
@@ -63,7 +63,7 @@ export class ParamsAdapterInterceptor implements HttpInterceptor {
       return inputObj.map((value: unknown) => {
 
         if (typeof value === 'object' && value !== null) {
-          return this.transformParamsOrBody(value, direction);
+          return this._transformParamsOrBody(value, direction);
         }
 
         return value;
@@ -74,10 +74,10 @@ export class ParamsAdapterInterceptor implements HttpInterceptor {
       (resultObject: { [x: string]: unknown }, [key, value]: [string, unknown]) => {
 
         if (typeof value === 'object' && value !== null) {
-          value = this.transformParamsOrBody(value, direction);
+          value = this._transformParamsOrBody(value, direction);
         }
 
-        const transformedKey = this.transformKey(key, direction);
+        const transformedKey = this._transformKey(key, direction);
   
         resultObject[transformedKey] = value;
   
@@ -85,7 +85,7 @@ export class ParamsAdapterInterceptor implements HttpInterceptor {
       }, {});
   }
 
-  public transformKey(key: string, direction: 'toClient' | 'toServer'): string  {
+  private _transformKey(key: string, direction: 'toClient' | 'toServer'): string  {
     if (direction === 'toClient') {
 
       if (!key.includes('_')) {

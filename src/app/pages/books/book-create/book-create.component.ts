@@ -18,6 +18,7 @@ import {
   Observable,
   Subject,
   catchError,
+  finalize,
   map,
   of,
   switchMap,
@@ -169,18 +170,17 @@ export class BookCreateComponent implements OnInit, OnDestroy {
       }),
       catchError(handleError),
       takeUntil(this._destroyed),
+      finalize(() => {
+        this._cdr.detectChanges();
+      }),
     )
       .subscribe({
         next: () => {
           this.submitted = true;
           this.submitError = false;
-
-          this._cdr.detectChanges();
         },
         error: () => {
           this.submitError = true;
-
-          this._cdr.detectChanges();
         },
       });
   }
