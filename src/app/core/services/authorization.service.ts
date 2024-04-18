@@ -1,9 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-// import { Router } from '@angular/router';
 
-import { Observable, of, map, shareReplay, BehaviorSubject } from 'rxjs';
+import { Observable, of, map, shareReplay, BehaviorSubject, catchError } from 'rxjs';
 import { IJwtTokens, IRequestAuthorization } from '../interfaces/authorization';
+
+const ACCESS_TOKEN_KEY = 'accessToken';
+const REFRESH_TOKEN_KEY = 'refreshToken';
 
 
 @Injectable({
@@ -12,7 +14,6 @@ import { IJwtTokens, IRequestAuthorization } from '../interfaces/authorization';
 export class AuthorizationService {
   private _logged = new BehaviorSubject<boolean>(false);
   private _authorizationUrl = 'api/token';
-  // private _redirectUrl = '/authorization';
 
   constructor(
     private _http: HttpClient,
@@ -25,33 +26,33 @@ export class AuthorizationService {
       );
   }
 
-  public logIn(accountData: IRequestAuthorization): void {
-    this._http.post<IJwtTokens>(`${this._authorizationUrl}/`, accountData)
-      .subscribe({
-        next: (response: IJwtTokens) => {
+  public logIn$(accountData: IRequestAuthorization): Observable<boolean> {
+    return this._http.post<IJwtTokens>(`${this._authorizationUrl}/`, accountData)
+      .pipe(
+        map((response: IJwtTokens) => {
           const accessTokenPrefix = 'Bearer ';
           const accessToken = accessTokenPrefix + response.access;
-  
-          localStorage.setItem('refreshToken', response.refresh!);
-          localStorage.setItem('accessToken', accessToken);
-  
+
+          localStorage.setItem(REFRESH_TOKEN_KEY, response.refresh!);
+          localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+
           this._logged.next(true);
-        },
-        error: () => {
-          this._logged.next(false);
-        },
-      });
+
+          return true;
+        }),
+        catchError(() => of(false)),
+      );
   }
 
   public logOut(): void {
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('accessToken');
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
 
     this._logged.next(false);
   }
 
   public getAccessToken(): string | null{
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
 
     return accessToken;
   }
@@ -60,14 +61,10 @@ export class AuthorizationService {
     this._logged.next(true);
   }
 
-  public refreshToken(): Observable<string | null> {
-    const refreshToken = localStorage.getItem('refreshToken');
-
-    // console.log('test');
+  public getRefreshedAccessToken$(): Observable<string | null> {
+    const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
 
     if (!refreshToken) {
-
-      // Router navigate
       return of(null);
     }
 
@@ -81,10 +78,11 @@ export class AuthorizationService {
         const accessToken = accessTokenPrefix + response.access!;
         console.log('test');
 
-        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
 
         return accessToken;
       }),
+      catchError(() => of(null)),
     );
   }
 }

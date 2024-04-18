@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 
 import { IAuthorizationForm } from '../../core/interfaces/authorization';
 import { AuthorizationService } from '../../core/services/authorization.service';
+import { Subject, takeUntil, tap } from 'rxjs';
 
 
 @Component({
@@ -11,8 +12,10 @@ import { AuthorizationService } from '../../core/services/authorization.service'
   styleUrl: './authorization.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AuthorizationComponent implements OnInit {
+export class AuthorizationComponent implements OnInit, OnDestroy {
   public authForm!: FormGroup<IAuthorizationForm>;
+  public loginError: boolean = false;
+  private _destroyed = new Subject<void>();
 
   constructor(
     public authService: AuthorizationService,
@@ -31,15 +34,25 @@ export class AuthorizationComponent implements OnInit {
     this._initForm();
   }
 
+  public ngOnDestroy(): void {
+    this._destroyed.next();
+    this._destroyed.complete();
+  }
+
   public onLogin(): void {
     if (!this.authForm.valid) {
       return;
     }
 
-    this.authService.logIn({
+    this.authService.logIn$({
       email: this.authForm.get('email')!.value,
       password: this.authForm.get('password')!.value,
-    });
+    }).pipe(
+      tap((isLogged: boolean) => {
+        this.loginError = !isLogged;
+      }),
+      takeUntil(this._destroyed),
+    ).subscribe();
   }
 
   // public onSignUp(): void {}

@@ -22,6 +22,10 @@
       </mat-error>
     </mat-form-field>
 
+    <mat-error *ngIf="loginError">
+      Incorrect username or password
+    </mat-error>
+
     <section class="actions">
       <button mat-fab extended color="accent" (click)="onLogin()">Login</button>
       <button mat-fab extended color="primary">Sign up</button>
