@@ -28,7 +28,7 @@
       <a mat-list-item href="#">Instagram</a>
     </mat-nav-list>
 
-    <mat-nav-list class="navigation">
+    <mat-nav-list *ngIf="authService.isLoggedIn$ | async" class="navigation">
       <h4>Navigation</h4>
       <a mat-list-item routerLink="/books">Books</a>
       <a mat-list-item routerLink="/authors">Authors</a>

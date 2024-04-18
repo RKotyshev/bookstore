@@ -30,11 +30,11 @@ export class AuthorizationService {
     return this._http.post<IJwtTokens>(`${this._authorizationUrl}/`, accountData)
       .pipe(
         map((response: IJwtTokens) => {
-          const accessTokenPrefix = 'Bearer ';
-          const accessToken = accessTokenPrefix + response.access;
+          // const accessTokenPrefix = 'Bearer ';
+          // const accessToken = accessTokenPrefix + response.access;
 
           localStorage.setItem(REFRESH_TOKEN_KEY, response.refresh!);
-          localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+          localStorage.setItem(ACCESS_TOKEN_KEY, response.access!);
 
           this._logged.next(true);
 
@@ -74,9 +74,7 @@ export class AuthorizationService {
 
     return this._http.post<IJwtTokens>(`${this._authorizationUrl}/refresh/`, refreshBody).pipe(
       map((response: IJwtTokens) => {
-        const accessTokenPrefix = 'Bearer ';
-        const accessToken = accessTokenPrefix + response.access!;
-        console.log('test');
+        const accessToken = response.access!;
 
         localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
 

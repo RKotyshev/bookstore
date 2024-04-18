@@ -9,6 +9,7 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 
 import { MobileMenuService } from '../core/services/mobile-menu.service';
+import { AuthorizationService } from '../core/services/authorization.service';
 
 
 @Component({
@@ -22,6 +23,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private _destroyed = new Subject<void>();
 
   constructor(
+    public authService: AuthorizationService,
     private _menuService: MobileMenuService,
     private _cdr: ChangeDetectorRef,
   ) { }

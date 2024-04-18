@@ -22,7 +22,9 @@ export class AuthorizationInterceptor implements HttpInterceptor {
   ) {}
 
   public intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    const accessToken = this._authService.getAccessToken();
+    const accessTokenPrefix = 'Bearer ';
+    const accessTokenPersonal = this._authService.getAccessToken();
+    const accessToken = accessTokenPersonal ? (accessTokenPrefix + accessTokenPersonal) : null;
 
     const cloneReq = accessToken ? req.clone({
       setHeaders: {
