@@ -17,7 +17,8 @@
         <a mat-list-item routerLink="/">Bookstore</a>
       </mat-nav-list>
 
-      <mat-nav-list *ngIf="authService.isLoggedIn$ | async" class="site-list">
+      <!-- <mat-nav-list *ngIf="authService.isLoggedIn$ | async" class="site-list"> -->
+      <mat-nav-list class="site-list">
         <a mat-list-item routerLink="/books">Books</a>
         <a mat-list-item routerLink="/authors">Authors</a>
       </mat-nav-list>
