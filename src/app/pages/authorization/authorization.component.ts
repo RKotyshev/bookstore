@@ -36,13 +36,17 @@ export class AuthorizationComponent implements OnInit {
       return;
     }
 
-    this.authService.login({
+    this.authService.logIn({
       email: this.authForm.get('email')!.value,
       password: this.authForm.get('password')!.value,
     });
   }
 
-  public onSignUp(): void {}
+  // public onSignUp(): void {}
+
+  public onLogout(): void {
+    this.authService.logOut();
+  }
 
   private _initForm(): void {
     this.authForm = this._formBuilder.group<IAuthorizationForm>({

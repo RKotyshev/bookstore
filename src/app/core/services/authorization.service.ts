@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 // import { Router } from '@angular/router';
 
 import { Observable, of, map, shareReplay, BehaviorSubject } from 'rxjs';
+import { IJwtTokens, IRequestAuthorization } from '../interfaces/authorization';
 
 
 @Injectable({
@@ -11,13 +12,9 @@ import { Observable, of, map, shareReplay, BehaviorSubject } from 'rxjs';
 export class AuthorizationService {
   private _logged = new BehaviorSubject<boolean>(false);
   private _authorizationUrl = 'api/token';
-  // private _accessTokenPrefix = 'Bearer ';
-  // private _accessTokenPersonal!: string | null;
   // private _redirectUrl = '/authorization';
-  // private _refreshToken!: string | null;
 
   constructor(
-    // private _router: Router,
     private _http: HttpClient,
   ) { }
 
@@ -28,20 +25,14 @@ export class AuthorizationService {
       );
   }
 
-  public login(accountData: { email: string, password: string }): Observable<boolean> {
-    // const accessToken = localStorage.getItem('access');
-
-    // if (!accessToken) {
-    //   this._router.navigate([this._redirectUrl]);
-    // }
-
-    this._http.post<{ refresh: string, access: string }>(`${this._authorizationUrl}/`, accountData)
+  public logIn(accountData: IRequestAuthorization): void {
+    this._http.post<IJwtTokens>(`${this._authorizationUrl}/`, accountData)
       .subscribe({
-        next: (response: { refresh: string, access: string }) => {
+        next: (response: IJwtTokens) => {
           const accessTokenPrefix = 'Bearer ';
           const accessToken = accessTokenPrefix + response.access;
   
-          localStorage.setItem('refreshToken', response.refresh);
+          localStorage.setItem('refreshToken', response.refresh!);
           localStorage.setItem('accessToken', accessToken);
   
           this._logged.next(true);
@@ -50,36 +41,33 @@ export class AuthorizationService {
           this._logged.next(false);
         },
       });
+  }
 
-    return this.isLoggedIn$;
+  public logOut(): void {
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('accessToken');
+
+    this._logged.next(false);
   }
 
   public getAccessToken(): string | null{
     const accessToken = localStorage.getItem('accessToken');
 
     return accessToken;
-
-    // this._refreshToken = localStorage.getItem('refreshToken');
-
-    // if (!this._refreshToken) {
-    //   this._router.navigate([this._redirectUrl]);
-    // }
-
-    // const refreshBody = {
-    //   refresh: this._refreshToken,
-    // };
-
-    // return this._http.post<{ access: string }>(`${this._authorizationUrl}`, refreshBody).pipe(
-    //   map((response: { access: string }) => {
-    //     return response.access;
-    //   }),
-    // );
   }
 
-  public refreshToken(): Observable<string> | Observable<null> {
+  public setLoggedIn(): void {
+    this._logged.next(true);
+  }
+
+  public refreshToken(): Observable<string | null> {
     const refreshToken = localStorage.getItem('refreshToken');
 
+    // console.log('test');
+
     if (!refreshToken) {
+
+      // Router navigate
       return of(null);
     }
 
@@ -87,9 +75,15 @@ export class AuthorizationService {
       refresh: refreshToken,
     };
 
-    return this._http.post<{ access: string }>(`${this._authorizationUrl}/`, refreshBody).pipe(
-      map((response: { access: string }) => {
-        return response.access;
+    return this._http.post<IJwtTokens>(`${this._authorizationUrl}/refresh/`, refreshBody).pipe(
+      map((response: IJwtTokens) => {
+        const accessTokenPrefix = 'Bearer ';
+        const accessToken = accessTokenPrefix + response.access!;
+        console.log('test');
+
+        localStorage.setItem('accessToken', accessToken);
+
+        return accessToken;
       }),
     );
   }
