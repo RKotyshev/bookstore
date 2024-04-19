@@ -24,6 +24,11 @@ const routes: Routes = [
     loadChildren: () => import('./pages/cart/cart.module')
       .then((m: typeof import('./pages/cart/cart.module')) => m.CartModule),
   },
+  {
+    path: 'registration',
+    loadChildren: () => import('./pages/registration/registration.module')
+      .then((m: typeof import('./pages/registration/registration.module')) => m.RegistrationModule),
+  },
   { path: '',
     component: MainComponent,
     pathMatch: 'full',

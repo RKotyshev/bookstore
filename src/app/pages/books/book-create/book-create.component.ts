@@ -45,7 +45,6 @@ import {
 import { FirebaseStorageService } from '../../../core/services/firebase-storage.service';
 import { IResponse } from '../../../core/interfaces/response';
 import { ICanComponentDeactivate } from '../../../core/guards/can-deactivate.guard';
-import { DialogService } from '../../../core/services/dialog.service';
 
 const DEFAULT_AUTHORS_PAGE_INDEX = 0;
 const DEFAULT_AUTHORS_PAGE_SIZE = 100;
@@ -88,7 +87,6 @@ export class BookCreateComponent implements OnInit, OnDestroy, ICanComponentDeac
     private _router: Router,
     private _storage: FirebaseStorageService,
     private _cdr: ChangeDetectorRef,
-    private _dialog: DialogService,
   ) { }
 
   public get inStockControl(): FormControl<number> {
