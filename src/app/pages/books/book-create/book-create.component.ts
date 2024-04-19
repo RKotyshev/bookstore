@@ -44,6 +44,8 @@ import {
 } from '../../../core/components/input-file/interfaces/input-item';
 import { FirebaseStorageService } from '../../../core/services/firebase-storage.service';
 import { IResponse } from '../../../core/interfaces/response';
+import { ICanComponentDeactivate } from '../../../core/guards/can-deactivate.guard';
+import { DialogService } from '../../../core/services/dialog.service';
 
 const DEFAULT_AUTHORS_PAGE_INDEX = 0;
 const DEFAULT_AUTHORS_PAGE_SIZE = 100;
@@ -55,7 +57,7 @@ const DEFAULT_AUTHORS_PAGE_SIZE = 100;
   styleUrl: './book-create.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BookCreateComponent implements OnInit, OnDestroy {
+export class BookCreateComponent implements OnInit, OnDestroy, ICanComponentDeactivate {
   public submitted: boolean = false;
   public submitError: boolean = false;
   public submitting: boolean = false;
@@ -86,6 +88,7 @@ export class BookCreateComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _storage: FirebaseStorageService,
     private _cdr: ChangeDetectorRef,
+    private _dialog: DialogService,
   ) { }
 
   public get inStockControl(): FormControl<number> {
@@ -205,6 +208,10 @@ export class BookCreateComponent implements OnInit, OnDestroy {
       }, new Set());
   
     return Array.from(uniqueInvalidItems.values());
+  }
+
+  public canDeactivate(): boolean {
+    return this.bookForm.pristine;
   }
 
   private _initForm(): void {
