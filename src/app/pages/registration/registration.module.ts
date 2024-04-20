@@ -9,6 +9,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { RegistrationRoutingModule } from './registration-routing.module';
 import { RegistrationComponent } from './registration.component';
+import { DisplayTimerComponent } from '../../core/components/display-timer/display-timer.component';
 
 
 @NgModule({
@@ -23,6 +24,7 @@ import { RegistrationComponent } from './registration.component';
     MatButtonModule,
     MatProgressSpinnerModule,
     RegistrationRoutingModule,
+    DisplayTimerComponent,
   ],
 })
 export class RegistrationModule { }

@@ -4,6 +4,8 @@ import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@ang
 import { IRegistrationForm } from '../../core/interfaces/registration';
 import { identicalValuesValidator } from '../../core/functions/validators/identical-value-validator';
 import { AvailableEmailValidator } from '../../core/functions/validators/available-email-validator';
+import { RegistrationService } from '../../core/services/registration.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -13,10 +15,16 @@ import { AvailableEmailValidator } from '../../core/functions/validators/availab
 })
 export class RegistrationComponent implements OnInit {
   public registrationForm!: FormGroup<IRegistrationForm>;
+  public submitted = false;
+  public redirectDelaySeconds = 9;
+  public submitError = false;
+  public submitting = false;
   
   constructor(
     private _formBuilder: NonNullableFormBuilder,
     private _availableEmailValidator: AvailableEmailValidator,
+    private _registrationService: RegistrationService,
+    private _router: Router,
   ) {}
 
   public get emailControl(): FormControl<string> {
@@ -33,6 +41,36 @@ export class RegistrationComponent implements OnInit {
 
   public ngOnInit(): void {
     this._initForm();
+  }
+
+  public onSubmit(): void {
+    if (this.registrationForm.invalid) {
+      return;
+    }
+
+    this.submitting = true;
+
+    const userData = {
+      ...this.registrationForm.getRawValue(),
+    };
+
+    delete userData.passwordConfirm;
+
+    this._registrationService.registerUser(userData).subscribe({
+      next: () => {
+        this.submitted = true;
+        this.submitError = false;
+        this.submitting = false;
+      },
+      error: () => {
+        this.submitError = true;
+        this.submitting = false;
+      },
+    });
+  }
+
+  public onRedirect(): void {
+    this._router.navigate(['authorization']);
   }
 
   private _initForm(): void {

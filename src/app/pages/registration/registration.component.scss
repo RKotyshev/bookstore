@@ -9,7 +9,15 @@ form {
   margin-bottom: 20px;
 }
 
+mat-spinner {
+  margin-right: 10px;
+}
+
 button {
   width: 100%;
   margin: 20px 0;
+}
+
+.submitting, .submitted {
+  margin-bottom: 20px;
 }

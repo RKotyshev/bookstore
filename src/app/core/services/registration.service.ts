@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 
 import { Observable, map } from 'rxjs';
 
-import { IAvailableEmail } from '../interfaces/registration';
+import { IAvailableEmail, IRequestRegistration, IUser } from '../interfaces/registration';
 
 
 @Injectable({
@@ -26,5 +26,13 @@ export class RegistrationService {
         return response.isAvailable;
       }),
     );
+  }
+
+  public registerUser(userData: IRequestRegistration): Observable<IUser> {
+    const body = {
+      ...userData,
+    };
+
+    return this._http.post<IUser>(`${this._registrationUrl}/`, body);
   }
 }
