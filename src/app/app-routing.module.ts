@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { MainComponent } from './pages/main/main.component';
 import { authorizationGuard } from './core/guards/authorization.guard';
+import { unauthorizedOnlyGuard } from './core/guards/unauthorized-only.guard';
 
 
 const routes: Routes = [
@@ -28,6 +29,7 @@ const routes: Routes = [
     path: 'registration',
     loadChildren: () => import('./pages/registration/registration.module')
       .then((m: typeof import('./pages/registration/registration.module')) => m.RegistrationModule),
+    canActivate: [unauthorizedOnlyGuard],
   },
   { path: '',
     component: MainComponent,

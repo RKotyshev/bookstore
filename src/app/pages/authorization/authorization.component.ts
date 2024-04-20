@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 
+import { Subject, takeUntil, tap } from 'rxjs';
+
 import { IAuthorizationForm } from '../../core/interfaces/authorization';
 import { AuthorizationService } from '../../core/services/authorization.service';
-import { Subject, takeUntil, tap } from 'rxjs';
 
 
 @Component({
@@ -31,6 +32,16 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
+    // this.authService.isLoggedIn$.pipe(
+    //   switchMap((isLogged: boolean) => {
+    //     if (isLogged) {
+    //       return EMPTY;
+    //     }
+
+    //     return this.authService.verifyToken('access');
+    //   }),
+    // ).subscribe();
+
     this._initForm();
   }
 

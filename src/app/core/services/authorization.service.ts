@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { Observable, of, map, shareReplay, BehaviorSubject, catchError } from 'rxjs';
-import { IJwtTokens, IRequestAuthorization } from '../interfaces/authorization';
+
+import { IJwtTokenStatus, IJwtTokens, IRequestAuthorization } from '../interfaces/authorization';
 
 const ACCESS_TOKEN_KEY = 'accessToken';
 const REFRESH_TOKEN_KEY = 'refreshToken';
@@ -12,7 +13,7 @@ const REFRESH_TOKEN_KEY = 'refreshToken';
   providedIn: 'root',
 })
 export class AuthorizationService {
-  private _logged = new BehaviorSubject<boolean>(false);
+  private _logged$ = new BehaviorSubject<boolean>(false);
   private _authorizationUrl = 'api/token';
 
   constructor(
@@ -20,7 +21,7 @@ export class AuthorizationService {
   ) { }
 
   public get isLoggedIn$(): Observable<boolean> {
-    return this._logged.asObservable()
+    return this._logged$.asObservable()
       .pipe(
         shareReplay({ bufferSize: 1, refCount: true }),
       );
@@ -30,13 +31,10 @@ export class AuthorizationService {
     return this._http.post<IJwtTokens>(`${this._authorizationUrl}/`, accountData)
       .pipe(
         map((response: IJwtTokens) => {
-          // const accessTokenPrefix = 'Bearer ';
-          // const accessToken = accessTokenPrefix + response.access;
-
           localStorage.setItem(REFRESH_TOKEN_KEY, response.refresh!);
           localStorage.setItem(ACCESS_TOKEN_KEY, response.access!);
 
-          this._logged.next(true);
+          this._logged$.next(true);
 
           return true;
         }),
@@ -48,7 +46,7 @@ export class AuthorizationService {
     localStorage.removeItem(REFRESH_TOKEN_KEY);
     localStorage.removeItem(ACCESS_TOKEN_KEY);
 
-    this._logged.next(false);
+    this._logged$.next(false);
   }
 
   public getAccessToken(): string | null{
@@ -58,7 +56,7 @@ export class AuthorizationService {
   }
 
   public setLoggedIn(): void {
-    this._logged.next(true);
+    this._logged$.next(true);
   }
 
   public getRefreshedAccessToken$(): Observable<string | null> {
@@ -80,6 +78,23 @@ export class AuthorizationService {
 
         return accessToken;
       }),
+      catchError(() => of(null)),
+    );
+  }
+
+  public verifyToken(tokenType: 'access' | 'refresh'): Observable<IJwtTokenStatus | null> {
+    const token = tokenType === 'access' ? 
+      localStorage.getItem(ACCESS_TOKEN_KEY) : localStorage.getItem(REFRESH_TOKEN_KEY);
+
+    if (!token) {
+      return of(null);
+    }
+
+    const body = {
+      token,
+    };
+
+    return this._http.post<IJwtTokenStatus>(`${this._authorizationUrl}/verify/`, body).pipe(
       catchError(() => of(null)),
     );
   }
