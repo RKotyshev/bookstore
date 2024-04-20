@@ -72,7 +72,6 @@ export class AuthorizationInterceptor implements HttpInterceptor {
 
           return next.handle(retryReq);
         }),
-        // take(1),
       );
     }
 

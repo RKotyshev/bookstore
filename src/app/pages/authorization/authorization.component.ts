@@ -32,16 +32,6 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    // this.authService.isLoggedIn$.pipe(
-    //   switchMap((isLogged: boolean) => {
-    //     if (isLogged) {
-    //       return EMPTY;
-    //     }
-
-    //     return this.authService.verifyToken('access');
-    //   }),
-    // ).subscribe();
-
     this._initForm();
   }
 
@@ -65,8 +55,6 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
       takeUntil(this._destroyed),
     ).subscribe();
   }
-
-  // public onSignUp(): void {}
 
   public onLogout(): void {
     this.authService.logOut();

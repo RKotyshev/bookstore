@@ -13,10 +13,4 @@ export const unauthorizedOnlyGuard: CanActivateFn = () => {
       return response ? router.parseUrl('/') : true;
     }),
   );
-
-  // return authService.isLoggedIn$.pipe(
-  //   map((isLogged: boolean) => {
-  //     return isLogged ? router.parseUrl('/') : true;
-  //   }),
-  // );
 };
