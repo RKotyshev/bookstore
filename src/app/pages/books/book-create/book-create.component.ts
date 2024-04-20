@@ -179,6 +179,8 @@ export class BookCreateComponent implements OnInit, OnDestroy, ICanComponentDeac
         next: () => {
           this.submitted = true;
           this.submitError = false;
+          
+          this.bookForm.markAsPristine();
         },
         error: () => {
           this.submitError = true;

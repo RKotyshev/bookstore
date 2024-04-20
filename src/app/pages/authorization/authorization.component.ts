@@ -5,6 +5,7 @@ import { Subject, takeUntil, tap } from 'rxjs';
 
 import { IAuthorizationForm } from '../../core/interfaces/authorization';
 import { AuthorizationService } from '../../core/services/authorization.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -21,6 +22,7 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
   constructor(
     public authService: AuthorizationService,
     private _formBuilder: NonNullableFormBuilder,
+    private _router: Router,
   ) { }
 
   public get emailControl(): FormControl<string> {
@@ -53,7 +55,9 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
         this.loginError = !isLogged;
       }),
       takeUntil(this._destroyed),
-    ).subscribe();
+    ).subscribe(() => {
+      this._router.navigate(['/']);
+    });
   }
 
   public onLogout(): void {

@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { IRegistrationForm } from '../../core/interfaces/registration';
 import { identicalValuesValidator } from '../../core/functions/validators/identical-value-validator';
 import { AvailableEmailValidator } from '../../core/functions/validators/available-email-validator';
 import { RegistrationService } from '../../core/services/registration.service';
-import { Router } from '@angular/router';
+import { finalize } from 'rxjs';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class RegistrationComponent implements OnInit {
     private _availableEmailValidator: AvailableEmailValidator,
     private _registrationService: RegistrationService,
     private _router: Router,
+    private _cdr: ChangeDetectorRef,
   ) {}
 
   public get emailControl(): FormControl<string> {
@@ -56,7 +58,11 @@ export class RegistrationComponent implements OnInit {
 
     delete userData.passwordConfirm;
 
-    this._registrationService.registerUser(userData).subscribe({
+    this._registrationService.registerUser(userData).pipe(
+      finalize(() => {
+        this._cdr.markForCheck();
+      }),
+    ).subscribe({
       next: () => {
         this.submitted = true;
         this.submitError = false;
@@ -70,7 +76,7 @@ export class RegistrationComponent implements OnInit {
   }
 
   public onRedirect(): void {
-    this._router.navigate(['authorization']);
+    this._router.navigate(['/authorization']);
   }
 
   private _initForm(): void {

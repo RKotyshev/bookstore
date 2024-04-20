@@ -19,15 +19,7 @@ export const authorizationGuard: CanMatchFn = () => {
       return authService.verifyToken('access');
     }),
     map((loggedOrResponse: boolean | IJwtTokenStatus | null) => {
-      // if (typeof loggedOrResponse === 'boolean') {
-      //   return true;
-      // }
-
       return loggedOrResponse === null ? router.parseUrl('/authorization') : true;
     }),
   );
-
-  // const accessToken = authService.getAccessToken();
-
-  // return !accessToken ? router.parseUrl('/authorization') : true;
 };

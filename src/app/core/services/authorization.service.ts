@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of, map, shareReplay, BehaviorSubject, catchError } from 'rxjs';
 
 import { IJwtTokenStatus, IJwtTokens, IRequestAuthorization } from '../interfaces/authorization';
+import { Router } from '@angular/router';
 
 const ACCESS_TOKEN_KEY = 'accessToken';
 const REFRESH_TOKEN_KEY = 'refreshToken';
@@ -18,6 +19,7 @@ export class AuthorizationService {
 
   constructor(
     private _http: HttpClient,
+    private _router: Router,
   ) { }
 
   public get isLoggedIn$(): Observable<boolean> {
@@ -47,6 +49,8 @@ export class AuthorizationService {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
 
     this._logged$.next(false);
+
+    this._router.navigate(['authorization']);
   }
 
   public getAccessToken(): string | null{
@@ -70,9 +74,13 @@ export class AuthorizationService {
       refresh: refreshToken,
     };
 
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
+
     return this._http.post<IJwtTokens>(`${this._authorizationUrl}/refresh/`, refreshBody).pipe(
       map((response: IJwtTokens) => {
         const accessToken = response.access!;
+        console.log('test');
 
         localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
 
