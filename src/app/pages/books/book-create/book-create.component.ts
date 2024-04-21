@@ -170,10 +170,10 @@ export class BookCreateComponent implements OnInit, OnDestroy, ICanComponentDeac
         return this._booksService.postBook(newBook as IBook);
       }),
       catchError(handleError),
-      takeUntil(this._destroyed),
       finalize(() => {
         this._cdr.detectChanges();
       }),
+      takeUntil(this._destroyed),
     )
       .subscribe({
         next: () => {

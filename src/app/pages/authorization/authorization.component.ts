@@ -1,8 +1,13 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { 
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { Subject, takeUntil, tap } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 import { IAuthorizationForm } from '../../core/interfaces/authorization';
 import { AuthorizationService } from '../../core/services/authorization.service';
@@ -47,16 +52,19 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.authService.logIn$({
+    this.authService.logIn({
       email: this.authForm.get('email')!.value,
       password: this.authForm.get('password')!.value,
     }).pipe(
-      tap((isLogged: boolean) => {
-        this.loginError = !isLogged;
-      }),
       takeUntil(this._destroyed),
-    ).subscribe(() => {
-      this._router.navigate(['/']);
+    ).subscribe({
+      next: () => {
+        this.loginError = false;
+        this._router.navigate(['/']);
+      },
+      error: () => {
+        this.loginError = true;
+      },
     });
   }
 

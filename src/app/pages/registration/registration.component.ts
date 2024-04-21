@@ -1,8 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { 
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { finalize } from 'rxjs';
+import { Subject, finalize, takeUntil } from 'rxjs';
 
 import { RegistrationService } from '../../core/services/registration.service';
 import { IRegistrationForm } from '../../core/interfaces/registration';
@@ -16,12 +22,13 @@ import { AvailableEmailValidator } from '../../core/functions/validators/availab
   styleUrl: './registration.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RegistrationComponent implements OnInit {
+export class RegistrationComponent implements OnInit, OnDestroy {
   public registrationForm!: FormGroup<IRegistrationForm>;
   public submitted = false;
   public redirectDelaySeconds = 9;
   public submitError = false;
   public submitting = false;
+  private _destroyed = new Subject<void>();
   
   constructor(
     private _formBuilder: NonNullableFormBuilder,
@@ -47,6 +54,11 @@ export class RegistrationComponent implements OnInit {
     this._initForm();
   }
 
+  public ngOnDestroy(): void {
+    this._destroyed.next();
+    this._destroyed.complete();
+  }
+
   public onSubmit(): void {
     if (this.registrationForm.invalid) {
       return;
@@ -63,16 +75,16 @@ export class RegistrationComponent implements OnInit {
     this._registrationService.registerUser(userData).pipe(
       finalize(() => {
         this._cdr.markForCheck();
+        this.submitting = false;
       }),
+      takeUntil(this._destroyed),
     ).subscribe({
       next: () => {
         this.submitted = true;
         this.submitError = false;
-        this.submitting = false;
       },
       error: () => {
         this.submitError = true;
-        this.submitting = false;
       },
     });
   }

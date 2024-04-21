@@ -29,7 +29,7 @@ export class AuthorizationService {
       );
   }
 
-  public logIn$(accountData: IRequestAuthorization): Observable<boolean> {
+  public logIn(accountData: IRequestAuthorization): Observable<boolean> {
     return this._http.post<IJwtTokens>(`${this._authorizationUrl}/`, accountData)
       .pipe(
         map((response: IJwtTokens) => {
@@ -40,7 +40,6 @@ export class AuthorizationService {
 
           return true;
         }),
-        catchError(() => of(false)),
       );
   }
 
@@ -63,7 +62,7 @@ export class AuthorizationService {
     this._logged$.next(true);
   }
 
-  public getRefreshedAccessToken$(): Observable<string | null> {
+  public getRefreshedAccessToken(): Observable<string | null> {
     const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
 
     if (!refreshToken) {

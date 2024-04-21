@@ -8,7 +8,7 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { EMPTY, Observable, catchError, map, switchMap, throwError } from 'rxjs';
+import { Observable, catchError, map, switchMap, throwError } from 'rxjs';
 
 import { AuthorizationService } from '../services/authorization.service';
 
@@ -52,7 +52,7 @@ export class AuthorizationInterceptor implements HttpInterceptor {
     next: HttpHandler,
   ): Observable<HttpEvent<unknown>> {
     if (error.status === 401 || error.status === 403) {
-      return this._authService.getRefreshedAccessToken$().pipe(
+      return this._authService.getRefreshedAccessToken().pipe(
         switchMap((newAccessToken: string | null) => {
           const retryReq = newAccessToken ? req.clone({
             setHeaders: {
@@ -63,7 +63,7 @@ export class AuthorizationInterceptor implements HttpInterceptor {
           if (!retryReq) {
             this._authService.logOut();
 
-            return EMPTY;
+            return throwError(() => error);
           }
 
           return next.handle(retryReq);
