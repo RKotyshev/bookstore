@@ -83,6 +83,7 @@ export class AuthorizationService {
         console.log('test');
 
         localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+        localStorage.setItem(REFRESH_TOKEN_KEY, accessToken);
 
         return accessToken;
       }),

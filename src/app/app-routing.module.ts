@@ -20,7 +20,7 @@ const routes: Routes = [
   { path: 'authorization', 
     loadChildren: () => import('./pages/authorization/authorization.module')
       .then((m: typeof import('./pages/authorization/authorization.module')) => m.AuthorizationModule),
-    // canActivate: [unauthorizedOnlyGuard],
+    canActivate: [unauthorizedOnlyGuard],
   },
   { path: 'cart',
     loadChildren: () => import('./pages/cart/cart.module')

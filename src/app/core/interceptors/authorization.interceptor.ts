@@ -8,7 +8,7 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { EMPTY, Observable, catchError, map, switchMap, take, throwError } from 'rxjs';
+import { EMPTY, Observable, catchError, map, switchMap, throwError } from 'rxjs';
 
 import { AuthorizationService } from '../services/authorization.service';
 import { Router } from '@angular/router';

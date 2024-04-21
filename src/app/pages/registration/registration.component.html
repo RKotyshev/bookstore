@@ -10,7 +10,7 @@
     <mat-error *ngIf="emailControl.hasError('availableEmail')">
       Email already exists
     </mat-error>
-    <mat-spinner *ngIf="emailControl.pending" [diameter]="20" matSuffix></mat-spinner>
+    <mat-spinner *ngIf="(emailControl.statusChanges | async) === 'PENDING'" [diameter]="20" matSuffix></mat-spinner>
   </mat-form-field>
   
   <mat-form-field>

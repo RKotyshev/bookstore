@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { AuthorizationService } from '../../core/services/authorization.service';
 
@@ -7,6 +7,7 @@ import { AuthorizationService } from '../../core/services/authorization.service'
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserComponent {
   constructor(
