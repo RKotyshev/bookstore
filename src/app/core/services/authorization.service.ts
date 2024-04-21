@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { Observable, of, map, shareReplay, BehaviorSubject, catchError } from 'rxjs';
 
 import { IJwtTokenStatus, IJwtTokens, IRequestAuthorization } from '../interfaces/authorization';
-import { Router } from '@angular/router';
 
 const ACCESS_TOKEN_KEY = 'accessToken';
 const REFRESH_TOKEN_KEY = 'refreshToken';
@@ -80,7 +80,6 @@ export class AuthorizationService {
     return this._http.post<IJwtTokens>(`${this._authorizationUrl}/refresh/`, refreshBody).pipe(
       map((response: IJwtTokens) => {
         const accessToken = response.access!;
-        console.log('test');
 
         localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
         localStorage.setItem(REFRESH_TOKEN_KEY, accessToken);

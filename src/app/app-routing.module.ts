@@ -25,6 +25,7 @@ const routes: Routes = [
   { path: 'cart',
     loadChildren: () => import('./pages/cart/cart.module')
       .then((m: typeof import('./pages/cart/cart.module')) => m.CartModule),
+    canMatch: [authorizationGuard],
   },
   {
     path: 'registration',

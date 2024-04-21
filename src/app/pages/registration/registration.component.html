@@ -3,19 +3,22 @@
 <form *ngIf="!submitted" [formGroup]="registrationForm">
   <mat-form-field class="emailField">
     <mat-label>Enter your email:</mat-label>
-    <input matInput type="email" formControlName="email"/>
+    <input matInput formControlName="email" type="email"/>
     <mat-error *ngIf="emailControl.hasError('required')">
       This field is required
     </mat-error>
     <mat-error *ngIf="emailControl.hasError('availableEmail')">
       Email already exists
     </mat-error>
-    <mat-spinner *ngIf="(emailControl.statusChanges | async) === 'PENDING'" [diameter]="20" matSuffix></mat-spinner>
+    <mat-spinner
+      *ngIf="(emailControl.statusChanges | async) === 'PENDING'"
+      matSuffix
+      [diameter]="20"></mat-spinner>
   </mat-form-field>
   
   <mat-form-field>
     <mat-label>Enter your password:</mat-label>
-    <input matInput type="password" formControlName="password">
+    <input matInput formControlName="password" type="password">
     <mat-error *ngIf="passwordControl.hasError('required')">
       This field is required
     </mat-error>
@@ -23,7 +26,7 @@
 
   <mat-form-field>
     <mat-label>Confirm your password:</mat-label>
-    <input matInput type="password" formControlName="passwordConfirm">
+    <input matInput formControlName="passwordConfirm" type="password">
     <mat-error *ngIf="passwordConfirmControl.hasError('required')">
       This field is required
     </mat-error>
@@ -44,16 +47,16 @@
 
 <section *ngIf="submitting" class="submitting">
   <h4>Please wait..</h4>
-  <mat-spinner  diameter="50"></mat-spinner>
+  <mat-spinner diameter="50"></mat-spinner>
 </section>
 
 <div *ngIf="submitted" class="submitted">
   <h2>Registration was successful</h2>
   <p>
     You will be redirected to the
-     <a routerLink="/authorization">authorization page</a>
-      in 
+    <a routerLink="/authorization">authorization page</a>
+    in 
     <app-display-timer [timerDelay]="redirectDelaySeconds" (timerFinished)="onRedirect()"></app-display-timer>
-     seconds
+    seconds
   </p>
 </div>

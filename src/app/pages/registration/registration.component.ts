@@ -2,11 +2,12 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
+import { finalize } from 'rxjs';
+
+import { RegistrationService } from '../../core/services/registration.service';
 import { IRegistrationForm } from '../../core/interfaces/registration';
 import { identicalValuesValidator } from '../../core/functions/validators/identical-value-validator';
 import { AvailableEmailValidator } from '../../core/functions/validators/available-email-validator';
-import { RegistrationService } from '../../core/services/registration.service';
-import { finalize } from 'rxjs';
 
 
 @Component({

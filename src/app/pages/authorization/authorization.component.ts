@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { Subject, takeUntil, tap } from 'rxjs';
 
 import { IAuthorizationForm } from '../../core/interfaces/authorization';
 import { AuthorizationService } from '../../core/services/authorization.service';
-import { Router } from '@angular/router';
 
 
 @Component({

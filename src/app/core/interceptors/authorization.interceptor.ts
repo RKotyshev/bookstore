@@ -11,7 +11,6 @@ import { Injectable } from '@angular/core';
 import { EMPTY, Observable, catchError, map, switchMap, throwError } from 'rxjs';
 
 import { AuthorizationService } from '../services/authorization.service';
-import { Router } from '@angular/router';
 
 const ACCESS_TOKEN_PREFIX = 'Bearer ';
 
@@ -21,7 +20,6 @@ export class AuthorizationInterceptor implements HttpInterceptor {
   
   constructor(
     private _authService: AuthorizationService,
-    private _router: Router,
   ) {}
 
   public intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
@@ -33,8 +31,6 @@ export class AuthorizationInterceptor implements HttpInterceptor {
         Authorization: accessToken,
       },
     }) : req;
-
-    console.log(cloneReq);
 
     return next.handle(cloneReq).pipe(
       map((event: HttpEvent<unknown>) => {
@@ -66,14 +62,12 @@ export class AuthorizationInterceptor implements HttpInterceptor {
 
           if (!retryReq) {
             this._authService.logOut();
-            // this._router.navigate(['/authorization']);
 
             return EMPTY;
           }
 
           return next.handle(retryReq);
         }),
-        // take(1),
       );
     }
 

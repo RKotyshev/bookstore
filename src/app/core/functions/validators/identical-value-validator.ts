@@ -7,10 +7,10 @@ export function identicalValuesValidator(
   return (control: AbstractControl): ValidationErrors | null => {
     const firstControl = control.get(firstControlName);
     const secondControl = control.get(secondControlName);
-    const isIdentical = firstControl!.value === secondControl!.value;
+    const isIdenticalValues = firstControl!.value === secondControl!.value;
     const isControlsDirty = firstControl!.dirty && secondControl!.dirty;
 
-    return !isIdentical && isControlsDirty ? {
+    return !isIdenticalValues && isControlsDirty ? {
       identicalValues: true,
     } : null;
   };

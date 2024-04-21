@@ -1,8 +1,9 @@
 import { CanMatchFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 
-import { AuthorizationService } from '../services/authorization.service';
 import { map, of, switchMap } from 'rxjs';
+
+import { AuthorizationService } from '../services/authorization.service';
 import { IJwtTokenStatus } from '../interfaces/authorization';
 
 

@@ -23,8 +23,8 @@ import { DisplayTimerComponent } from '../../core/components/display-timer/displ
     MatInputModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    RegistrationRoutingModule,
     DisplayTimerComponent,
+    RegistrationRoutingModule,
   ],
 })
 export class RegistrationModule { }
