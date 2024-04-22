@@ -68,10 +68,6 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
     });
   }
 
-  public onLogout(): void {
-    this.authService.logOut();
-  }
-
   private _initForm(): void {
     this.authForm = this._formBuilder.group<IAuthorizationForm>({
       email: this._formBuilder.control({

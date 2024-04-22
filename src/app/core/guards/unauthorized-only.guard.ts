@@ -1,8 +1,11 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { AuthorizationService } from '../services/authorization.service';
+
 import { map } from 'rxjs';
+
+import { AuthorizationService } from '../services/authorization.service';
 import { IJwtTokenStatus } from '../interfaces/authorization';
+
 
 export const unauthorizedOnlyGuard: CanActivateFn = () => {
   const authService = inject(AuthorizationService);
