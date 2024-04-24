@@ -14,7 +14,16 @@
         <div class="authors">
           <div *ngFor="let author of authors" class="author">
             <div mat-card-avatar class="author-avatar"></div>
-            <p>{{ author | fullname }}</p>
+            <p (click)="showAuthorDetails = !showAuthorDetails">{{ author | fullname }}</p>
+
+            <app-modal-details *ngIf="showAuthorDetails">
+              <h4 class="header">Author details:</h4>
+              <section class="content">
+                <p>Author id: {{ author.id }}</p>
+                <p>Author name: {{ author.firstName }}</p>
+                <p>Author second name: {{ author.secondName }}</p>
+              </section>
+            </app-modal-details>
           </div>
         </div>
       </ng-container>

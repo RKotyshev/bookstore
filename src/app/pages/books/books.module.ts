@@ -25,6 +25,7 @@ import { BooksComponent } from './books.component';
 import { BooksListComponent } from './books-list/books-list.component';
 import { BookDetailComponent } from './book-detail/book-detail.component';
 import { DisplayTimerComponent } from '../../core/components/display-timer/display-timer.component';
+import { ModalDetailsComponent } from '../../core/components/modal-details/modal-details.component';
 import { BookCreateComponent } from './book-create/book-create.component';
 import { BooksFilterComponent } from './books-filter/books-filter.component';
 import { InputFileComponent } from '../../core/components/input-file/input-file.component';
@@ -61,6 +62,7 @@ import { BooksRoutingModule } from './books-routing.module';
     MatProgressSpinnerModule,
     BooksRoutingModule,
     DisplayTimerComponent,
+    ModalDetailsComponent,
     InputFileComponent,
     FullnamePipe,
     FileTypesPipe,

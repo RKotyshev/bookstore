@@ -18,6 +18,8 @@ import { IGenre } from '../../../core/interfaces/genre';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BookDetailComponent {
+  public showAuthorDetails: boolean = false;
+
   public book$: Observable<IBook> = this._route.paramMap.pipe(
     switchMap((paramMap: ParamMap) => this._booksService.getCurrentBook(paramMap.get('id')!)),
     shareReplay({ bufferSize: 1, refCount: true }),
