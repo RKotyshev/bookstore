@@ -6,6 +6,7 @@ import {
   Output,
   TemplateRef,
 } from '@angular/core';
+
 import { MatButtonModule } from '@angular/material/button';
 
 
@@ -38,32 +39,4 @@ export class ModalDetailsComponent {
   public onClose(): void {
     this.close.emit();
   }
-  // public state = {
-  //   entityType: 'Entity',
-  //   fields: [
-  //     'Entity name: default',
-  //     'Entity surname: default',
-  //   ], 
-  // };
-
-  // @ViewChild('headerContainer', { read: ViewContainerRef })
-  // private _headerContainer!: ViewContainerRef;
-
-  // @ViewChild('defaultHeader')
-  // private _defaultHeader!: TemplateRef<any>;
-
-  // @ViewChild('contentContainer', { read: ViewContainerRef })
-  // private _contentContainer!: ViewContainerRef;
-
-  // @ViewChild('defaultContent')
-  // private _defaultContent!: TemplateRef<any>;
-
-  // constructor(private _cdr: ChangeDetectorRef) {}
-
-  // public ngAfterViewInit(): void {
-  //   this._headerContainer.createEmbeddedView(this._defaultHeader,{
-  // state: { entityType: 'Entity' },
-  // });
-  //   this._cdr.detectChanges();
-  // }
 }
