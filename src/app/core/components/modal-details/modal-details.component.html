@@ -1,5 +1,6 @@
 <div>
   <section [ngTemplateOutlet]="headerTemplate || defaultHeader" class="header"></section>
+  <ng-content select=".header"></ng-content>
   <ng-template #defaultHeader>
     <h4>Detailed information:</h4>
   </ng-template>
@@ -9,6 +10,7 @@
       [ngTemplateOutlet]="fieldTemplate || defaultField"
       [ngTemplateOutletContext]="{ $implicit: field }"
     ></ng-container>
+    <ng-content select=".field"></ng-content>
     <ng-template #defaultField let-field>
       <p>{{field}}</p>
     </ng-template>

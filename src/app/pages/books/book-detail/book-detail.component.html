@@ -18,21 +18,19 @@
             <app-modal-details
               *ngIf="showAuthorDetails"
               [fields]="getAuthorFields(author)"
-              [headerTemplate]="headerTemplate"
-              [fieldTemplate]="fieldTemplate"
               (close)="showAuthorDetails = !showAuthorDetails"
-            ></app-modal-details>
-
-            <ng-template #headerTemplate>
+            >
+            <ng-template #headerTemplate class="header">
               <h4 class="author-header">Information about author:</h4>
             </ng-template>
-            
-            <ng-template #fieldTemplate let-field>
+
+            <ng-template #fieldTemplate let-field class="field">
               <p class="author-field">
                 <mat-icon fontIcon="info_i"></mat-icon>
                 {{field}}
               </p>
             </ng-template>
+            </app-modal-details>
           </div>
         </div>
       </ng-container>

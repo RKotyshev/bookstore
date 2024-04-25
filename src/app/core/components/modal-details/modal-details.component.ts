@@ -1,6 +1,7 @@
 import { NgFor, NgTemplateOutlet } from '@angular/common';
 import { 
   Component,
+  ContentChild,
   EventEmitter,
   Input,
   Output,
@@ -22,17 +23,23 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './modal-details.component.scss',
 })
 export class ModalDetailsComponent {
-  @Input()
-  public headerTemplate!: TemplateRef<unknown>;
+  // @Input()
+  // public headerTemplate!: TemplateRef<unknown>;
 
-  @Input()
-  public fieldTemplate!: TemplateRef<unknown>;
+  // @Input()
+  // public fieldTemplate!: TemplateRef<unknown>;
 
   @Input()
   public fields: string[] = [];
 
   @Output()
   public close = new EventEmitter();
+
+  @ContentChild('headerTemplate')
+  public headerTemplate!: TemplateRef<unknown>;
+
+  @ContentChild('fieldTemplate')
+  public fieldTemplate!: TemplateRef<unknown>;
 
   constructor() {}
 
