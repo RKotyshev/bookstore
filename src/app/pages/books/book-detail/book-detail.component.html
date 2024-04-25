@@ -16,14 +16,30 @@
             <div mat-card-avatar class="author-avatar"></div>
             <p (click)="showAuthorDetails = !showAuthorDetails">{{ author | fullname }}</p>
 
-            <app-modal-details *ngIf="showAuthorDetails">
+            <!-- <app-modal-details *ngIf="showAuthorDetails">
               <h4 class="header">Author details:</h4>
               <section class="content">
                 <p>Author id: {{ author.id }}</p>
                 <p>Author name: {{ author.firstName }}</p>
                 <p>Author second name: {{ author.secondName }}</p>
               </section>
-            </app-modal-details>
+            </app-modal-details> -->
+            <app-modal-details
+              *ngIf="showAuthorDetails"
+              [fields]="getAuthorFields(author)"
+              [headerTemplate]="headerTemplate"
+              [fieldTemplate]="fieldTemplate"
+              (close)="showAuthorDetails = !showAuthorDetails"
+            ></app-modal-details>
+            <ng-template #headerTemplate>
+              <h4 class="author-header">Information about author:</h4>
+            </ng-template>
+            <ng-template #fieldTemplate let-field>
+              <p class="author-field">
+                <mat-icon fontIcon="info_i"></mat-icon>
+                {{field}}
+              </p>
+            </ng-template>
           </div>
         </div>
       </ng-container>

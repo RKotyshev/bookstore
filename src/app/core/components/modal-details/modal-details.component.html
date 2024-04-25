@@ -1,5 +1,65 @@
-<section>
+<!-- <section>
   <ng-content select=".header"></ng-content>
   <ng-content select=".content"></ng-content>
   <button>Close</button>
-</section>
+</section> -->
+
+<!-- <div>
+  <ng-container #headerContainer class="header"></ng-container>
+  <ng-template #defaultHeader>
+    <p>Detailed information</p>
+    <p>{{state.entityType}} identifier</p>
+  </ng-template>
+  <section #contentContainer class="content"></section>
+    <ng-template *ngFor="let field of state.fields" #defaultContent>
+      <p>{{field}}</p>
+    </ng-template>
+  <section class="actions">
+    <button mat-fab extended color="accent">Close</button>
+  </section>
+</div> -->
+
+<!-- <div>
+  <ng-container [ngTemplateOutlet]="defaultHeader"></ng-container>
+  <ng-template #defaultHeader>
+    <p>Detailed information</p>
+    <p>{{state.entityType}} identifier</p>
+  </ng-template>
+  <section [ngTemplateOutlet]="defaultContent"></section>
+    <ng-template *ngFor="let field of state.fields" #defaultContent>
+      <p>{{field}}</p>
+    </ng-template>
+  <section class="actions">
+    <button mat-fab extended color="accent">Close</button>
+  </section>
+</div> -->
+
+<!-- <div>
+  <ng-container #headerContainer class="header"></ng-container>
+  <ng-template #defaultHeader let-state="state">
+    <p>Detailed information</p>
+    <p>{{state.entityType}} identifier</p>
+  </ng-template>
+  <section class="actions">
+    <button mat-fab extended color="accent">Close</button>
+  </section>
+</div> -->
+
+<div>
+  <section [ngTemplateOutlet]="headerTemplate || defaultHeader" class="header"></section>
+  <ng-template #defaultHeader>
+    <h4>Detailed information:</h4>
+  </ng-template>
+
+  <section *ngFor="let field of fields" class="fields">
+    <ng-container
+      [ngTemplateOutlet]="fieldTemplate || defaultField"
+      [ngTemplateOutletContext]="{ $implicit: field }"
+    ></ng-container>
+    <ng-template #defaultField let-field>
+      <p>{{field}}</p>
+    </ng-template>
+  </section>
+
+  <button mat-fab extended color="accent" (click)="onClose()">Close</button>
+</div>

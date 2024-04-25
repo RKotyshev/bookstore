@@ -1,3 +1,6 @@
+@import '../../../styles/variables.scss';
+
+
 :host {
   position: fixed;
   width: 100%;
@@ -6,10 +9,37 @@
   left: 0;
   background-color: rgba(100, 100, 100, 0.2);
   z-index: 100;
+  display: flex;
+  align-items: center;
 }
 
-section {
-  min-width: 200px;
-  max-width: 560px;
+div {
+  display: flex;
+  flex-direction: column;
+  width: 260px;
+  margin: auto;
+
+  border-radius: 25px;
   background-color: white;
+
+  @media(min-width: $tablet-width) {
+    width: 380px;
+  }
+
+  @media(min-width: $desktop-width) {
+    width: 560px;
+  }
+
+  // margin: 0 auto;
+  // margin-top: 50vh;
 }
+
+h4 {
+  padding: 20px 10px;
+}
+
+// section {
+//   &.actions {
+//     align-self: center;
+//   }
+// }

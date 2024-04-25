@@ -48,4 +48,11 @@ export class BookDetailComponent {
     private _genreService: GenresService,
   ) { }
 
+  public getAuthorFields(author: IAuthor): string[] {
+    const identifierField = `Identifier: #${author.id}`;
+    const firstNameField = `First name: ${author.firstName}`;
+    const secondNameField = `Second Name: ${author.secondName}`;
+
+    return [identifierField, firstNameField, secondNameField];
+  }
 }
