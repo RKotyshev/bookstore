@@ -20,16 +20,16 @@
               [fields]="getAuthorFields(author)"
               (close)="showAuthorDetails = !showAuthorDetails"
             >
-            <ng-template #headerTemplate class="header">
-              <h4 class="author-header">Information about author:</h4>
-            </ng-template>
+              <ng-template #headerTemplate class="header">
+                <h4 class="author-header">Information about author:</h4>
+              </ng-template>
 
-            <ng-template #fieldTemplate let-field class="field">
-              <p class="author-field">
-                <mat-icon fontIcon="info_i"></mat-icon>
-                {{field}}
-              </p>
-            </ng-template>
+              <ng-template #fieldTemplate let-field class="field">
+                <p class="author-field">
+                  <mat-icon fontIcon="info_i"></mat-icon>
+                  {{ field }}
+                </p>
+              </ng-template>
             </app-modal-details>
           </div>
         </div>

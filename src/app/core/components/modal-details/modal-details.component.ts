@@ -23,12 +23,6 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './modal-details.component.scss',
 })
 export class ModalDetailsComponent {
-  // @Input()
-  // public headerTemplate!: TemplateRef<unknown>;
-
-  // @Input()
-  // public fieldTemplate!: TemplateRef<unknown>;
-
   @Input()
   public fields: string[] = [];
 
