@@ -6,7 +6,7 @@ import {
   OnInit,
 } from '@angular/core';
 
-import { Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 
 import { MobileMenuService } from '../core/services/mobile-menu.service';
 import { AuthorizationService } from '../core/services/authorization.service';
@@ -23,10 +23,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private _destroyed = new Subject<void>();
 
   constructor(
-    public authService: AuthorizationService,
+    private _authService: AuthorizationService,
     private _menuService: MobileMenuService,
     private _cdr: ChangeDetectorRef,
   ) { }
+
+  public get isLoggedIn$(): Observable<boolean> {
+    return this._authService.isLoggedIn$;
+  }
 
   public ngOnInit(): void {
     this._menuService.menuStatus$.pipe(

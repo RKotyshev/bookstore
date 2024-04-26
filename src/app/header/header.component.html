@@ -1,5 +1,5 @@
 <section *ngIf="isMenuOpen" class="mobile-wrapper">
-  <mat-nav-list *ngIf="authService.isLoggedIn$ | async" class="mobile-list">
+  <mat-nav-list *ngIf="isLoggedIn$ | async" class="mobile-list">
     <a mat-list-item routerLink="/" (click)="closeMenu()">Bookstore</a>
     <a mat-list-item routerLink="/books" (click)="closeMenu()">Books</a>
     <a mat-list-item routerLink="/authors" (click)="closeMenu()">Authors</a>
@@ -12,19 +12,19 @@
 <mat-toolbar color="accent" class="header">
   <div class="container">
     <section class="site-navigation">
-      <h2 *ngIf="(authService.isLoggedIn$ | async) === false">Bookstore</h2>
-      <mat-nav-list *ngIf="authService.isLoggedIn$ | async" class="bookstore-link">
+      <h2 *ngIf="(isLoggedIn$ | async) === false">Bookstore</h2>
+      <mat-nav-list *ngIf="isLoggedIn$ | async" class="bookstore-link">
         <a mat-list-item routerLink="/">Bookstore</a>
       </mat-nav-list>
 
-      <mat-nav-list *ngIf="authService.isLoggedIn$ | async" class="site-list">
+      <mat-nav-list *ngIf="isLoggedIn$ | async" class="site-list">
         <a mat-list-item routerLink="/books">Books</a>
         <a mat-list-item routerLink="/authors">Authors</a>
       </mat-nav-list>
     </section>
 
     <button
-      *ngIf="authService.isLoggedIn$ | async"
+      *ngIf="isLoggedIn$ | async"
       mat-icon-button
       class="navigation-toggle" 
       aria-label="Icon button with a menu icon"
@@ -33,7 +33,7 @@
       <mat-icon [fontIcon]="isMenuOpen ? 'close' : 'menu'"></mat-icon>
     </button>
 
-    <section *ngIf="authService.isLoggedIn$ | async" class="user-navigation">
+    <section *ngIf="isLoggedIn$ | async" class="user-navigation">
       <a mat-icon-button routerLink="/user" aria-label="Icon button with an account_circle icon">
         <mat-icon fontIcon="account_circle"></mat-icon>
       </a>

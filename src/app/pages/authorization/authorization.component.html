@@ -1,4 +1,4 @@
-<ng-container *ngIf="(authService.isLoggedIn$ | async) === false">
+<ng-container *ngIf="(isLoggedIn$ | async) === false">
   <h2>Authorization</h2>
 
 <form [formGroup]="authForm">

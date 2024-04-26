@@ -1,4 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+
+import { Observable } from 'rxjs';
+
 import { AuthorizationService } from '../core/services/authorization.service';
 
 
@@ -10,6 +13,10 @@ import { AuthorizationService } from '../core/services/authorization.service';
 })
 export class FooterComponent {
   constructor(
-    public authService: AuthorizationService,
+    private _authService: AuthorizationService,
   ) {}
+
+  public get isLoggedIn$(): Observable<boolean> {
+    return this._authService.isLoggedIn$;
+  }
 }

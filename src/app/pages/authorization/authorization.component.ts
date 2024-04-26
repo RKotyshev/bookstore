@@ -7,7 +7,7 @@ import {
 import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 
 import { IAuthorizationForm } from '../../core/interfaces/authorization';
 import { AuthorizationService } from '../../core/services/authorization.service';
@@ -25,10 +25,14 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
   private _destroyed = new Subject<void>();
 
   constructor(
-    public authService: AuthorizationService,
+    private _authService: AuthorizationService,
     private _formBuilder: NonNullableFormBuilder,
     private _router: Router,
   ) { }
+
+  public get isLoggedIn$(): Observable<boolean> {
+    return this._authService.isLoggedIn$;
+  }
 
   public get emailControl(): FormControl<string> {
     return this.authForm.get('email') as FormControl;
@@ -52,7 +56,7 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.authService.logIn({
+    this._authService.logIn({
       email: this.authForm.get('email')!.value,
       password: this.authForm.get('password')!.value,
     }).pipe(

@@ -20,7 +20,7 @@ const routes: Routes = [
   { path: 'authorization', 
     loadChildren: () => import('./pages/authorization/authorization.module')
       .then((m: typeof import('./pages/authorization/authorization.module')) => m.AuthorizationModule),
-    canActivate: [unauthorizedOnlyGuard],
+    canMatch: [unauthorizedOnlyGuard],
   },
   { path: 'cart',
     loadChildren: () => import('./pages/cart/cart.module')
@@ -31,7 +31,7 @@ const routes: Routes = [
     path: 'registration',
     loadChildren: () => import('./pages/registration/registration.module')
       .then((m: typeof import('./pages/registration/registration.module')) => m.RegistrationModule),
-    canActivate: [unauthorizedOnlyGuard],
+    canMatch: [unauthorizedOnlyGuard],
   },
   {
     path: 'user',
