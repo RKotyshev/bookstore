@@ -1,7 +1,16 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { 
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+
+import { Observable, Subject, takeUntil } from 'rxjs';
 
 import { IAuthorizationForm } from '../../core/interfaces/authorization';
+import { AuthorizationService } from '../../core/services/authorization.service';
 
 
 @Component({
@@ -10,12 +19,20 @@ import { IAuthorizationForm } from '../../core/interfaces/authorization';
   styleUrl: './authorization.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AuthorizationComponent implements OnInit {
+export class AuthorizationComponent implements OnInit, OnDestroy {
   public authForm!: FormGroup<IAuthorizationForm>;
+  public loginError: boolean = false;
+  private _destroyed = new Subject<void>();
 
   constructor(
+    private _authService: AuthorizationService,
     private _formBuilder: NonNullableFormBuilder,
+    private _router: Router,
   ) { }
+
+  public get isLoggedIn$(): Observable<boolean> {
+    return this._authService.isLoggedIn$;
+  }
 
   public get emailControl(): FormControl<string> {
     return this.authForm.get('email') as FormControl;
@@ -27,6 +44,32 @@ export class AuthorizationComponent implements OnInit {
 
   public ngOnInit(): void {
     this._initForm();
+  }
+
+  public ngOnDestroy(): void {
+    this._destroyed.next();
+    this._destroyed.complete();
+  }
+
+  public onLogin(): void {
+    if (!this.authForm.valid) {
+      return;
+    }
+
+    this._authService.logIn({
+      email: this.authForm.get('email')!.value,
+      password: this.authForm.get('password')!.value,
+    }).pipe(
+      takeUntil(this._destroyed),
+    ).subscribe({
+      next: () => {
+        this.loginError = false;
+        this._router.navigate(['/']);
+      },
+      error: () => {
+        this.loginError = true;
+      },
+    });
   }
 
   private _initForm(): void {

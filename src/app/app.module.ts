@@ -19,6 +19,7 @@ import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { environment } from '../environments/environment.development';
 import { ParamsAdapterInterceptor } from './core/interceptors/params-adapter.interceptor';
+import { AuthorizationInterceptor } from './core/interceptors/authorization.interceptor';
 
 
 @NgModule({
@@ -45,6 +46,11 @@ import { ParamsAdapterInterceptor } from './core/interceptors/params-adapter.int
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ParamsAdapterInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthorizationInterceptor,
       multi: true,
     },
   ],

@@ -12,7 +12,9 @@ import { MobileMenuService } from './core/services/mobile-menu.service';
 export class AppComponent {
   public title = 'bookstore-initial';
 
-  constructor(private _menuService: MobileMenuService) { }
+  constructor(
+    private _menuService: MobileMenuService,
+  ) { }
 
   public closeMenu(): void {
     this._menuService.closeMenu();

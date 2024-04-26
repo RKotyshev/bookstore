@@ -1,0 +1,33 @@
+form {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 280px;
+  max-width: 500px;
+
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+
+mat-spinner {
+  margin-right: 10px;
+}
+
+button {
+  width: 100%;
+  margin: 20px 0;
+}
+
+p {
+  width: 100%;
+  text-align: center;
+}
+
+a {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.submitting, .submitted {
+  margin-bottom: 20px;
+}

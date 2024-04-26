@@ -1,0 +1,64 @@
+<h2 *ngIf="!submitted">Registration</h2>
+
+<form *ngIf="!submitted" [formGroup]="registrationForm">
+  <mat-form-field class="emailField">
+    <mat-label>Enter your email:</mat-label>
+    <input matInput formControlName="email" type="email"/>
+    <mat-error *ngIf="emailControl.hasError('required')">
+      This field is required
+    </mat-error>
+    <mat-error *ngIf="emailControl.hasError('availableEmail')">
+      Email already exists
+    </mat-error>
+    <mat-spinner
+      *ngIf="(emailControl.statusChanges | async) === 'PENDING'"
+      matSuffix
+      [diameter]="20"></mat-spinner>
+  </mat-form-field>
+  
+  <mat-form-field>
+    <mat-label>Enter your password:</mat-label>
+    <input matInput formControlName="password" type="password">
+    <mat-error *ngIf="passwordControl.hasError('required')">
+      This field is required
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Confirm your password:</mat-label>
+    <input matInput formControlName="passwordConfirm" type="password">
+    <mat-error *ngIf="passwordConfirmControl.hasError('required')">
+      This field is required
+    </mat-error>
+  </mat-form-field>
+
+  <mat-error *ngIf="registrationForm.hasError('identicalValues')">
+    Passwords don't match
+  </mat-error>
+
+  <mat-error *ngIf="submitError">
+    Some error was occurred. Try again later
+  </mat-error>
+
+  <section>
+    <button mat-fab extended color="primary" type="submit" (click)="onSubmit()">Sign up</button>
+    <p>Do you have an account?</p>
+    <a mat-fab extended routerLink="/authorization" color="accent">Log in</a>
+  </section>
+</form>
+
+<section *ngIf="submitting" class="submitting">
+  <h4>Please wait..</h4>
+  <mat-spinner diameter="50"></mat-spinner>
+</section>
+
+<div *ngIf="submitted" class="submitted">
+  <h2>Registration was successful</h2>
+  <p>
+    You will be redirected to the
+    <a routerLink="/authorization">authorization page</a>
+    in 
+    <app-display-timer [timerDelay]="redirectDelaySeconds" (timerFinished)="onRedirect()"></app-display-timer>
+    seconds
+  </p>
+</div>
