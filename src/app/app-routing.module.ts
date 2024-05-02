@@ -42,6 +42,7 @@ const routes: Routes = [
   { path: '',
     component: MainComponent,
     pathMatch: 'full',
+    canMatch: [authorizationGuard],
   },
 ];
 
