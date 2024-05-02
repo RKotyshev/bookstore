@@ -5,12 +5,15 @@ import { Observable, map } from 'rxjs';
 
 import { IAvailableEmail, IRequestRegistration, IUser } from '../interfaces/registration';
 
+export const BOOKSTORE_API = 'https://bookstore-api.wis-software.ru/api';
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class RegistrationService {
   private _registrationUrl = '/api/users';
+  // private _registrationUrl = `${BOOKSTORE_API}/users`;
 
   constructor(
     private _http: HttpClient,

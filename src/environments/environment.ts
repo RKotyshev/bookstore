@@ -10,3 +10,5 @@ export const environment = {
     measurementId: '',
   },
 };
+
+export const BOOKSTORE_API = 'bookstore-api.wis-software.ru/api';
