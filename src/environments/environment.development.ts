@@ -10,3 +10,5 @@ export const environment = {
     measurementId: 'G-FRNCQGG8H8',
   },
 };
+
+export const BOOKSTORE_API = '/api';

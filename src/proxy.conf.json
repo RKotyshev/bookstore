@@ -1,6 +1,6 @@
 {
     "/api": {
-      "target": "https://bookstore-api.wis-software.ru",
+      "target": "http://localhost:8000",
       "secure": true,
       "changeOrigin": true
     }

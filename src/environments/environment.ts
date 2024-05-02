@@ -11,4 +11,4 @@ export const environment = {
   },
 };
 
-export const BOOKSTORE_API = 'bookstore-api.wis-software.ru/api';
+export const BOOKSTORE_API = 'https://bookstore-api.wis-software.ru/api';
