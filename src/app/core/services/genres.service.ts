@@ -5,13 +5,14 @@ import { Observable, map } from 'rxjs';
 
 import { IGenre } from '../interfaces/genre';
 import { IResponse } from '../interfaces/response';
+import { BOOKSTORE_API } from '../../../environments/environment';
 
 
 @Injectable({
   providedIn: 'root',
 })
 export class GenresService {
-  private _genresUrl = '/api/genres';
+  private _genresUrl = `${BOOKSTORE_API}/genres`;
 
   constructor(private _httpClient: HttpClient) { }
 

@@ -4,13 +4,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ICartResponse } from '../interfaces/response';
+import { BOOKSTORE_API } from '../../../environments/environment';
 
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
-  private _cartUrl = 'api/cart';
+  private _cartUrl = `${BOOKSTORE_API}/cart`;
 
   constructor(
     private _http: HttpClient,

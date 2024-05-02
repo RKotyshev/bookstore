@@ -7,17 +7,14 @@ import { IBook, IRequestBook } from '../interfaces/book';
 import { IResponse } from '../interfaces/response';
 import { SortDirection } from '../interfaces/sorting';
 import { formatDate } from '../../pages/books/utils/format-date';
-// import { BOOKSTORE_API } from '../../../environments/environment';
-
-export const BOOKSTORE_API = 'http://bookstore-api.wis-software.ru/api';
+import { BOOKSTORE_API } from '../../../environments/environment';
 
 
 @Injectable({
   providedIn: 'root',
 })
 export class BooksService {
-  private _booksUrl = 'api/books';
-  // private _booksUrl = `${BOOKSTORE_API}/books`;
+  private _booksUrl = `${BOOKSTORE_API}/books`;
 
   constructor(private _http: HttpClient) { }
 

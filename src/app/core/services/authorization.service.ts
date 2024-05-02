@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Observable, of, map, shareReplay, BehaviorSubject, catchError } from 'rxjs';
 
 import { IJwtTokenStatus, IJwtTokens, IRequestAuthorization } from '../interfaces/authorization';
+import { BOOKSTORE_API } from '../../../environments/environment';
 
 const ACCESS_TOKEN_KEY = 'accessToken';
 const REFRESH_TOKEN_KEY = 'refreshToken';
@@ -15,7 +16,7 @@ const REFRESH_TOKEN_KEY = 'refreshToken';
 })
 export class AuthorizationService {
   private _logged$ = new BehaviorSubject<boolean>(false);
-  private _authorizationUrl = 'api/token';
+  private _authorizationUrl = `${BOOKSTORE_API}/token`;
 
   constructor(
     private _http: HttpClient,

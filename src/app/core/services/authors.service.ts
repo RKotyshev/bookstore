@@ -5,13 +5,14 @@ import { Observable } from 'rxjs';
 
 import { IAuthor, IRequestAuthors } from '../interfaces/author';
 import { IResponse } from '../interfaces/response';
+import { BOOKSTORE_API } from '../../../environments/environment';
 
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthorsService {
-  private _authorsUrl = 'api/authors';
+  private _authorsUrl = `${BOOKSTORE_API}/authors`;
 
   constructor(private _httpClient: HttpClient) { }
 
